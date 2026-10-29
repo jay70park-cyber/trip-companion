@@ -6,3 +6,5 @@ Location-based travel companion for foreign visitors in Korea: nearby places (KT
 - `_redirects` — Netlify relay for TMAP calls (`/api/tmap/*`)
 
 API keys are never stored in this repository; each user enters them in the app, and they stay in that browser only.
+
+Deployed automatically to Netlify from the `main` branch.
