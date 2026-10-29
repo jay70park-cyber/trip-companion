@@ -171,7 +171,7 @@ ul.food li:first-child{border-top:0}
 
 <script>
 const T={
- en:{eyebrow:"Prototype · Step 4.2 (audio)",gps:"Use my location",browse:"Browse places around",
+ en:{eyebrow:"Prototype · Step 4.3",gps:"Use my location",browse:"Browse places around",
   areaGps:"My location",
   idle:"Location not read yet",live:"Your location (live)",stopped:"Could not read location",
   acc:a=>"Accuracy ± "+a+" m",searchTitle:"Nearby places",radius:"Search radius",search:"Search",
@@ -192,8 +192,8 @@ const T={
   s3:"Walking route",s3btn:"Show walking directions",s3far:"You are more than 3 km away. Walking directions appear when you get closer.",
   s4:"About this place",s4none:"No description available yet.",
   audioTitle:"Audio guide",officialTitle:"Official description",audioNone:"No audio guide within 120 m of this place.",textOnly:"Text only (no audio yet)",script:"Read the script",odiiCredit:"Audio guide: Korea Tourism Organization (Odii)",followOn:"Follow me",followOff:"Stop following",whole:"Whole route",tapRoute:"Tap a route to show it on the map.",arrived:n=>"You have arrived at "+n+". See \"About this place\" below.",dest:"Destination",start:"Start",board:"Board at",alight:"get off at",sameStop:"Transfer at the same stop",modes:{WALK:"WALK",BUS:"BUS",SUBWAY:"SUBWAY",EXPRESSBUS:"COACH",TRAIN:"TRAIN",AIRPLANE:"FLIGHT",FERRY:"FERRY"},
-  cats:{"":"All",76:"Attractions",78:"Culture",85:"Festivals",82:"Food",79:"Shopping",80:"Stay"},food:82},
- ko:{eyebrow:"시제품 · 4.2단계 (오디오)",gps:"내 위치 사용",browse:"둘러볼 지역",
+  cats:{"":"All",76:"Attractions",temple:"Temples",78:"Culture",85:"Festivals",82:"Food",79:"Shopping",80:"Stay"},food:82},
+ ko:{eyebrow:"시제품 · 4.3단계",gps:"내 위치 사용",browse:"둘러볼 지역",
   areaGps:"내 위치",
   idle:"위치 읽기 전",live:"내 위치 (실시간)",stopped:"위치를 읽지 못함",
   acc:a=>"정확도 ± "+a+" m",searchTitle:"주변 장소",radius:"검색 반경",search:"검색",
@@ -214,7 +214,7 @@ const T={
   s3:"도보 동선",s3btn:"도보 경로 보기",s3far:"3km 이상 떨어져 있습니다. 가까워지면 도보 경로가 표시됩니다.",
   s4:"장소 소개",s4none:"아직 소개 글이 없습니다.",
   audioTitle:"오디오 해설",officialTitle:"공식 소개",audioNone:"이 장소 120m 안에 오디오 해설이 없습니다.",textOnly:"대본만 있음 (음성 없음)",script:"대본 보기",odiiCredit:"오디오 해설: 한국관광공사 오디(Odii)",followOn:"내 위치 따라가기",followOff:"따라가기 끄기",whole:"전체 경로",tapRoute:"경로를 누르면 지도에 표시됩니다.",arrived:n=>n+"에 도착했습니다. 아래 \"장소 소개\"를 보세요.",dest:"도착지",start:"출발지",board:"승차",alight:"하차",sameStop:"같은 정류장에서 환승",modes:{WALK:"도보",BUS:"버스",SUBWAY:"지하철",EXPRESSBUS:"고속버스",TRAIN:"기차",AIRPLANE:"항공",FERRY:"배"},
-  cats:{"":"전체",12:"관광지",14:"문화시설",15:"축제",39:"음식점",38:"쇼핑",32:"숙박"},food:39}
+  cats:{"":"전체",12:"관광지",temple:"사찰",14:"문화시설",15:"축제",39:"음식점",38:"쇼핑",32:"숙박"},food:39}
 };
 const AREAS=[
   {id:"gps"},
@@ -306,10 +306,25 @@ async function search(){
   const pos=areaPos();if(!pos){show("apimsg",t("needPos"));return;}
   $("count").textContent=t("loading");$("list").innerHTML="";$("search").disabled=true;
   const extra={numOfRows:"30",pageNo:"1",arrange:"E",mapX:String(pos.lng),mapY:String(pos.lat),radius:$("radius").value};
-  if(cat)extra.contentTypeId=cat;
-  try{lastItems=await tour("locationBasedList2",extra);renderList(lastItems);}
+  const temple=cat==="temple";
+  if(temple){extra.contentTypeId=lang==="en"?"76":"12";extra.numOfRows="200";}
+  else if(cat)extra.contentTypeId=cat;
+  try{
+    let items=await tour("locationBasedList2",extra);
+    if(temple)items=items.filter(isTemple);
+    lastItems=items;renderList(lastItems);
+  }
   catch(e){$("count").textContent="";show("apimsg",e&&e.api?t("apiErr")(e.api):t("netErr"));}
   finally{$("search").disabled=false;}
+}
+/* Temples: KTO classification (old cat3 A02010800 / new lclsSystm) when present, otherwise the name */
+function isTemple(it){
+  const codes=[it.cat3,it.lclsSystm3,it.lclsSystm2].filter(Boolean).join(" ");
+  if(/A02010800/.test(codes))return true;
+  const ttl=it.title||"";
+  if(/\btemple\b|hermitage/i.test(ttl))return true;
+  const ko=(ttl.match(/\(([^)]*[\uac00-\ud7a3][^)]*)\)\s*$/)||[,ttl])[1].trim();
+  return /(사|암|사찰|선원)(\s*\([^)]*\))?$/.test(ko)&&!/(회사|대사관|공사|기념사|신문사|출판사|여행사|검사|조사)$/.test(ko);
 }
 function kakaoLink(it){return "https://map.kakao.com/link/map/"+encodeURIComponent(it.title||"")+","+it.mapy+","+it.mapx;}
 function img(it,cls){
