@@ -1,4 +1,4 @@
-# Trip Companion
+# K-Trip Companion
 
 Location-based travel companion for foreign visitors in Korea: nearby places and temples (KTO TourAPI), public transport and walking routes (TMAP), NAVER map with live follow, arrival alerts, and audio guides (KTO Odii). Installable as an app (PWA).
 

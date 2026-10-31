@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Trip Companion</title>
+<title>K-Trip Companion</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#2f5d50">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Trip Companion">
+<meta name="apple-mobile-web-app-title" content="K-Trip Companion">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@700&family=IBM+Plex+Sans+KR:wght@400;600&family=IBM+Plex+Mono:wght@500&display=swap">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -116,7 +116,7 @@ ul.food li:first-child{border-top:0}
   <div class="top">
     <div>
       <div class="eyebrow" data-i="eyebrow"></div>
-      <h1>Trip Companion</h1>
+      <h1>K-Trip Companion</h1>
     </div>
     <div style="display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap;justify-content:flex-end">
     <button type="button" id="install" class="ghost small" hidden data-i="install"></button>
@@ -198,7 +198,7 @@ ul.food li:first-child{border-top:0}
 
 <script>
 const T={
- en:{eyebrow:"Trip Companion · Beta",gps:"Use my location",browse:"Browse places around",
+ en:{eyebrow:"Beta",gps:"Use my location",browse:"Browse places around",
   areaGps:"My location",
   idle:"Location not read yet",live:"Your location (live)",stopped:"Could not read location",
   acc:a=>"Accuracy ± "+a+" m",searchTitle:"Nearby places",radius:"Search radius",search:"Search",
@@ -218,7 +218,7 @@ const T={
   s2:"Food near the destination",s2none:"No listed restaurants within 1 km.",
   s3:"Walking route",s3btn:"Show walking directions",s3far:"You are more than 3 km away. Walking directions appear when you get closer.",
   s4:"About this place",s4none:"No description available yet.",
-  audioTitle:"Audio guide",officialTitle:"Official description",audioNone:"No audio guide within 120 m of this place.",textOnly:"Text only (no audio yet)",script:"Read the script",odiiCredit:"Audio guide: Korea Tourism Organization (Odii)",install:"Install app",agree:"Agree",notNow:"Not now",privacy:"Privacy",terms:"Terms",locTerms:"Location terms",withdraw:"Stop using my location",credits:"Data: Korea Tourism Organization · TMAP · NAVER",consentA:"To find places and routes from where you are, Trip Companion uses your location for that moment only and does not store it. Please read the ",consentB:" and tap Agree.",noConsent:"Location is off. You can still pick an area to browse.",withdrawn:"Location consent withdrawn. Pick an area to browse.",playGuide:"▶ Play the audio guide",followOn:"Follow me",followOff:"Stop following",whole:"Whole route",tapRoute:"Tap a route to show it on the map.",arrived:n=>"You have arrived at "+n+". See \"About this place\" below.",dest:"Destination",start:"Start",board:"Board at",alight:"get off at",sameStop:"Transfer at the same stop",modes:{WALK:"WALK",BUS:"BUS",SUBWAY:"SUBWAY",EXPRESSBUS:"COACH",TRAIN:"TRAIN",AIRPLANE:"FLIGHT",FERRY:"FERRY"},
+  audioTitle:"Audio guide",officialTitle:"Official description",audioNone:"No audio guide within 120 m of this place.",textOnly:"Text only (no audio yet)",script:"Read the script",odiiCredit:"Audio guide: Korea Tourism Organization (Odii)",install:"Install app",agree:"Agree",notNow:"Not now",privacy:"Privacy",terms:"Terms",locTerms:"Location terms",withdraw:"Stop using my location",credits:"Data: Korea Tourism Organization · TMAP · NAVER",consentA:"To find places and routes from where you are, K-Trip Companion uses your location for that moment only and does not store it. Please read the ",consentB:" and tap Agree.",noConsent:"Location is off. You can still pick an area to browse.",withdrawn:"Location consent withdrawn. Pick an area to browse.",playGuide:"▶ Play the audio guide",followOn:"Follow me",followOff:"Stop following",whole:"Whole route",tapRoute:"Tap a route to show it on the map.",arrived:n=>"You have arrived at "+n+". See \"About this place\" below.",dest:"Destination",start:"Start",board:"Board at",alight:"get off at",sameStop:"Transfer at the same stop",modes:{WALK:"WALK",BUS:"BUS",SUBWAY:"SUBWAY",EXPRESSBUS:"COACH",TRAIN:"TRAIN",AIRPLANE:"FLIGHT",FERRY:"FERRY"},
   cats:{"":"All",76:"Attractions",temple:"Temples",78:"Culture",85:"Festivals",82:"Food",79:"Shopping",80:"Stay"},food:82},
  ko:{eyebrow:"베타",gps:"내 위치 사용",browse:"둘러볼 지역",
   areaGps:"내 위치",

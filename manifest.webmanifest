@@ -1,6 +1,6 @@
 {
-  "name": "Trip Companion",
-  "short_name": "Trip Companion",
+  "name": "K-Trip Companion",
+  "short_name": "K-Trip",
   "description": "Your guide in Korea: nearby places, routes, food, walking paths and audio stories.",
   "start_url": "./",
   "scope": "./",
@@ -10,8 +10,23 @@
   "theme_color": "#2f5d50",
   "lang": "en",
   "icons": [
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }
