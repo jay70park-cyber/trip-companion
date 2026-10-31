@@ -729,6 +729,7 @@ $("install").onclick=async()=>{if(!installEvt)return;installEvt.prompt();try{awa
 if("serviceWorker" in navigator&&window.isSecureContext){window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));}
 
 (async()=>{
+  try{const q=new URLSearchParams(location.search).get("cat");if(q)cat=q;}catch(e){}
   await loadConfig();
   const allOnServer=SERVER.tour&&SERVER.tmap;
   $("keysec").hidden=allOnServer;
