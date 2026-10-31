@@ -4,6 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Trip Companion</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#2f5d50">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Trip Companion">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@700&family=IBM+Plex+Sans+KR:wght@400;600&family=IBM+Plex+Mono:wght@500&display=swap">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -108,9 +113,12 @@ ul.food li:first-child{border-top:0}
       <div class="eyebrow" data-i="eyebrow"></div>
       <h1>Trip Companion</h1>
     </div>
+    <div style="display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap;justify-content:flex-end">
+    <button type="button" id="install" class="ghost small" hidden data-i="install"></button>
     <div class="lang" role="group" aria-label="Language">
       <button type="button" id="lang-en" aria-pressed="true">EN</button>
       <button type="button" id="lang-ko" aria-pressed="false">한국어</button>
+    </div>
     </div>
   </div>
 
@@ -155,7 +163,7 @@ ul.food li:first-child{border-top:0}
     <ol class="places" id="list"></ol>
   </section>
 
-  <section class="card">
+  <section class="card" id="keysec">
     <details id="keybox">
       <summary data-i="keyTitle"></summary>
       <div style="margin-top:12px;display:flex;flex-direction:column;gap:12px">
@@ -171,7 +179,7 @@ ul.food li:first-child{border-top:0}
 
 <script>
 const T={
- en:{eyebrow:"Prototype · Step 4.3",gps:"Use my location",browse:"Browse places around",
+ en:{eyebrow:"Trip Companion · Beta",gps:"Use my location",browse:"Browse places around",
   areaGps:"My location",
   idle:"Location not read yet",live:"Your location (live)",stopped:"Could not read location",
   acc:a=>"Accuracy ± "+a+" m",searchTitle:"Nearby places",radius:"Search radius",search:"Search",
@@ -191,9 +199,9 @@ const T={
   s2:"Food near the destination",s2none:"No listed restaurants within 1 km.",
   s3:"Walking route",s3btn:"Show walking directions",s3far:"You are more than 3 km away. Walking directions appear when you get closer.",
   s4:"About this place",s4none:"No description available yet.",
-  audioTitle:"Audio guide",officialTitle:"Official description",audioNone:"No audio guide within 120 m of this place.",textOnly:"Text only (no audio yet)",script:"Read the script",odiiCredit:"Audio guide: Korea Tourism Organization (Odii)",followOn:"Follow me",followOff:"Stop following",whole:"Whole route",tapRoute:"Tap a route to show it on the map.",arrived:n=>"You have arrived at "+n+". See \"About this place\" below.",dest:"Destination",start:"Start",board:"Board at",alight:"get off at",sameStop:"Transfer at the same stop",modes:{WALK:"WALK",BUS:"BUS",SUBWAY:"SUBWAY",EXPRESSBUS:"COACH",TRAIN:"TRAIN",AIRPLANE:"FLIGHT",FERRY:"FERRY"},
+  audioTitle:"Audio guide",officialTitle:"Official description",audioNone:"No audio guide within 120 m of this place.",textOnly:"Text only (no audio yet)",script:"Read the script",odiiCredit:"Audio guide: Korea Tourism Organization (Odii)",install:"Install app",playGuide:"▶ Play the audio guide",followOn:"Follow me",followOff:"Stop following",whole:"Whole route",tapRoute:"Tap a route to show it on the map.",arrived:n=>"You have arrived at "+n+". See \"About this place\" below.",dest:"Destination",start:"Start",board:"Board at",alight:"get off at",sameStop:"Transfer at the same stop",modes:{WALK:"WALK",BUS:"BUS",SUBWAY:"SUBWAY",EXPRESSBUS:"COACH",TRAIN:"TRAIN",AIRPLANE:"FLIGHT",FERRY:"FERRY"},
   cats:{"":"All",76:"Attractions",temple:"Temples",78:"Culture",85:"Festivals",82:"Food",79:"Shopping",80:"Stay"},food:82},
- ko:{eyebrow:"시제품 · 4.3단계",gps:"내 위치 사용",browse:"둘러볼 지역",
+ ko:{eyebrow:"베타",gps:"내 위치 사용",browse:"둘러볼 지역",
   areaGps:"내 위치",
   idle:"위치 읽기 전",live:"내 위치 (실시간)",stopped:"위치를 읽지 못함",
   acc:a=>"정확도 ± "+a+" m",searchTitle:"주변 장소",radius:"검색 반경",search:"검색",
@@ -213,7 +221,7 @@ const T={
   s2:"도착지 주변 식당",s2none:"1km 안에 등록된 식당이 없습니다.",
   s3:"도보 동선",s3btn:"도보 경로 보기",s3far:"3km 이상 떨어져 있습니다. 가까워지면 도보 경로가 표시됩니다.",
   s4:"장소 소개",s4none:"아직 소개 글이 없습니다.",
-  audioTitle:"오디오 해설",officialTitle:"공식 소개",audioNone:"이 장소 120m 안에 오디오 해설이 없습니다.",textOnly:"대본만 있음 (음성 없음)",script:"대본 보기",odiiCredit:"오디오 해설: 한국관광공사 오디(Odii)",followOn:"내 위치 따라가기",followOff:"따라가기 끄기",whole:"전체 경로",tapRoute:"경로를 누르면 지도에 표시됩니다.",arrived:n=>n+"에 도착했습니다. 아래 \"장소 소개\"를 보세요.",dest:"도착지",start:"출발지",board:"승차",alight:"하차",sameStop:"같은 정류장에서 환승",modes:{WALK:"도보",BUS:"버스",SUBWAY:"지하철",EXPRESSBUS:"고속버스",TRAIN:"기차",AIRPLANE:"항공",FERRY:"배"},
+  audioTitle:"오디오 해설",officialTitle:"공식 소개",audioNone:"이 장소 120m 안에 오디오 해설이 없습니다.",textOnly:"대본만 있음 (음성 없음)",script:"대본 보기",odiiCredit:"오디오 해설: 한국관광공사 오디(Odii)",install:"앱 설치",playGuide:"▶ 오디오 해설 듣기",followOn:"내 위치 따라가기",followOff:"따라가기 끄기",whole:"전체 경로",tapRoute:"경로를 누르면 지도에 표시됩니다.",arrived:n=>n+"에 도착했습니다. 아래 \"장소 소개\"를 보세요.",dest:"도착지",start:"출발지",board:"승차",alight:"하차",sameStop:"같은 정류장에서 환승",modes:{WALK:"도보",BUS:"버스",SUBWAY:"지하철",EXPRESSBUS:"고속버스",TRAIN:"기차",AIRPLANE:"항공",FERRY:"배"},
   cats:{"":"전체",12:"관광지",temple:"사찰",14:"문화시설",15:"축제",39:"음식점",38:"쇼핑",32:"숙박"},food:39}
 };
 const AREAS=[
@@ -281,17 +289,28 @@ $("gps").onclick=()=>{
 $("search").onclick=()=>search();
 
 $("key").value=store.get("tourapi_key")||"";$("nkey").value=store.get("naver_key")||"";$("tkey").value=store.get("tmap_key")||"";
-if(!$("key").value||!$("tkey").value)$("keybox").open=true;
+
 $("savekey").onclick=()=>{store.set("tourapi_key",$("key").value.trim());store.set("tmap_key",$("tkey").value.replace(/[^\x21-\x7E]/g,""));$("tkey").value=$("tkey").value.replace(/[^\x21-\x7E]/g,"");
   const nk=$("nkey").value.replace(/[^\x21-\x7E]/g,"");const changed=nk!==(store.get("naver_key")||"");store.set("naver_key",nk);$("nkey").value=nk;
   $("keybox").open=false;show("apimsg","");if(changed){location.reload();return;}search();};
 
 /* ---------- TourAPI ---------- */
-async function tour(op,extra){
-  const key=($("key").value||"").replace(/[^\x21-\x7E]/g,"");if(!key)throw {api:t("needKey")};
-  const svc=key.includes("%")?key:encodeURIComponent(key);
+let SERVER={ok:false,tour:false,tmap:false,naver:""};
+async function loadConfig(){
+  try{const r=await fetch("/api/config",{cache:"no-store"});if(r.ok){const j=await r.json();if(j&&j.ok)SERVER=j;}}catch(e){}
+}
+const localKey=id=>(($(id)&&$(id).value)||"").replace(/[^\x21-\x7E]/g,"");
+async function dataGo(service,op,extra){
+  const key=localKey("key");
+  if(!SERVER.tour&&!key)throw {api:t("needKey")};
   const p=new URLSearchParams({MobileOS:"ETC",MobileApp:"TripCompanion",_type:"json",...extra});
-  const res=await fetch("https://apis.data.go.kr/B551011/"+SERVICE[lang]+"/"+op+"?serviceKey="+svc+"&"+p);
+  let url;
+  if(SERVER.ok){url="/api/tour/"+service+"/"+op+"?"+p+(!SERVER.tour?"&serviceKey="+encodeURIComponent(key):"");}
+  else{url="https://apis.data.go.kr/B551011/"+service+"/"+op+"?serviceKey="+(key.includes("%")?key:encodeURIComponent(key))+"&"+p;}
+  const res=await fetch(url);
+  return parseDataGo(res);
+}
+async function parseDataGo(res){
   const text=await res.text();let data;
   try{data=JSON.parse(text)}catch(e){const m=text.match(/<returnAuthMsg>([^<]+)|<resultMsg>([^<]+)/);throw {api:(m&&(m[1]||m[2]))||("HTTP "+res.status)};}
   const h=data.response&&data.response.header;
@@ -300,9 +319,10 @@ async function tour(op,extra){
   let it=data.response.body&&data.response.body.items&&data.response.body.items.item;
   return !it?[]:Array.isArray(it)?it:[it];
 }
+function tour(op,extra){return dataGo(SERVICE[lang],op,extra);}
 async function search(){
   show("apimsg","");
-  if(!($("key").value||"").trim()){show("apimsg",t("needKey"));$("keybox").open=true;return;}
+  if(!SERVER.tour&&!localKey("key")){show("apimsg",t("needKey"));$("keybox").open=true;return;}
   const pos=areaPos();if(!pos){show("apimsg",t("needPos"));return;}
   $("count").textContent=t("loading");$("list").innerHTML="";$("search").disabled=true;
   const extra={numOfRows:"30",pageNo:"1",arrange:"E",mapX:String(pos.lng),mapY:String(pos.lat),radius:$("radius").value};
@@ -402,19 +422,7 @@ async function loadFood(it,box){
   }catch(e){box.className="msg";box.textContent=e&&e.api?t("apiErr")(e.api):t("netErr");}
 }
 /* ---------- Odii audio guide (KTO) ---------- */
-async function odii(op,extra){
-  const key=($("key").value||"").replace(/[^\x21-\x7E]/g,"");if(!key)throw {api:t("needKey")};
-  const svc=key.includes("%")?key:encodeURIComponent(key);
-  const p=new URLSearchParams({MobileOS:"ETC",MobileApp:"TripCompanion",_type:"json",langCode:lang==="en"?"en":"ko",...extra});
-  const res=await fetch("https://apis.data.go.kr/B551011/Odii/"+op+"?serviceKey="+svc+"&"+p);
-  const text=await res.text();let data;
-  try{data=JSON.parse(text)}catch(e){const m=text.match(/<returnAuthMsg>([^<]+)|<resultMsg>([^<]+)/);throw {api:(m&&(m[1]||m[2]))||("HTTP "+res.status)};}
-  const h=data.response&&data.response.header;
-  if(!h)throw {api:JSON.stringify(data).slice(0,160)};
-  if(h.resultCode!=="0000")throw {api:h.resultMsg||h.resultCode};
-  let it=data.response.body&&data.response.body.items&&data.response.body.items.item;
-  return !it?[]:Array.isArray(it)?it:[it];
-}
+function odii(op,extra){return dataGo("Odii",op,{langCode:lang==="en"?"en":"ko",...extra});}
 const ODII_RADIUS=120;
 async function loadOdii(it,box){
   try{
@@ -458,17 +466,14 @@ async function loadOverview(it,box){
 }
 
 async function tmap(path,body){
-  const raw=($("tkey").value||"");
-  const k=raw.replace(/[^\x21-\x7E]/g,"");  // drop hidden characters (spaces, line breaks, non-ASCII) picked up when copying
-  if(!k)throw {api:t("needT")};
-  if(k!==raw.trim())console.warn("TMAP key contained hidden characters; they were removed.");
-  // On Netlify, go through our own address (/api/tmap → apis.openapi.sk.com) so the browser never blocks it
-  const viaProxy=/netlify\.app$/.test(location.hostname);
-  const url=(viaProxy?"/api/tmap":"https://apis.openapi.sk.com")+path;
+  const k=localKey("tkey");
+  if(!SERVER.tmap&&!k)throw {api:t("needT")};
+  const url=(SERVER.ok?"/api/tmap":"https://apis.openapi.sk.com")+path;
+  const headers={"Content-Type":"application/json",Accept:"application/json"};
+  if(!SERVER.tmap)headers.appKey=k;
   let res;
-  try{
-    res=await fetch(url,{method:"POST",headers:{appKey:k,"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify(body)});
-  }catch(e){throw {api:t("cors")+" ["+(e&&e.message||e)+"]"};}
+  try{res=await fetch(url,{method:"POST",headers,body:JSON.stringify(body)});}
+  catch(e){throw {api:t("cors")+" ["+(e&&e.message||e)+"]"};}
   const text=await res.text();let data;
   try{data=JSON.parse(text)}catch(e){throw {api:"HTTP "+res.status+" "+text.replace(/<[^>]+>/g," ").trim().slice(0,120)};}
   if(!res.ok){const m=(data.error&&(data.error.message||data.error.code))||(data.result&&data.result.message)||data.message||("HTTP "+res.status);throw {api:m+" (HTTP "+res.status+")"};}
@@ -556,7 +561,7 @@ let naverReady=null,naverFailed=false;
 const cssVar=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 function setFollow(v){follow=v;const b=$("followBtn");if(b){b.textContent=v?t("followOff"):t("followOn");b.className=v?"small":"ghost small";}}
 function loadNaver(){
-  const id=(store.get("naver_key")||"").replace(/[^\x21-\x7E]/g,"");
+  const id=(SERVER.naver||store.get("naver_key")||"").replace(/[^\x21-\x7E]/g,"");
   if(!id||naverFailed)return Promise.resolve(false);
   if(naverReady)return naverReady;
   naverReady=new Promise(res=>{
@@ -672,15 +677,31 @@ function updateMe(pos,acc){
     const box=$("arrived");
     if(box&&d<=ARRIVE_M&&arrivedFor!==current.contentid){
       arrivedFor=current.contentid;
-      box.textContent=t("arrived")((current.title||"").replace(/\s*\([^)]*[가-힣][^)]*\)\s*$/,""));box.hidden=false;
+      box.innerHTML="";box.append(el("div",null,t("arrived")((current.title||"").replace(/\s*\([^)]*[\uac00-\ud7a3][^)]*\)\s*$/,""))));box.hidden=false;
+      const au=document.querySelector("ul.odii audio");
+      if(au){const pb=el("button","small",t("playGuide"));pb.type="button";pb.style.marginTop="8px";pb.style.background="var(--accent-ink)";pb.style.color="var(--accent)";
+        pb.onclick=()=>{au.closest("li").scrollIntoView({behavior:"smooth",block:"center"});au.play().catch(()=>{});};box.append(pb);}
       try{navigator.vibrate&&navigator.vibrate([150,80,150]);}catch(e){}
     }
   }
 }
 const ARRIVE_M=50;
 
-applyLang();
-search();
+/* ---------- App install (PWA) ---------- */
+let installEvt=null;
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();installEvt=e;$("install").hidden=false;});
+window.addEventListener("appinstalled",()=>{$("install").hidden=true;installEvt=null;});
+$("install").onclick=async()=>{if(!installEvt)return;installEvt.prompt();try{await installEvt.userChoice;}catch(e){}installEvt=null;$("install").hidden=true;};
+if("serviceWorker" in navigator&&window.isSecureContext){window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));}
+
+(async()=>{
+  await loadConfig();
+  const allOnServer=SERVER.tour&&SERVER.tmap;
+  $("keysec").hidden=allOnServer;
+  if(!allOnServer&&(!localKey("key")||!localKey("tkey")))$("keybox").open=true;
+  applyLang();
+  search();
+})();
 </script>
 </body>
 </html>

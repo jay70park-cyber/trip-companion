@@ -1,10 +1,19 @@
 # Trip Companion
 
-Location-based travel companion for foreign visitors in Korea: nearby places (KTO TourAPI), public transport and walking routes (TMAP), NAVER map with live follow, arrival alerts, and audio guides (KTO Odii).
+Location-based travel companion for foreign visitors in Korea: nearby places and temples (KTO TourAPI), public transport and walking routes (TMAP), NAVER map with live follow, arrival alerts, and audio guides (KTO Odii). Installable as an app (PWA).
 
-- `index.html` — the whole app (single page)
-- `_redirects` — Netlify relay for TMAP calls (`/api/tmap/*`)
+- `index.html` — the app (single page)
+- `netlify/functions/api.mjs` — server relay that adds API keys (`/api/*`)
+- `manifest.webmanifest`, `sw.js`, `icons/` — app install support
 
-API keys are never stored in this repository; each user enters them in the app, and they stay in that browser only.
+## Keys (Netlify environment variables)
+
+| Variable | Value |
+|---|---|
+| `TOURAPI_KEY` | data.go.kr general key (Decoding) |
+| `TMAP_KEY` | SK open API appKey |
+| `NAVER_CLIENT_ID` | NAVER Cloud Maps Client ID |
+
+No key is stored in this repository.
 
 Deployed automatically to Netlify from the `main` branch.
