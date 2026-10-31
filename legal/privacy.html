@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Trip Companion 개인정보처리방침</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@700&family=IBM+Plex+Sans+KR:wght@400;600&display=swap">
+<style>
+:root{--bg:#f3f1ec;--surface:#fffdf8;--ink:#22262b;--muted:#6b6f72;--line:#ddd8cc;--accent:#2f5d50;--warn:#a4442a;
+  --display:"Gowun Batang",serif;--body:"IBM Plex Sans KR",system-ui,sans-serif;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#15181b;--surface:#1e2226;--ink:#ebe8e1;--muted:#9aa0a4;--line:#30363b;--accent:#7fb8a5;--warn:#e48b6f;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.75 var(--body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+main{max-width:720px;margin:0 auto;padding-block:24px 56px}
+a{color:var(--accent)}
+.top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:13px}
+h1{font:700 26px/1.3 var(--display);margin:18px 0 4px;text-wrap:balance}
+h2{font:700 18px/1.4 var(--display);margin:28px 0 6px;text-wrap:balance}
+p,li{max-width:65ch}
+.meta{color:var(--muted);font-size:13px}
+table{border-collapse:collapse;width:100%;font-size:14px;margin:8px 0}
+th,td{border:1px solid var(--line);padding:8px;text-align:left;vertical-align:top}
+th{background:var(--surface)}
+.wrap{overflow-x:auto}
+.en{border-top:2px solid var(--line);margin-top:40px;padding-top:8px}
+.todo{color:var(--warn);font-weight:600}
+nav.docs{display:flex;flex-wrap:wrap;gap:10px}
+</style>
+</head>
+<body><main>
+<div class="top"><a href="../">← Trip Companion</a>
+<nav class="docs"><a href="privacy.html">개인정보처리방침 · Privacy</a><a href="terms.html">이용약관 · Terms</a><a href="location.html">위치기반서비스 약관 · Location</a></nav></div>
+
+<h1>개인정보처리방침</h1>
+<p class="meta">시행일: 2026년 10월 31일 · 운영자: Jay Park(개인 운영)</p>
+<h2>1. 처리하는 정보</h2>
+<p>Trip Companion(이하 "서비스")은 회원가입이 없으며 이름, 전화번호, 이메일 등 이용자를 식별하는 정보를 받지 않습니다. 서비스가 다루는 정보는 다음과 같습니다.</p>
+<ul>
+<li><b>위치정보</b>: 이용자가 "내 위치 사용"을 누르고 기기에서 위치 권한을 허용한 경우에만 휴대폰의 GPS 위치를 사용합니다.</li>
+<li><b>기기 저장 정보</b>: 선택한 언어, 둘러볼 지역, 화면 설정이 이용자 기기의 브라우저 저장소에만 저장됩니다. 운영자는 이 정보를 받지 않습니다.</li>
+<li><b>접속 기록</b>: 앱을 제공하는 호스팅 서버(Netlify)가 접속 IP 주소와 접속 일시를 기록할 수 있습니다.</li>
+</ul>
+<h2>2. 이용 목적</h2>
+<p>주변 관광지·사찰·식당 검색, 대중교통 및 도보 경로 안내, 지도에 현재 위치 표시, 목적지 도착 알림과 오디오 해설 제공에만 사용합니다. 광고, 마케팅, 이용자 분석에는 사용하지 않습니다.</p>
+<h2>3. 보관 기간과 파기</h2>
+<p>운영자는 위치정보를 저장하지 않습니다. 위치 좌표는 검색과 경로 계산을 위해 서버를 거쳐 아래 제공처로 실시간 전달되며, 응답을 받은 즉시 서버에서 사라집니다. 기기에 저장된 설정은 브라우저의 사이트 데이터 삭제 또는 앱 삭제로 지울 수 있습니다. 관계 법령에 따라 보존이 필요한 기록은 해당 기간 동안 보존한 뒤 파기합니다.</p>
+<h2>4. 외부로 전달되는 정보</h2>
+<p>서비스 기능을 위해 다음 사업자의 공개 API로 정보가 전달됩니다. 각 사업자는 자체 방침에 따라 정보를 처리합니다.</p>
+<div class="wrap"><table>
+<tr><th>받는 곳</th><th>보내는 정보</th><th>목적</th></tr>
+<tr><td>한국관광공사 (공공데이터포털 TourAPI, 오디)</td><td>현재 위치 또는 선택한 지점의 좌표</td><td>주변 관광지·식당·오디오 해설 검색</td></tr>
+<tr><td>티맵모빌리티 / SK (TMAP API)</td><td>출발지(현재 위치)와 목적지 좌표</td><td>대중교통·도보 경로 안내</td></tr>
+<tr><td>네이버클라우드 (네이버 지도)</td><td>지도에 표시할 영역 (지도 화면 요청)</td><td>지도 표시</td></tr>
+<tr><td>Netlify, Inc. (호스팅)</td><td>접속 IP 주소, 접속 일시 등 서버 접속 기록</td><td>앱 제공 및 서버 중계</td></tr>
+</table></div>
+<h2>5. 이용자의 권리</h2>
+<ul>
+<li>위치 권한은 휴대폰 또는 브라우저 설정에서 언제든지 끌 수 있습니다. 끄면 위치 기반 기능만 제한되고, 지역을 골라 둘러보는 기능은 계속 쓸 수 있습니다.</li>
+<li>서비스 안에서 위치 이용 동의를 철회할 수 있습니다.</li>
+<li>기기에 저장된 설정은 언제든지 삭제할 수 있습니다.</li>
+<li>개인정보 처리에 관한 문의, 열람·정정·삭제 요청은 아래 연락처로 하시면 지체 없이 답변드립니다.</li>
+</ul>
+<h2>6. 만 14세 미만 아동</h2>
+<p>서비스는 만 14세 미만 아동을 대상으로 하지 않습니다.</p>
+<h2>7. 안전성 확보 조치</h2>
+<p>모든 통신은 암호화(HTTPS)됩니다. 외부 API 인증키는 서버에만 보관하며 이용자 기기나 공개 저장소에 두지 않습니다.</p>
+<h2>8. 개인정보 보호책임자</h2>
+<p>성명: Jay Park · 이메일: <span class="todo">[문의 이메일 — 출시 전 기재]</span></p>
+<p>개인정보 침해 신고·상담: 개인정보침해신고센터 (privacy.kisa.or.kr, 국번 없이 118), 개인정보분쟁조정위원회 (kopico.go.kr, 1833-6972)</p>
+<h2>9. 방침 변경</h2>
+<p>이 방침이 바뀌면 시행 7일 전부터 이 페이지에 알립니다.</p>
+<section class="en" lang="en">
+<h1>Privacy Policy (English summary)</h1>
+<p class="meta">Effective October 31, 2026 · Operator: Jay Park (individual operator). The Korean text above prevails.</p>
+<p><b>No account, no identity data.</b> Trip Companion has no sign-up and does not ask for your name, phone number or email.</p>
+<p><b>Location.</b> Your device location is used only after you agree in the app, tap "Use my location" and allow it. It is used to find nearby places and temples, plan transit and walking routes, show you on the map, and alert you on arrival. We do not store your location: coordinates pass through our server to the services listed below and are discarded once the answer comes back.</p>
+<p><b>On your device.</b> Language, browsing area and display settings stay in your browser storage. We never receive them.</p>
+<p><b>Shared with.</b> Korea Tourism Organization (TourAPI, Odii audio guides), TMAP Mobility/SK (routes), NAVER Cloud (maps), and Netlify (hosting, which may log IP address and time of access).</p>
+<p><b>No ads, no analytics, no tracking.</b> The service is not directed at children under 14.</p>
+<p><b>Your choices.</b> Turn off location in your phone or browser settings at any time, or withdraw consent in the app; the rest of the app keeps working. Clear site data to remove saved settings.</p>
+<p><b>Contact.</b> Jay Park · <span class="todo">[contact email — to be added before release]</span></p>
+</section>
+</main></body></html>

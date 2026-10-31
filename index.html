@@ -72,6 +72,11 @@ ol.places>li:first-child{border-top:0}
 details summary{cursor:pointer;font-size:14px;font-weight:600}
 /* guide */
 #guide{border-color:var(--accent)}
+.consent{margin-top:12px;padding:12px;border:1px solid var(--accent);border-radius:8px;font-size:14px}
+.consent p{margin:0;max-width:65ch}
+.foot{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted);padding-top:4px}
+.foot a{color:var(--muted)}
+.linkish{background:none;border:0;padding:0;color:var(--muted);font:inherit;text-decoration:underline;cursor:pointer}
 ul.odii{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:12px}
 ul.odii li{border:1px solid var(--line);border-radius:8px;padding:12px}
 .odii-head{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
@@ -135,6 +140,13 @@ ul.food li:first-child{border-top:0}
         <select id="area"></select>
       </div>
     </div>
+    <div class="consent" id="consent" hidden>
+      <p id="consentText"></p>
+      <div class="row" style="margin-top:8px">
+        <button type="button" id="consentYes" data-i="agree"></button>
+        <button type="button" id="consentNo" class="ghost" data-i="notNow"></button>
+      </div>
+    </div>
     <div class="msg" id="gpsmsg" hidden></div>
   </section>
 
@@ -175,6 +187,13 @@ ul.food li:first-child{border-top:0}
       </div>
     </details>
   </section>
+  <footer class="foot">
+    <a href="legal/privacy.html" data-i="privacy"></a>
+    <a href="legal/terms.html" data-i="terms"></a>
+    <a href="legal/location.html" data-i="locTerms"></a>
+    <button type="button" id="withdraw" class="linkish" data-i="withdraw" hidden></button>
+    <span class="meta" data-i="credits"></span>
+  </footer>
 </main>
 
 <script>
@@ -199,7 +218,7 @@ const T={
   s2:"Food near the destination",s2none:"No listed restaurants within 1 km.",
   s3:"Walking route",s3btn:"Show walking directions",s3far:"You are more than 3 km away. Walking directions appear when you get closer.",
   s4:"About this place",s4none:"No description available yet.",
-  audioTitle:"Audio guide",officialTitle:"Official description",audioNone:"No audio guide within 120 m of this place.",textOnly:"Text only (no audio yet)",script:"Read the script",odiiCredit:"Audio guide: Korea Tourism Organization (Odii)",install:"Install app",playGuide:"▶ Play the audio guide",followOn:"Follow me",followOff:"Stop following",whole:"Whole route",tapRoute:"Tap a route to show it on the map.",arrived:n=>"You have arrived at "+n+". See \"About this place\" below.",dest:"Destination",start:"Start",board:"Board at",alight:"get off at",sameStop:"Transfer at the same stop",modes:{WALK:"WALK",BUS:"BUS",SUBWAY:"SUBWAY",EXPRESSBUS:"COACH",TRAIN:"TRAIN",AIRPLANE:"FLIGHT",FERRY:"FERRY"},
+  audioTitle:"Audio guide",officialTitle:"Official description",audioNone:"No audio guide within 120 m of this place.",textOnly:"Text only (no audio yet)",script:"Read the script",odiiCredit:"Audio guide: Korea Tourism Organization (Odii)",install:"Install app",agree:"Agree",notNow:"Not now",privacy:"Privacy",terms:"Terms",locTerms:"Location terms",withdraw:"Stop using my location",credits:"Data: Korea Tourism Organization · TMAP · NAVER",consentA:"To find places and routes from where you are, Trip Companion uses your location for that moment only and does not store it. Please read the ",consentB:" and tap Agree.",noConsent:"Location is off. You can still pick an area to browse.",withdrawn:"Location consent withdrawn. Pick an area to browse.",playGuide:"▶ Play the audio guide",followOn:"Follow me",followOff:"Stop following",whole:"Whole route",tapRoute:"Tap a route to show it on the map.",arrived:n=>"You have arrived at "+n+". See \"About this place\" below.",dest:"Destination",start:"Start",board:"Board at",alight:"get off at",sameStop:"Transfer at the same stop",modes:{WALK:"WALK",BUS:"BUS",SUBWAY:"SUBWAY",EXPRESSBUS:"COACH",TRAIN:"TRAIN",AIRPLANE:"FLIGHT",FERRY:"FERRY"},
   cats:{"":"All",76:"Attractions",temple:"Temples",78:"Culture",85:"Festivals",82:"Food",79:"Shopping",80:"Stay"},food:82},
  ko:{eyebrow:"베타",gps:"내 위치 사용",browse:"둘러볼 지역",
   areaGps:"내 위치",
@@ -221,7 +240,7 @@ const T={
   s2:"도착지 주변 식당",s2none:"1km 안에 등록된 식당이 없습니다.",
   s3:"도보 동선",s3btn:"도보 경로 보기",s3far:"3km 이상 떨어져 있습니다. 가까워지면 도보 경로가 표시됩니다.",
   s4:"장소 소개",s4none:"아직 소개 글이 없습니다.",
-  audioTitle:"오디오 해설",officialTitle:"공식 소개",audioNone:"이 장소 120m 안에 오디오 해설이 없습니다.",textOnly:"대본만 있음 (음성 없음)",script:"대본 보기",odiiCredit:"오디오 해설: 한국관광공사 오디(Odii)",install:"앱 설치",playGuide:"▶ 오디오 해설 듣기",followOn:"내 위치 따라가기",followOff:"따라가기 끄기",whole:"전체 경로",tapRoute:"경로를 누르면 지도에 표시됩니다.",arrived:n=>n+"에 도착했습니다. 아래 \"장소 소개\"를 보세요.",dest:"도착지",start:"출발지",board:"승차",alight:"하차",sameStop:"같은 정류장에서 환승",modes:{WALK:"도보",BUS:"버스",SUBWAY:"지하철",EXPRESSBUS:"고속버스",TRAIN:"기차",AIRPLANE:"항공",FERRY:"배"},
+  audioTitle:"오디오 해설",officialTitle:"공식 소개",audioNone:"이 장소 120m 안에 오디오 해설이 없습니다.",textOnly:"대본만 있음 (음성 없음)",script:"대본 보기",odiiCredit:"오디오 해설: 한국관광공사 오디(Odii)",install:"앱 설치",agree:"동의",notNow:"나중에",privacy:"개인정보처리방침",terms:"이용약관",locTerms:"위치기반서비스 이용약관",withdraw:"위치 이용 동의 철회",credits:"데이터: 한국관광공사 · TMAP · 네이버",consentA:"현재 위치 주변 장소와 경로를 안내하기 위해 그 순간의 위치만 사용하며 저장하지 않습니다. ",consentB:"을 확인하시고 동의를 눌러주세요.",noConsent:"위치를 쓰지 않습니다. 둘러볼 지역을 골라 계속 이용할 수 있습니다.",withdrawn:"위치 이용 동의를 철회했습니다. 둘러볼 지역을 골라주세요.",playGuide:"▶ 오디오 해설 듣기",followOn:"내 위치 따라가기",followOff:"따라가기 끄기",whole:"전체 경로",tapRoute:"경로를 누르면 지도에 표시됩니다.",arrived:n=>n+"에 도착했습니다. 아래 \"장소 소개\"를 보세요.",dest:"도착지",start:"출발지",board:"승차",alight:"하차",sameStop:"같은 정류장에서 환승",modes:{WALK:"도보",BUS:"버스",SUBWAY:"지하철",EXPRESSBUS:"고속버스",TRAIN:"기차",AIRPLANE:"항공",FERRY:"배"},
   cats:{"":"전체",12:"관광지",temple:"사찰",14:"문화시설",15:"축제",39:"음식점",38:"쇼핑",32:"숙박"},food:39}
 };
 const AREAS=[
@@ -272,7 +291,22 @@ $("lang-en").onclick=()=>setLang("en");$("lang-ko").onclick=()=>setLang("ko");
 $("area").onchange=()=>{areaId=$("area").value;store.set("area",areaId);$("guide").hidden=true;search();};
 
 let firstFix=true;
+function hasConsent(){return store.get("loc_consent")==="2026-10-31";}
+function askConsent(){
+  const c=$("consent");c.hidden=false;
+  $("consentText").innerHTML="";
+  const a=el("a",null,t("locTerms"));a.href="legal/location.html";a.target="_blank";a.rel="noopener";
+  $("consentText").append(document.createTextNode(t("consentA")),a,document.createTextNode(t("consentB")));
+  c.scrollIntoView({block:"center"});
+}
+$("consentYes").onclick=()=>{store.set("loc_consent","2026-10-31");$("consent").hidden=true;$("withdraw").hidden=false;$("gps").click();};
+$("consentNo").onclick=()=>{$("consent").hidden=true;show("gpsmsg",t("noConsent"));};
+$("withdraw").onclick=()=>{store.set("loc_consent","");if(watchId!==null){navigator.geolocation.clearWatch(watchId);watchId=null;}
+  gpsPos=null;gpsState="idle";renderStatus();$("coords").textContent="—";$("acc").textContent="";$("withdraw").hidden=true;show("gpsmsg",t("withdrawn"));
+  if(areaId==="gps"){areaId="hwaseong";store.set("area",areaId);$("area").value=areaId;search();}};
+$("withdraw").hidden=!hasConsent();
 $("gps").onclick=()=>{
+  if(!hasConsent()){askConsent();return;}
   show("gpsmsg","");
   if(!navigator.geolocation||!window.isSecureContext){show("gpsmsg","https / geolocation not available");return;}
   if(watchId!==null)navigator.geolocation.clearWatch(watchId);
@@ -405,7 +439,7 @@ function openGuide(it){
 
   g.append(s1.s,s2.s,s3.s,s4.s);
   initMap(it,o);
-  if(watchId===null&&navigator.geolocation&&window.isSecureContext)$("gps").click();
+  if(watchId===null&&hasConsent()&&navigator.geolocation&&window.isSecureContext)$("gps").click();
   g.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
   loadFood(it,r2);loadOverview(it,r4);loadOdii(it,ra);
 }
