@@ -1,5 +1,5 @@
 // Trip Companion service worker: app shell works offline; live data (/api) always goes to the network.
-const CACHE = "tc-shell-v4";
+const CACHE = "tc-shell-v5";
 const SHELL = ["./", "index.html", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png"];
 self.addEventListener("install", (e) => { self.skipWaiting(); e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL))); });
 self.addEventListener("activate", (e) => e.waitUntil(

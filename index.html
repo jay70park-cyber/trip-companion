@@ -36,7 +36,7 @@ main{max-width:560px;margin:0 auto;padding-block:18px 48px;display:flex;flex-dir
 h1{font:700 26px/1.25 var(--display);margin:2px 0 0;text-wrap:balance}
 h2{font:700 18px/1.3 var(--display);margin:0 0 8px;text-wrap:balance}
 h3{font:600 15px var(--body);margin:0 0 6px}
-.lang{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;flex:none}
+.lang{display:flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:8px;overflow:hidden;flex:none}
 .lang button{border:0;border-radius:0;background:transparent;color:var(--ink);padding:7px 11px;font:600 13px var(--body)}
 .lang button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px}
@@ -128,8 +128,7 @@ ul.food li:first-child{border-top:0}
     <div style="display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap;justify-content:flex-end">
     <button type="button" id="install" class="ghost small" hidden data-i="install"></button>
     <div class="lang" role="group" aria-label="Language">
-      <button type="button" id="lang-en" aria-pressed="true">EN</button>
-      <button type="button" id="lang-ko" aria-pressed="false">한국어</button>
+
     </div>
     </div>
   </div>
@@ -230,7 +229,7 @@ const T={
   s2:"Food near the destination",s2none:"No listed restaurants within 1 km.",
   s3:"Walking route",s3btn:"Show walking directions",s3far:"You are more than 3 km away. Walking directions appear when you get closer.",
   s4:"About this place",s4none:"No description available yet.",
-  audioTitle:"Audio guide",officialTitle:"Official description",audioNone:"No audio guide within 120 m of this place.",textOnly:"Text only (no audio yet)",script:"Read the script",odiiCredit:"Audio guide: Korea Tourism Organization (Odii)",install:"Install app",find:"Find",findPh:"Search a place, e.g. Bulguksa, Haeundae",findNone:"No places found. Try another spelling.",agree:"Agree",notNow:"Not now",privacy:"Privacy",terms:"Terms",locTerms:"Location terms",withdraw:"Stop using my location",credits:"Data: Korea Tourism Organization · TMAP · NAVER · Contact: ktrip.help@gmail.com",consentA:"To find places and routes from where you are, K-Trip Companion uses your location for that moment only and does not store it. Please read the ",consentB:" and tap Agree.",noConsent:"Location is off. You can still pick an area to browse.",withdrawn:"Location consent withdrawn. Pick an area to browse.",playGuide:"▶ Play the audio guide",followOn:"Follow me",followOff:"Stop following",whole:"Whole route",tapRoute:"Tap a route to show it on the map.",arrived:n=>"You have arrived at "+n+". See \"About this place\" below.",dest:"Destination",start:"Start",board:"Board at",alight:"get off at",sameStop:"Transfer at the same stop",modes:{WALK:"WALK",BUS:"BUS",SUBWAY:"SUBWAY",EXPRESSBUS:"COACH",TRAIN:"TRAIN",AIRPLANE:"FLIGHT",FERRY:"FERRY"},
+  audioTitle:"Audio guide",officialTitle:"Official description",audioNone:"No audio guide within 120 m of this place.",textOnly:"Text only (no audio yet)",script:"Read the script",odiiCredit:"Audio guide: Korea Tourism Organization (Odii)",install:"Install app",find:"Find",findPh:"Search a place, e.g. Bulguksa, Haeundae",findNone:"No places found. Try another spelling.",agree:"Agree",notNow:"Not now",privacy:"Privacy",terms:"Terms",locTerms:"Location terms",withdraw:"Stop using my location",credits:"Data: Korea Tourism Organization · TMAP · NAVER · Contact: ktrip.help@gmail.com",consentA:"To find places and routes from where you are, K-Trip Companion uses your location for that moment only and does not store it. Please read the ",consentB:" and tap Agree.",noConsent:"Location is off. You can still pick an area to browse.",withdrawn:"Location consent withdrawn. Pick an area to browse.",playGuide:"▶ Play the audio guide",followOn:"Follow me",followOff:"Stop following",whole:"Whole route",tapRoute:"Tap a route to show it on the map.",arrived:n=>"You have arrived at "+n+". See \"About this place\" below.",routeLangNote:"",dest:"Destination",start:"Start",board:"Board at",alight:"get off at",sameStop:"Transfer at the same stop",modes:{WALK:"WALK",BUS:"BUS",SUBWAY:"SUBWAY",EXPRESSBUS:"COACH",TRAIN:"TRAIN",AIRPLANE:"FLIGHT",FERRY:"FERRY"},
   cats:{"":"All",76:"Attractions",temple:"Temples",78:"Culture",85:"Festivals",82:"Food",79:"Shopping",80:"Stay"},food:82},
  ko:{eyebrow:"베타",gps:"내 위치 사용",browse:"둘러볼 지역",
   areaGps:"내 위치",
@@ -252,9 +251,95 @@ const T={
   s2:"도착지 주변 식당",s2none:"1km 안에 등록된 식당이 없습니다.",
   s3:"도보 동선",s3btn:"도보 경로 보기",s3far:"3km 이상 떨어져 있습니다. 가까워지면 도보 경로가 표시됩니다.",
   s4:"장소 소개",s4none:"아직 소개 글이 없습니다.",
-  audioTitle:"오디오 해설",officialTitle:"공식 소개",audioNone:"이 장소 120m 안에 오디오 해설이 없습니다.",textOnly:"대본만 있음 (음성 없음)",script:"대본 보기",odiiCredit:"오디오 해설: 한국관광공사 오디(Odii)",install:"앱 설치",find:"찾기",findPh:"장소 검색 (예: 불국사, 해운대)",findNone:"찾는 장소가 없습니다. 다른 이름으로 검색해 보세요.",agree:"동의",notNow:"나중에",privacy:"개인정보처리방침",terms:"이용약관",locTerms:"위치기반서비스 이용약관",withdraw:"위치 이용 동의 철회",credits:"데이터: 한국관광공사 · TMAP · 네이버 · 문의: ktrip.help@gmail.com",consentA:"현재 위치 주변 장소와 경로를 안내하기 위해 그 순간의 위치만 사용하며 저장하지 않습니다. ",consentB:"을 확인하시고 동의를 눌러주세요.",noConsent:"위치를 쓰지 않습니다. 둘러볼 지역을 골라 계속 이용할 수 있습니다.",withdrawn:"위치 이용 동의를 철회했습니다. 둘러볼 지역을 골라주세요.",playGuide:"▶ 오디오 해설 듣기",followOn:"내 위치 따라가기",followOff:"따라가기 끄기",whole:"전체 경로",tapRoute:"경로를 누르면 지도에 표시됩니다.",arrived:n=>n+"에 도착했습니다. 아래 \"장소 소개\"를 보세요.",dest:"도착지",start:"출발지",board:"승차",alight:"하차",sameStop:"같은 정류장에서 환승",modes:{WALK:"도보",BUS:"버스",SUBWAY:"지하철",EXPRESSBUS:"고속버스",TRAIN:"기차",AIRPLANE:"항공",FERRY:"배"},
+  audioTitle:"오디오 해설",officialTitle:"공식 소개",audioNone:"이 장소 120m 안에 오디오 해설이 없습니다.",textOnly:"대본만 있음 (음성 없음)",script:"대본 보기",odiiCredit:"오디오 해설: 한국관광공사 오디(Odii)",install:"앱 설치",find:"찾기",findPh:"장소 검색 (예: 불국사, 해운대)",findNone:"찾는 장소가 없습니다. 다른 이름으로 검색해 보세요.",agree:"동의",notNow:"나중에",privacy:"개인정보처리방침",terms:"이용약관",locTerms:"위치기반서비스 이용약관",withdraw:"위치 이용 동의 철회",credits:"데이터: 한국관광공사 · TMAP · 네이버 · 문의: ktrip.help@gmail.com",consentA:"현재 위치 주변 장소와 경로를 안내하기 위해 그 순간의 위치만 사용하며 저장하지 않습니다. ",consentB:"을 확인하시고 동의를 눌러주세요.",noConsent:"위치를 쓰지 않습니다. 둘러볼 지역을 골라 계속 이용할 수 있습니다.",withdrawn:"위치 이용 동의를 철회했습니다. 둘러볼 지역을 골라주세요.",playGuide:"▶ 오디오 해설 듣기",followOn:"내 위치 따라가기",followOff:"따라가기 끄기",whole:"전체 경로",tapRoute:"경로를 누르면 지도에 표시됩니다.",arrived:n=>n+"에 도착했습니다. 아래 \"장소 소개\"를 보세요.",routeLangNote:"",dest:"도착지",start:"출발지",board:"승차",alight:"하차",sameStop:"같은 정류장에서 환승",modes:{WALK:"도보",BUS:"버스",SUBWAY:"지하철",EXPRESSBUS:"고속버스",TRAIN:"기차",AIRPLANE:"항공",FERRY:"배"},
   cats:{"":"전체",12:"관광지",temple:"사찰",14:"문화시설",15:"축제",39:"음식점",38:"쇼핑",32:"숙박"},food:39}
 };
+T.ja={...T.en,eyebrow:"ベータ",gps:"現在地を使う",browse:"周辺を見るエリア",areaGps:"現在地",
+  idle:"現在地はまだ取得していません",live:"現在地（リアルタイム）",stopped:"現在地を取得できません",
+  acc:a=>"精度 ± "+a+" m",searchTitle:"周辺スポット",radius:"検索範囲",search:"検索",
+  needPos:"現在地を使うか、エリアを選んでください。",
+  loading:"読み込み中…",none:"この範囲にスポットがありません。範囲を広げてください。",found:n=>n+"件・近い順",
+  guide:"ガイド開始",map:"地図",
+  netErr:"通信に失敗しました。時間をおいて再度お試しください。",apiErr:m=>"エラー: "+m,
+  denied:"位置情報の許可がありません。ブラウザの設定でこのサイトの位置情報を許可してください。",
+  unavail:"現在地を取得できません。端末の位置情報(GPS)をオンにしてください。",timeout:"位置情報がタイムアウトしました。窓の近くで再度お試しください。",
+  from:"出発地",fromGps:"現在地",fromArea:a=>a+"（選択エリア）",
+  s1:"行き方",s1btn:"公共交通の経路を探す",s1none:"公共交通の経路がありません。徒歩圏内の可能性があります。",
+  cors:"経路サービスが応答しませんでした。時間をおいて再度お試しください。",
+  min:"分",transfers:n=>"乗換"+n+"回",walk:"徒歩",fare:"運賃",stops:n=>n+"駅/停留所",
+  handoff:"ナビを開く",naver:"NAVER Map",kakao:"Kakao Map",
+  s2:"目的地周辺の飲食店",s2none:"1km以内に登録された飲食店はありません。",
+  s3:"徒歩ルート",s3btn:"徒歩ルートを表示",s3far:"3km以上離れています。近づくと徒歩ルートが表示されます。",
+  s4:"スポット紹介",s4none:"紹介文はまだありません。",
+  audioTitle:"音声ガイド",officialTitle:"公式紹介",audioNone:"このスポットの120m以内に音声ガイドはありません。",textOnly:"テキストのみ（音声なし）",script:"台本を読む",odiiCredit:"音声ガイド: 韓国観光公社（Odii）",
+  install:"アプリを追加",find:"検索",findPh:"スポットを検索（例: 仏国寺、海雲台）",findNone:"見つかりません。別の表記で検索してください。",
+  agree:"同意する",notNow:"後で",privacy:"プライバシー",terms:"利用規約",locTerms:"位置情報サービス規約",withdraw:"位置情報の利用をやめる",
+  credits:"データ: 韓国観光公社 · TMAP · NAVER · お問い合わせ: ktrip.help@gmail.com",
+  consentA:"現在地周辺のスポットや経路を案内するため、その時点の位置情報だけを使い、保存はしません。",consentB:"をご確認のうえ「同意する」を押してください。",
+  noConsent:"位置情報は使いません。エリアを選んで引き続きご利用いただけます。",withdrawn:"位置情報の利用同意を取り消しました。エリアを選んでください。",
+  playGuide:"▶ 音声ガイドを再生",followOn:"現在地を追従",followOff:"追従をやめる",whole:"ルート全体",tapRoute:"経路をタップすると地図に表示されます。",
+  arrived:n=>n+"に到着しました。下の「スポット紹介」をご覧ください。",dest:"目的地",start:"出発地",board:"乗車",alight:"下車",sameStop:"同じ停留所で乗換",
+  modes:{WALK:"徒歩",BUS:"バス",SUBWAY:"地下鉄",EXPRESSBUS:"高速バス",TRAIN:"鉄道",AIRPLANE:"飛行機",FERRY:"フェリー"},
+  cats:{"":"すべて",76:"観光地",temple:"寺院",78:"文化施設",85:"祭り",82:"グルメ",79:"ショッピング",80:"宿泊"},food:82,
+  routeLangNote:"経路の駅名・路線名は英語で表示されます。"};
+T.zhs={...T.en,eyebrow:"测试版",gps:"使用我的位置",browse:"浏览周边区域",areaGps:"我的位置",
+  idle:"尚未获取位置",live:"我的位置（实时）",stopped:"无法获取位置",
+  acc:a=>"精度 ± "+a+" 米",searchTitle:"周边景点",radius:"搜索范围",search:"搜索",
+  needPos:"请使用我的位置或选择一个区域。",
+  loading:"加载中…",none:"此范围内没有景点，请扩大范围。",found:n=>n+" 个地点，由近到远",
+  guide:"开始导览",map:"地图",
+  netErr:"请求失败，请稍后再试。",apiErr:m=>"错误: "+m,
+  denied:"未获得位置权限。请在浏览器设置中允许本网站使用位置。",
+  unavail:"无法获取位置。请确认手机定位(GPS)已开启。",timeout:"定位超时。请靠近窗户后再试。",
+  from:"出发地",fromGps:"当前位置",fromArea:a=>a+"（所选区域）",
+  s1:"如何前往",s1btn:"查找公共交通路线",s1none:"没有公共交通路线，目的地可能在步行范围内。",
+  cors:"路线服务没有响应，请稍后再试。",
+  min:"分钟",transfers:n=>"换乘 "+n+" 次",walk:"步行",fare:"票价",stops:n=>n+" 站",
+  handoff:"打开导航",naver:"NAVER Map",kakao:"Kakao Map",
+  s2:"目的地附近餐厅",s2none:"1公里内没有登记的餐厅。",
+  s3:"步行路线",s3btn:"显示步行路线",s3far:"距离超过3公里，靠近后会显示步行路线。",
+  s4:"景点介绍",s4none:"暂无介绍。",
+  audioTitle:"语音导览",officialTitle:"官方介绍",audioNone:"此地点120米内没有语音导览。",textOnly:"仅有文字（暂无语音）",script:"查看讲解稿",odiiCredit:"语音导览: 韩国观光公社（Odii）",
+  install:"安装应用",find:"查找",findPh:"搜索地点（如: 佛国寺、海云台）",findNone:"未找到，请换个名称搜索。",
+  agree:"同意",notNow:"以后再说",privacy:"隐私政策",terms:"使用条款",locTerms:"位置服务条款",withdraw:"停止使用我的位置",
+  credits:"数据: 韩国观光公社 · TMAP · NAVER · 联系: ktrip.help@gmail.com",
+  consentA:"为了介绍您周边的景点和路线，本应用只使用当下的位置，不会保存。请阅读",consentB:"后点击“同意”。",
+  noConsent:"不使用位置。您仍可选择区域继续浏览。",withdrawn:"已撤回位置使用同意，请选择区域。",
+  playGuide:"▶ 播放语音导览",followOn:"跟随我的位置",followOff:"停止跟随",whole:"整条路线",tapRoute:"点击路线即可在地图上显示。",
+  arrived:n=>"您已到达"+n+"。请查看下方“景点介绍”。",dest:"目的地",start:"出发地",board:"上车",alight:"下车",sameStop:"同一站点换乘",
+  modes:{WALK:"步行",BUS:"公交",SUBWAY:"地铁",EXPRESSBUS:"长途巴士",TRAIN:"火车",AIRPLANE:"飞机",FERRY:"渡轮"},
+  cats:{"":"全部",76:"景点",temple:"寺庙",78:"文化设施",85:"节庆",82:"美食",79:"购物",80:"住宿"},food:82,
+  routeLangNote:"路线中的站名和线路名以英文显示。"};
+T.zht={...T.zhs,eyebrow:"測試版",gps:"使用我的位置",browse:"瀏覽周邊區域",areaGps:"我的位置",
+  idle:"尚未取得位置",live:"我的位置（即時）",stopped:"無法取得位置",
+  acc:a=>"精確度 ± "+a+" 公尺",searchTitle:"周邊景點",radius:"搜尋範圍",search:"搜尋",
+  needPos:"請使用我的位置或選擇一個區域。",
+  loading:"載入中…",none:"此範圍內沒有景點，請擴大範圍。",found:n=>n+" 個地點，由近到遠",
+  guide:"開始導覽",map:"地圖",
+  netErr:"請求失敗，請稍後再試。",apiErr:m=>"錯誤: "+m,
+  denied:"未取得位置權限。請在瀏覽器設定中允許本網站使用位置。",
+  unavail:"無法取得位置。請確認手機定位(GPS)已開啟。",timeout:"定位逾時。請靠近窗戶後再試。",
+  from:"出發地",fromGps:"目前位置",fromArea:a=>a+"（所選區域）",
+  s1:"如何前往",s1btn:"查詢大眾運輸路線",s1none:"沒有大眾運輸路線，目的地可能在步行範圍內。",
+  cors:"路線服務沒有回應，請稍後再試。",
+  min:"分鐘",transfers:n=>"轉乘 "+n+" 次",walk:"步行",fare:"票價",stops:n=>n+" 站",
+  handoff:"開啟導航",
+  s2:"目的地附近餐廳",s2none:"1公里內沒有登錄的餐廳。",
+  s3:"步行路線",s3btn:"顯示步行路線",s3far:"距離超過3公里，靠近後會顯示步行路線。",
+  s4:"景點介紹",s4none:"暫無介紹。",
+  audioTitle:"語音導覽",officialTitle:"官方介紹",audioNone:"此地點120公尺內沒有語音導覽。",textOnly:"僅有文字（暫無語音）",script:"查看解說稿",odiiCredit:"語音導覽: 韓國觀光公社（Odii）",
+  install:"安裝應用程式",find:"查詢",findPh:"搜尋地點（如: 佛國寺、海雲臺）",findNone:"找不到，請換個名稱搜尋。",
+  agree:"同意",notNow:"稍後再說",privacy:"隱私權政策",terms:"使用條款",locTerms:"位置服務條款",withdraw:"停止使用我的位置",
+  credits:"資料: 韓國觀光公社 · TMAP · NAVER · 聯絡: ktrip.help@gmail.com",
+  consentA:"為了介紹您周邊的景點和路線，本應用程式只使用當下的位置，不會儲存。請閱讀",consentB:"後點選「同意」。",
+  noConsent:"不使用位置。您仍可選擇區域繼續瀏覽。",withdrawn:"已撤回位置使用同意，請選擇區域。",
+  playGuide:"▶ 播放語音導覽",followOn:"跟隨我的位置",followOff:"停止跟隨",whole:"整條路線",tapRoute:"點選路線即可在地圖上顯示。",
+  arrived:n=>"您已抵達"+n+"。請查看下方「景點介紹」。",dest:"目的地",start:"出發地",board:"上車",alight:"下車",sameStop:"同一站轉乘",
+  modes:{WALK:"步行",BUS:"公車",SUBWAY:"地鐵",EXPRESSBUS:"客運",TRAIN:"火車",AIRPLANE:"飛機",FERRY:"渡輪"},
+  cats:{"":"全部",76:"景點",temple:"寺廟",78:"文化設施",85:"節慶",82:"美食",79:"購物",80:"住宿"},food:82,
+  routeLangNote:"路線中的站名和路線名以英文顯示。"};
+const LANGS=[["en","EN","en"],["ko","한국어","ko"],["ja","日本語","ja"],["zhs","简体","zh-Hans"],["zht","繁體","zh-Hant"]];
+const API_LANG={en:"en",ko:"ko",ja:"ja",zhs:"zh",zht:"zh"};
 const AREAS=[
   {id:"gps"},
   {g:"seoul",id:"gyeongbok",en:"Gyeongbokgung Palace",ko:"경복궁",lat:37.5796,lng:126.9770},
@@ -294,14 +379,17 @@ const AREAS=[
   {g:"jeju",id:"seogwipo",en:"Seogwipo",ko:"서귀포",lat:33.2470,lng:126.5640}
 ];
 const REGIONS={en:{seoul:"Seoul",gyeonggi:"Gyeonggi & Incheon",gangwon:"Gangwon",chungcheong:"Chungcheong",jeolla:"Jeolla",gyeongsang:"Gyeongsang & Busan",jeju:"Jeju",custom:"Searched"},
-  ko:{seoul:"서울",gyeonggi:"경기·인천",gangwon:"강원",chungcheong:"충청",jeolla:"전라",gyeongsang:"경상·부산",jeju:"제주",custom:"검색한 곳"}};
+  ko:{seoul:"서울",gyeonggi:"경기·인천",gangwon:"강원",chungcheong:"충청",jeolla:"전라",gyeongsang:"경상·부산",jeju:"제주",custom:"검색한 곳"},
+  ja:{seoul:"ソウル",gyeonggi:"京畿・仁川",gangwon:"江原",chungcheong:"忠清",jeolla:"全羅",gyeongsang:"慶尚・釜山",jeju:"済州",custom:"検索したスポット"},
+  zhs:{seoul:"首尔",gyeonggi:"京畿·仁川",gangwon:"江原",chungcheong:"忠清",jeolla:"全罗",gyeongsang:"庆尚·釜山",jeju:"济州",custom:"搜索的地点"},
+  zht:{seoul:"首爾",gyeonggi:"京畿·仁川",gangwon:"江原",chungcheong:"忠清",jeolla:"全羅",gyeongsang:"慶尚·釜山",jeju:"濟州",custom:"搜尋的地點"}};
 let customArea=null;try{customArea=JSON.parse(store.get("custom_area")||"null");}catch(e){}
-const SERVICE={en:"EngService2",ko:"KorService2"};
+const SERVICE={en:"EngService2",ko:"KorService2",ja:"JpnService2",zhs:"ChsService2",zht:"ChtService2"};
 const $=id=>document.getElementById(id);
 const store={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
 const el=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e;};
 
-let lang=store.get("lang")||"en", gpsPos=null, gpsState="idle", watchId=null, cat="", lastItems=null, current=null;
+let lang=(["en","ko","ja","zhs","zht"].includes(store.get("lang"))?store.get("lang"):"en"), gpsPos=null, gpsState="idle", watchId=null, cat="", lastItems=null, current=null;
 let areaId=store.get("area")||"hwaseong";
 
 function t(k){return T[lang][k]}
@@ -314,18 +402,18 @@ function fmtD(m){return m<1000?Math.round(m)+" m":(m/1000).toFixed(1)+" km";}
 function show(id,msg){$(id).textContent=msg||"";$(id).hidden=!msg;}
 
 function applyLang(){
-  document.documentElement.lang=lang;
-  $("lang-en").setAttribute("aria-pressed",lang==="en");$("lang-ko").setAttribute("aria-pressed",lang==="ko");
+  document.documentElement.lang=(LANGS.find(x=>x[0]===lang)||LANGS[0])[2];
+  document.querySelectorAll(".lang button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.lang===lang)));
   document.querySelectorAll("[data-i]").forEach(e=>{e.textContent=t(e.dataset.i)});
   $("area").innerHTML="";
   const groups={};
   for(const a of AREAS){
-    const o=el("option",null,a.id==="gps"?t("areaGps"):a[lang]);o.value=a.id;
+    const o=el("option",null,a.id==="gps"?t("areaGps"):(a[lang]||a.en));o.value=a.id;
     if(!a.g){$("area").append(o);continue;}
-    if(!groups[a.g]){groups[a.g]=document.createElement("optgroup");groups[a.g].label=REGIONS[lang][a.g];}
+    if(!groups[a.g]){groups[a.g]=document.createElement("optgroup");groups[a.g].label=(REGIONS[lang]||REGIONS.en)[a.g];}
     groups[a.g].append(o);
   }
-  if(customArea){const og=document.createElement("optgroup");og.label=REGIONS[lang].custom;const o=el("option",null,customArea.name);o.value="custom";og.append(o);$("area").append(og);}
+  if(customArea){const og=document.createElement("optgroup");og.label=(REGIONS[lang]||REGIONS.en).custom;const o=el("option",null,customArea.name);o.value="custom";og.append(o);$("area").append(og);}
   for(const g of Object.keys(REGIONS.en))if(groups[g])$("area").append(groups[g]);
   if(!findArea(areaId)&&areaId!=="gps")areaId="hwaseong";
   $("area").value=areaId;
@@ -339,13 +427,14 @@ function renderStatus(){
 }
 function renderChips(){
   $("chips").innerHTML="";const cats=t("cats");if(!(cat in cats))cat="";
-  for(const [id,name] of Object.entries(cats)){
+  const order=lang==="ko"?["","12","temple","14","15","39","38","32"]:["","76","temple","78","85","82","79","80"];
+  for(const id of order){const name=cats[id];if(!name)continue;
     const b=el("button",null,name);b.type="button";b.setAttribute("aria-pressed",String(id===cat));
     b.onclick=()=>{cat=id;renderChips();search();};$("chips").append(b);
   }
 }
 function setLang(l){lang=l;store.set("lang",l);if(window.naver&&window.naver.maps){location.reload();return;}lastItems=null;$("list").innerHTML="";$("guide").hidden=true;applyLang();search();}
-$("lang-en").onclick=()=>setLang("en");$("lang-ko").onclick=()=>setLang("ko");
+for(const [code,label] of LANGS){const b=el("button",null,label);b.type="button";b.dataset.lang=code;b.setAttribute("aria-pressed","false");b.onclick=()=>setLang(code);document.querySelector(".lang").append(b);}
 $("placeForm").onsubmit=async(e)=>{
   e.preventDefault();
   const q=$("placeQ").value.trim();const box=$("placePicks");
@@ -441,7 +530,7 @@ async function search(){
   $("count").textContent=t("loading");$("list").innerHTML="";$("search").disabled=true;
   const extra={numOfRows:"30",pageNo:"1",arrange:"E",mapX:String(pos.lng),mapY:String(pos.lat),radius:$("radius").value};
   const temple=cat==="temple";
-  if(temple){extra.contentTypeId=lang==="en"?"76":"12";extra.numOfRows="200";}
+  if(temple){extra.contentTypeId=lang==="ko"?"12":"76";extra.numOfRows="200";}
   else if(cat)extra.contentTypeId=cat;
   try{
     let items=await tour("locationBasedList2",extra);
@@ -457,6 +546,7 @@ function isTemple(it){
   if(/A02010800/.test(codes))return true;
   const ttl=it.title||"";
   if(/\btemple\b|hermitage/i.test(ttl))return true;
+  if(/[寺庵]/.test(ttl))return true;
   const ko=(ttl.match(/\(([^)]*[\uac00-\ud7a3][^)]*)\)\s*$/)||[,ttl])[1].trim();
   return /(사|암|사찰|선원)(\s*\([^)]*\))?$/.test(ko)&&!/(회사|대사관|공사|기념사|신문사|출판사|여행사|검사|조사)$/.test(ko);
 }
@@ -536,7 +626,7 @@ async function loadFood(it,box){
   }catch(e){box.className="msg";box.textContent=e&&e.api?t("apiErr")(e.api):t("netErr");}
 }
 /* ---------- Odii audio guide (KTO) ---------- */
-function odii(op,extra){return dataGo("Odii",op,{langCode:lang==="en"?"en":"ko",...extra});}
+function odii(op,extra){return dataGo("Odii",op,{langCode:API_LANG[lang],...extra});}
 const ODII_RADIUS=120;
 async function loadOdii(it,box){
   try{
@@ -605,7 +695,7 @@ function busKind(kind,mode){
 async function loadTransit(it,o,box){
   box.innerHTML="";box.append(el("div","loading",t("loading")));
   try{
-    const d=await tmap("/transit/routes",{startX:String(o.lng),startY:String(o.lat),endX:String(it.mapx),endY:String(it.mapy),lang:lang==="en"?1:0,format:"json",count:3});
+    const d=await tmap("/transit/routes",{startX:String(o.lng),startY:String(o.lat),endX:String(it.mapx),endY:String(it.mapy),lang:lang==="ko"?0:1,format:"json",count:3});
     box.innerHTML="";
     if(d.result&&d.result.status&&!(d.metaData)){box.append(el("div","meta",d.result.message||t("s1none")));return;}
     const its=(d.metaData&&d.metaData.plan&&d.metaData.plan.itineraries)||[];
@@ -651,14 +741,14 @@ async function loadTransit(it,o,box){
       card.append(ul);box.append(card);
     }
     if(cards[0]){cards[0].classList.add("sel");drawItinerary(its[0]);}
-    box.prepend(el("div","meta",t("tapRoute")));
+    box.prepend(el("div","meta",t("tapRoute")+(t("routeLangNote")?" "+t("routeLangNote"):"")));
   }catch(e){box.innerHTML="";box.append(el("div","msg",e&&e.api?t("apiErr")(e.api):t("netErr")));}
 }
 async function loadWalk(it,o,box){
   box.innerHTML="";box.append(el("div","loading",t("loading")));
   try{
     const d=await tmap("/tmap/routes/pedestrian?version=1",{startX:o.lng,startY:o.lat,endX:+it.mapx,endY:+it.mapy,
-      startName:encodeURIComponent(lang==="en"?"Start":"출발"),endName:encodeURIComponent(it.title||"dest"),reqCoordType:"WGS84GEO",resCoordType:"WGS84GEO"});
+      startName:encodeURIComponent(lang==="ko"?"출발":"Start"),endName:encodeURIComponent(it.title||"dest"),reqCoordType:"WGS84GEO",resCoordType:"WGS84GEO"});
     box.innerHTML="";
     const f=d.features||[];const p0=f[0]&&f[0].properties;
     if(p0&&p0.totalDistance!=null)box.append(el("div","meta",fmtD(p0.totalDistance)+" · "+Math.round(p0.totalTime/60)+" "+t("min")));
@@ -681,7 +771,7 @@ function loadNaver(){
   naverReady=new Promise(res=>{
     window.navermap_authFailure=()=>{naverFailed=true;showMapNote(t("naverFail"));if(engine==="naver"&&current){initMap(current,originLL?{lat:originLL[0],lng:originLL[1]}:origin());}};
     const sc=document.createElement("script");
-    sc.src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId="+encodeURIComponent(id)+"&language="+(lang==="en"?"en":"ko");
+    sc.src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId="+encodeURIComponent(id)+"&language="+API_LANG[lang];
     sc.onload=()=>res(!!(window.naver&&window.naver.maps));sc.onerror=()=>res(false);
     document.head.appendChild(sc);
   });
