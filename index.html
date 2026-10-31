@@ -26,6 +26,7 @@
   --accent:#7fb8a5; --accent-ink:#0f1a16; --chip:#2a3035; --warn:#e48b6f;
   --bus:#7fb0e6; --subway:#c3a1ea; --walk:#9aa0a4; color-scheme:dark}}
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html{padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--body);
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
@@ -72,6 +73,12 @@ ol.places>li:first-child{border-top:0}
 details summary{cursor:pointer;font-size:14px;font-weight:600}
 /* guide */
 #guide{border-color:var(--accent)}
+ul.picks{list-style:none;margin:0;padding:0;border:1px solid var(--line);border-radius:8px;max-height:260px;overflow:auto}
+ul.picks li{border-top:1px solid var(--line)}
+ul.picks li:first-child{border-top:0}
+ul.picks button{all:unset;display:block;width:100%;box-sizing:border-box;padding:10px 12px;cursor:pointer}
+ul.picks button:focus-visible{outline:3px solid var(--accent);outline-offset:-3px}
+ul.picks .a{font-size:12px;color:var(--muted)}
 .consent{margin-top:12px;padding:12px;border:1px solid var(--accent);border-radius:8px;font-size:14px}
 .consent p{margin:0;max-width:65ch}
 .foot{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted);padding-top:4px}
@@ -139,6 +146,11 @@ ul.food li:first-child{border-top:0}
         <label for="area" data-i="browse"></label>
         <select id="area"></select>
       </div>
+      <form id="placeForm" style="grid-column:1/-1;display:flex;gap:8px" autocomplete="off">
+        <input id="placeQ" type="search" enterkeyhint="search" style="font-family:var(--body)">
+        <button type="submit" id="placeGo" class="ghost" style="flex:none" data-i="find"></button>
+      </form>
+      <ul class="picks" id="placePicks" hidden style="grid-column:1/-1"></ul>
     </div>
     <div class="consent" id="consent" hidden>
       <p id="consentText"></p>
@@ -218,7 +230,7 @@ const T={
   s2:"Food near the destination",s2none:"No listed restaurants within 1 km.",
   s3:"Walking route",s3btn:"Show walking directions",s3far:"You are more than 3 km away. Walking directions appear when you get closer.",
   s4:"About this place",s4none:"No description available yet.",
-  audioTitle:"Audio guide",officialTitle:"Official description",audioNone:"No audio guide within 120 m of this place.",textOnly:"Text only (no audio yet)",script:"Read the script",odiiCredit:"Audio guide: Korea Tourism Organization (Odii)",install:"Install app",agree:"Agree",notNow:"Not now",privacy:"Privacy",terms:"Terms",locTerms:"Location terms",withdraw:"Stop using my location",credits:"Data: Korea Tourism Organization · TMAP · NAVER · Contact: ktrip.help@gmail.com",consentA:"To find places and routes from where you are, K-Trip Companion uses your location for that moment only and does not store it. Please read the ",consentB:" and tap Agree.",noConsent:"Location is off. You can still pick an area to browse.",withdrawn:"Location consent withdrawn. Pick an area to browse.",playGuide:"▶ Play the audio guide",followOn:"Follow me",followOff:"Stop following",whole:"Whole route",tapRoute:"Tap a route to show it on the map.",arrived:n=>"You have arrived at "+n+". See \"About this place\" below.",dest:"Destination",start:"Start",board:"Board at",alight:"get off at",sameStop:"Transfer at the same stop",modes:{WALK:"WALK",BUS:"BUS",SUBWAY:"SUBWAY",EXPRESSBUS:"COACH",TRAIN:"TRAIN",AIRPLANE:"FLIGHT",FERRY:"FERRY"},
+  audioTitle:"Audio guide",officialTitle:"Official description",audioNone:"No audio guide within 120 m of this place.",textOnly:"Text only (no audio yet)",script:"Read the script",odiiCredit:"Audio guide: Korea Tourism Organization (Odii)",install:"Install app",find:"Find",findPh:"Search a place, e.g. Bulguksa, Haeundae",findNone:"No places found. Try another spelling.",agree:"Agree",notNow:"Not now",privacy:"Privacy",terms:"Terms",locTerms:"Location terms",withdraw:"Stop using my location",credits:"Data: Korea Tourism Organization · TMAP · NAVER · Contact: ktrip.help@gmail.com",consentA:"To find places and routes from where you are, K-Trip Companion uses your location for that moment only and does not store it. Please read the ",consentB:" and tap Agree.",noConsent:"Location is off. You can still pick an area to browse.",withdrawn:"Location consent withdrawn. Pick an area to browse.",playGuide:"▶ Play the audio guide",followOn:"Follow me",followOff:"Stop following",whole:"Whole route",tapRoute:"Tap a route to show it on the map.",arrived:n=>"You have arrived at "+n+". See \"About this place\" below.",dest:"Destination",start:"Start",board:"Board at",alight:"get off at",sameStop:"Transfer at the same stop",modes:{WALK:"WALK",BUS:"BUS",SUBWAY:"SUBWAY",EXPRESSBUS:"COACH",TRAIN:"TRAIN",AIRPLANE:"FLIGHT",FERRY:"FERRY"},
   cats:{"":"All",76:"Attractions",temple:"Temples",78:"Culture",85:"Festivals",82:"Food",79:"Shopping",80:"Stay"},food:82},
  ko:{eyebrow:"베타",gps:"내 위치 사용",browse:"둘러볼 지역",
   areaGps:"내 위치",
@@ -240,15 +252,50 @@ const T={
   s2:"도착지 주변 식당",s2none:"1km 안에 등록된 식당이 없습니다.",
   s3:"도보 동선",s3btn:"도보 경로 보기",s3far:"3km 이상 떨어져 있습니다. 가까워지면 도보 경로가 표시됩니다.",
   s4:"장소 소개",s4none:"아직 소개 글이 없습니다.",
-  audioTitle:"오디오 해설",officialTitle:"공식 소개",audioNone:"이 장소 120m 안에 오디오 해설이 없습니다.",textOnly:"대본만 있음 (음성 없음)",script:"대본 보기",odiiCredit:"오디오 해설: 한국관광공사 오디(Odii)",install:"앱 설치",agree:"동의",notNow:"나중에",privacy:"개인정보처리방침",terms:"이용약관",locTerms:"위치기반서비스 이용약관",withdraw:"위치 이용 동의 철회",credits:"데이터: 한국관광공사 · TMAP · 네이버 · 문의: ktrip.help@gmail.com",consentA:"현재 위치 주변 장소와 경로를 안내하기 위해 그 순간의 위치만 사용하며 저장하지 않습니다. ",consentB:"을 확인하시고 동의를 눌러주세요.",noConsent:"위치를 쓰지 않습니다. 둘러볼 지역을 골라 계속 이용할 수 있습니다.",withdrawn:"위치 이용 동의를 철회했습니다. 둘러볼 지역을 골라주세요.",playGuide:"▶ 오디오 해설 듣기",followOn:"내 위치 따라가기",followOff:"따라가기 끄기",whole:"전체 경로",tapRoute:"경로를 누르면 지도에 표시됩니다.",arrived:n=>n+"에 도착했습니다. 아래 \"장소 소개\"를 보세요.",dest:"도착지",start:"출발지",board:"승차",alight:"하차",sameStop:"같은 정류장에서 환승",modes:{WALK:"도보",BUS:"버스",SUBWAY:"지하철",EXPRESSBUS:"고속버스",TRAIN:"기차",AIRPLANE:"항공",FERRY:"배"},
+  audioTitle:"오디오 해설",officialTitle:"공식 소개",audioNone:"이 장소 120m 안에 오디오 해설이 없습니다.",textOnly:"대본만 있음 (음성 없음)",script:"대본 보기",odiiCredit:"오디오 해설: 한국관광공사 오디(Odii)",install:"앱 설치",find:"찾기",findPh:"장소 검색 (예: 불국사, 해운대)",findNone:"찾는 장소가 없습니다. 다른 이름으로 검색해 보세요.",agree:"동의",notNow:"나중에",privacy:"개인정보처리방침",terms:"이용약관",locTerms:"위치기반서비스 이용약관",withdraw:"위치 이용 동의 철회",credits:"데이터: 한국관광공사 · TMAP · 네이버 · 문의: ktrip.help@gmail.com",consentA:"현재 위치 주변 장소와 경로를 안내하기 위해 그 순간의 위치만 사용하며 저장하지 않습니다. ",consentB:"을 확인하시고 동의를 눌러주세요.",noConsent:"위치를 쓰지 않습니다. 둘러볼 지역을 골라 계속 이용할 수 있습니다.",withdrawn:"위치 이용 동의를 철회했습니다. 둘러볼 지역을 골라주세요.",playGuide:"▶ 오디오 해설 듣기",followOn:"내 위치 따라가기",followOff:"따라가기 끄기",whole:"전체 경로",tapRoute:"경로를 누르면 지도에 표시됩니다.",arrived:n=>n+"에 도착했습니다. 아래 \"장소 소개\"를 보세요.",dest:"도착지",start:"출발지",board:"승차",alight:"하차",sameStop:"같은 정류장에서 환승",modes:{WALK:"도보",BUS:"버스",SUBWAY:"지하철",EXPRESSBUS:"고속버스",TRAIN:"기차",AIRPLANE:"항공",FERRY:"배"},
   cats:{"":"전체",12:"관광지",temple:"사찰",14:"문화시설",15:"축제",39:"음식점",38:"쇼핑",32:"숙박"},food:39}
 };
 const AREAS=[
   {id:"gps"},
-  {id:"hwaseong",en:"Hwaseong Haenggung, Suwon",ko:"수원 화성행궁",lat:37.2819,lng:127.0136},
-  {id:"gyeongbok",en:"Gyeongbokgung, Seoul",ko:"서울 경복궁",lat:37.5796,lng:126.9770},
-  {id:"jeonju",en:"Jeonju Hanok Village",ko:"전주 한옥마을",lat:35.8150,lng:127.1530}
+  {g:"seoul",id:"gyeongbok",en:"Gyeongbokgung Palace",ko:"경복궁",lat:37.5796,lng:126.9770},
+  {g:"seoul",id:"changdeok",en:"Changdeokgung Palace",ko:"창덕궁",lat:37.5794,lng:126.9910},
+  {g:"seoul",id:"bukchon",en:"Bukchon Hanok Village",ko:"북촌 한옥마을",lat:37.5826,lng:126.9830},
+  {g:"seoul",id:"insadong",en:"Insadong",ko:"인사동",lat:37.5740,lng:126.9850},
+  {g:"seoul",id:"myeongdong",en:"Myeong-dong",ko:"명동",lat:37.5636,lng:126.9850},
+  {g:"seoul",id:"namsan",en:"N Seoul Tower, Namsan",ko:"남산서울타워",lat:37.5512,lng:126.9882},
+  {g:"seoul",id:"ddp",en:"Dongdaemun (DDP)",ko:"동대문 DDP",lat:37.5665,lng:127.0092},
+  {g:"seoul",id:"hongdae",en:"Hongdae",ko:"홍대",lat:37.5563,lng:126.9236},
+  {g:"seoul",id:"gangnam",en:"Gangnam / COEX",ko:"강남 코엑스",lat:37.5116,lng:127.0595},
+  {g:"seoul",id:"jamsil",en:"Jamsil / Lotte World",ko:"잠실 롯데월드",lat:37.5125,lng:127.1025},
+  {g:"gyeonggi",id:"hwaseong",en:"Hwaseong Haenggung, Suwon",ko:"수원 화성행궁",lat:37.2819,lng:127.0136},
+  {g:"gyeonggi",id:"folkvillage",en:"Korean Folk Village, Yongin",ko:"용인 한국민속촌",lat:37.2588,lng:127.1180},
+  {g:"gyeonggi",id:"everland",en:"Everland, Yongin",ko:"용인 에버랜드",lat:37.2940,lng:127.2020},
+  {g:"gyeonggi",id:"imjingak",en:"Imjingak (DMZ), Paju",ko:"파주 임진각",lat:37.8895,lng:126.7400},
+  {g:"gyeonggi",id:"chinatown",en:"Incheon Chinatown",ko:"인천 차이나타운",lat:37.4757,lng:126.6183},
+  {g:"gyeonggi",id:"icn",en:"Incheon Airport",ko:"인천국제공항",lat:37.4602,lng:126.4407},
+  {g:"gangwon",id:"nami",en:"Nami Island",ko:"남이섬",lat:37.7906,lng:127.5254},
+  {g:"gangwon",id:"gangneung",en:"Gangneung (Gyeongpo)",ko:"강릉 경포",lat:37.7956,lng:128.8960},
+  {g:"gangwon",id:"sokcho",en:"Sokcho & Seoraksan",ko:"속초·설악산",lat:38.2045,lng:128.5903},
+  {g:"chungcheong",id:"gongju",en:"Gongju (Baekje)",ko:"공주 공산성",lat:36.4628,lng:127.1250},
+  {g:"chungcheong",id:"buyeo",en:"Buyeo (Baekje)",ko:"부여",lat:36.2780,lng:126.9100},
+  {g:"jeolla",id:"jeonju",en:"Jeonju Hanok Village",ko:"전주 한옥마을",lat:35.8150,lng:127.1530},
+  {g:"jeolla",id:"suncheon",en:"Suncheon Bay",ko:"순천만",lat:34.8870,lng:127.5090},
+  {g:"jeolla",id:"yeosu",en:"Yeosu",ko:"여수",lat:34.7442,lng:127.7370},
+  {g:"gyeongsang",id:"busan_haeundae",en:"Busan Haeundae",ko:"부산 해운대",lat:35.1587,lng:129.1604},
+  {g:"gyeongsang",id:"busan_gamcheon",en:"Busan Gamcheon Culture Village",ko:"부산 감천문화마을",lat:35.0975,lng:129.0106},
+  {g:"gyeongsang",id:"busan_nampo",en:"Busan Nampo-dong / Jagalchi",ko:"부산 남포동·자갈치",lat:35.0966,lng:129.0306},
+  {g:"gyeongsang",id:"gyeongju",en:"Gyeongju (Daereungwon)",ko:"경주 대릉원",lat:35.8380,lng:129.2120},
+  {g:"gyeongsang",id:"bulguksa",en:"Gyeongju Bulguksa Temple",ko:"경주 불국사",lat:35.7900,lng:129.3320},
+  {g:"gyeongsang",id:"hahoe",en:"Andong Hahoe Village",ko:"안동 하회마을",lat:36.5390,lng:128.5180},
+  {g:"gyeongsang",id:"haeinsa",en:"Haeinsa Temple",ko:"해인사",lat:35.8010,lng:128.0980},
+  {g:"gyeongsang",id:"daegu",en:"Daegu (Dongseongno)",ko:"대구 동성로",lat:35.8690,lng:128.5950},
+  {g:"jeju",id:"jeju_city",en:"Jeju City",ko:"제주시",lat:33.4996,lng:126.5312},
+  {g:"jeju",id:"seongsan",en:"Seongsan Ilchulbong",ko:"성산일출봉",lat:33.4580,lng:126.9420},
+  {g:"jeju",id:"seogwipo",en:"Seogwipo",ko:"서귀포",lat:33.2470,lng:126.5640}
 ];
+const REGIONS={en:{seoul:"Seoul",gyeonggi:"Gyeonggi & Incheon",gangwon:"Gangwon",chungcheong:"Chungcheong",jeolla:"Jeolla",gyeongsang:"Gyeongsang & Busan",jeju:"Jeju",custom:"Searched"},
+  ko:{seoul:"서울",gyeonggi:"경기·인천",gangwon:"강원",chungcheong:"충청",jeolla:"전라",gyeongsang:"경상·부산",jeju:"제주",custom:"검색한 곳"}};
+let customArea=null;try{customArea=JSON.parse(store.get("custom_area")||"null");}catch(e){}
 const SERVICE={en:"EngService2",ko:"KorService2"};
 const $=id=>document.getElementById(id);
 const store={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
@@ -258,8 +305,9 @@ let lang=store.get("lang")||"en", gpsPos=null, gpsState="idle", watchId=null, ca
 let areaId=store.get("area")||"hwaseong";
 
 function t(k){return T[lang][k]}
-function areaPos(){if(areaId==="gps")return gpsPos;const a=AREAS.find(x=>x.id===areaId);return a?{lat:a.lat,lng:a.lng}:null;}
-function areaName(){const a=AREAS.find(x=>x.id===areaId);return areaId==="gps"?t("areaGps"):a[lang];}
+function findArea(id){if(id==="custom")return customArea;return AREAS.find(x=>x.id===id);}
+function areaPos(){if(areaId==="gps")return gpsPos;const a=findArea(areaId);return a?{lat:a.lat,lng:a.lng}:null;}
+function areaName(){if(areaId==="gps")return t("areaGps");const a=findArea(areaId);return a?(a[lang]||a.en||a.ko):"";}
 function origin(){return gpsPos||areaPos();}
 function meters(a,b,c,d){const R=6371000,r=Math.PI/180,x=Math.sin((c-a)*r/2)**2+Math.cos(a*r)*Math.cos(c*r)*Math.sin((d-b)*r/2)**2;return 2*R*Math.asin(Math.sqrt(x));}
 function fmtD(m){return m<1000?Math.round(m)+" m":(m/1000).toFixed(1)+" km";}
@@ -270,8 +318,18 @@ function applyLang(){
   $("lang-en").setAttribute("aria-pressed",lang==="en");$("lang-ko").setAttribute("aria-pressed",lang==="ko");
   document.querySelectorAll("[data-i]").forEach(e=>{e.textContent=t(e.dataset.i)});
   $("area").innerHTML="";
-  for(const a of AREAS){const o=el("option",null,a.id==="gps"?t("areaGps"):a[lang]);o.value=a.id;$("area").append(o);}
+  const groups={};
+  for(const a of AREAS){
+    const o=el("option",null,a.id==="gps"?t("areaGps"):a[lang]);o.value=a.id;
+    if(!a.g){$("area").append(o);continue;}
+    if(!groups[a.g]){groups[a.g]=document.createElement("optgroup");groups[a.g].label=REGIONS[lang][a.g];}
+    groups[a.g].append(o);
+  }
+  if(customArea){const og=document.createElement("optgroup");og.label=REGIONS[lang].custom;const o=el("option",null,customArea.name);o.value="custom";og.append(o);$("area").append(og);}
+  for(const g of Object.keys(REGIONS.en))if(groups[g])$("area").append(groups[g]);
+  if(!findArea(areaId)&&areaId!=="gps")areaId="hwaseong";
   $("area").value=areaId;
+  $("placeQ").placeholder=t("findPh");
   renderStatus();renderChips();
   if(lastItems)renderList(lastItems);else $("count").textContent="";
 }
@@ -288,6 +346,28 @@ function renderChips(){
 }
 function setLang(l){lang=l;store.set("lang",l);if(window.naver&&window.naver.maps){location.reload();return;}lastItems=null;$("list").innerHTML="";$("guide").hidden=true;applyLang();search();}
 $("lang-en").onclick=()=>setLang("en");$("lang-ko").onclick=()=>setLang("ko");
+$("placeForm").onsubmit=async(e)=>{
+  e.preventDefault();
+  const q=$("placeQ").value.trim();const box=$("placePicks");
+  if(q.length<2){box.hidden=true;return;}
+  box.hidden=false;box.innerHTML="";box.append(el("li","meta",t("loading")));
+  try{
+    const items=(await tour("searchKeyword2",{keyword:q,numOfRows:"15",pageNo:"1",arrange:"O"})).filter(x=>x.mapx&&x.mapy);
+    box.innerHTML="";
+    if(!items.length){box.append(el("li","meta",t("findNone")));return;}
+    for(const it of items){
+      const li=el("li");const b=el("button");b.type="button";
+      b.append(el("div",null,it.title||""),el("div","a",[it.addr1].filter(Boolean).join(" ")));
+      b.onclick=()=>{
+        customArea={name:(it.title||"").replace(/\s*\([^)]*[\uac00-\ud7a3][^)]*\)\s*$/,""),lat:+it.mapy,lng:+it.mapx};
+        store.set("custom_area",JSON.stringify(customArea));
+        areaId="custom";store.set("area",areaId);box.hidden=true;$("placeQ").value="";
+        $("guide").hidden=true;applyLang();search();
+      };
+      li.append(b);box.append(li);
+    }
+  }catch(err){box.innerHTML="";box.append(el("li","msg",err&&err.api?t("apiErr")(err.api):t("netErr")));}
+};
 $("area").onchange=()=>{areaId=$("area").value;store.set("area",areaId);$("guide").hidden=true;search();};
 
 let firstFix=true;
