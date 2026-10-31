@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.ktripcompanion.app",
+      "sha256_cert_fingerprints": [
+        "79:BD:24:52:92:AE:0D:F0:48:3F:1E:82:CE:36:DD:FD:5D:95:A1:DE:59:F6:B1:7A:A0:31:86:49:6B:C1:49:47"
+      ]
+    }
+  }
+]
