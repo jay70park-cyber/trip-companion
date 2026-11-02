@@ -31,13 +31,18 @@ html{padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--body);
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 main{max-width:560px;margin:0 auto;padding-block:18px 48px;display:flex;flex-direction:column;gap:16px}
-.top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.top{display:flex;flex-wrap:wrap-reverse;justify-content:space-between;align-items:flex-start;gap:8px 12px}
+.top>div:first-child{flex:1 1 180px;min-width:0}
+.langwrap{position:relative;flex:none}
+.langmenu{position:absolute;right:0;top:calc(100% + 4px);z-index:20;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.12);overflow:hidden;min-width:110px}
+.langmenu button{border:0;border-radius:0;background:transparent;color:var(--ink);padding:10px 14px;font:600 14px var(--body);text-align:left}
+.langmenu button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
 .eyebrow{font-size:12px;letter-spacing:.08em;color:var(--muted)}
 h1{font:700 26px/1.25 var(--display);margin:2px 0 0;text-wrap:balance}
 h2{font:700 18px/1.3 var(--display);margin:0 0 8px;text-wrap:balance}
 h3{font:600 15px var(--body);margin:0 0 6px}
-.lang{display:flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:8px;overflow:hidden;flex:none}
-.lang button{border:0;border-radius:0;background:transparent;color:var(--ink);padding:7px 11px;font:600 13px var(--body)}
+.lang{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;flex:none}
+.lang button{border:0;border-radius:0;background:transparent;color:var(--ink);padding:6px 9px;font:600 12px var(--body);white-space:nowrap}
 .lang button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px}
 .status{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
@@ -127,8 +132,9 @@ ul.food li:first-child{border-top:0}
     </div>
     <div style="display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap;justify-content:flex-end">
     <button type="button" id="install" class="ghost small" hidden data-i="install"></button>
-    <div class="lang" role="group" aria-label="Language">
-
+    <div class="langwrap">
+      <div class="lang" role="group" aria-label="Language"></div>
+      <div class="langmenu" id="langmenu" hidden></div>
     </div>
     </div>
   </div>
@@ -403,7 +409,8 @@ function show(id,msg){$(id).textContent=msg||"";$(id).hidden=!msg;}
 
 function applyLang(){
   document.documentElement.lang=(LANGS.find(x=>x[0]===lang)||LANGS[0])[2];
-  document.querySelectorAll(".lang button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.lang===lang)));
+  document.querySelectorAll(".lang button[data-lang], .langmenu button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.lang===lang)));
+  const zb=$("zhBtn");if(zb){const isZh=lang==="zhs"||lang==="zht";zb.textContent=(lang==="zhs"?"简体":lang==="zht"?"繁體":"中文")+" ▾";zb.setAttribute("aria-pressed",String(isZh));}
   document.querySelectorAll("[data-i]").forEach(e=>{e.textContent=t(e.dataset.i)});
   $("area").innerHTML="";
   const groups={};
@@ -434,7 +441,17 @@ function renderChips(){
   }
 }
 function setLang(l){lang=l;store.set("lang",l);if(window.naver&&window.naver.maps){location.reload();return;}lastItems=null;$("list").innerHTML="";$("guide").hidden=true;applyLang();search();}
-for(const [code,label] of LANGS){const b=el("button",null,label);b.type="button";b.dataset.lang=code;b.setAttribute("aria-pressed","false");b.onclick=()=>setLang(code);document.querySelector(".lang").append(b);}
+/* Language switch: EN · 한국어 · 日本語 · 中文▾ (简体 / 繁體 in a small menu) */
+(function(){
+  const bar=document.querySelector(".lang"),menu=$("langmenu");
+  for(const [code,label] of LANGS.slice(0,3)){const b=el("button",null,label);b.type="button";b.dataset.lang=code;b.onclick=()=>{menu.hidden=true;setLang(code);};bar.append(b);}
+  const zh=el("button",null,"中文 ▾");zh.type="button";zh.id="zhBtn";zh.setAttribute("aria-haspopup","true");zh.setAttribute("aria-expanded","false");
+  zh.onclick=e=>{e.stopPropagation();menu.hidden=!menu.hidden;zh.setAttribute("aria-expanded",String(!menu.hidden));};
+  bar.append(zh);
+  for(const [code,label] of LANGS.slice(3)){const b=el("button",null,label==="简体"?"简体中文":"繁體中文");b.type="button";b.dataset.lang=code;b.onclick=()=>{menu.hidden=true;zh.setAttribute("aria-expanded","false");setLang(code);};menu.append(b);}
+  document.addEventListener("click",e=>{if(!menu.hidden&&!menu.contains(e.target)){menu.hidden=true;zh.setAttribute("aria-expanded","false");}});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!menu.hidden){menu.hidden=true;zh.setAttribute("aria-expanded","false");zh.focus();}});
+})();
 $("placeForm").onsubmit=async(e)=>{
   e.preventDefault();
   const q=$("placeQ").value.trim();const box=$("placePicks");
