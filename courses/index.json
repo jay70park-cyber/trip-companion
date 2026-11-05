@@ -1,0 +1,125 @@
+{
+ "updated": "2026-11-05",
+ "zones": [
+  {
+   "id": "hongdae",
+   "type": "hot",
+   "name": {
+    "en": "Hongdae",
+    "ko": "홍대",
+    "ja": "弘大",
+    "zhs": "弘大",
+    "zht": "弘大"
+   },
+   "start": {
+    "lat": 37.5573,
+    "lng": 126.9245,
+    "label": {
+     "en": "Hongik Univ. Station Exit 9",
+     "ko": "홍대입구역 9번 출구"
+    }
+   },
+   "stops": 6,
+   "distanceM": 2317,
+   "durationMin": 79,
+   "updated": "2026-11-05",
+   "ai": true
+  },
+  {
+   "id": "seongsu",
+   "type": "hot",
+   "name": {
+    "en": "Seongsu-dong",
+    "ko": "성수동",
+    "ja": "聖水洞",
+    "zhs": "圣水洞",
+    "zht": "聖水洞"
+   },
+   "start": {
+    "lat": 37.5446,
+    "lng": 127.056,
+    "label": {
+     "en": "Seongsu Station Exit 3",
+     "ko": "성수역 3번 출구"
+    }
+   },
+   "stops": 4,
+   "distanceM": 1509,
+   "durationMin": 52,
+   "updated": "2026-11-05",
+   "ai": true
+  },
+  {
+   "id": "myeongdong",
+   "type": "hot",
+   "name": {
+    "en": "Myeong-dong",
+    "ko": "명동",
+    "ja": "明洞",
+    "zhs": "明洞",
+    "zht": "明洞"
+   },
+   "start": {
+    "lat": 37.5609,
+    "lng": 126.9863,
+    "label": {
+     "en": "Myeong-dong Station Exit 6",
+     "ko": "명동역 6번 출구"
+    }
+   },
+   "stops": 7,
+   "distanceM": 2778,
+   "durationMin": 93,
+   "updated": "2026-11-05",
+   "ai": false
+  },
+  {
+   "id": "gyeongbok",
+   "type": "heritage",
+   "name": {
+    "en": "Gyeongbokgung & Bukchon",
+    "ko": "경복궁·북촌",
+    "ja": "景福宮・北村",
+    "zhs": "景福宫·北村",
+    "zht": "景福宮·北村"
+   },
+   "start": {
+    "lat": 37.576,
+    "lng": 126.9769,
+    "label": {
+     "en": "Gwanghwamun Gate",
+     "ko": "광화문"
+    }
+   },
+   "stops": 9,
+   "distanceM": 3161,
+   "durationMin": 114,
+   "updated": "2026-11-05",
+   "ai": false
+  },
+  {
+   "id": "hwaseong",
+   "type": "heritage",
+   "name": {
+    "en": "Hwaseong Fortress & Haenggung",
+    "ko": "수원화성·화성행궁",
+    "ja": "水原華城・華城行宮",
+    "zhs": "水原华城·华城行宫",
+    "zht": "水原華城·華城行宮"
+   },
+   "start": {
+    "lat": 37.2817,
+    "lng": 127.0137,
+    "label": {
+     "en": "Hwaseong Haenggung Square",
+     "ko": "화성행궁 광장"
+    }
+   },
+   "stops": 9,
+   "distanceM": 4706,
+   "durationMin": 137,
+   "updated": "2026-11-05",
+   "ai": false
+  }
+ ]
+}
