@@ -30,7 +30,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const log = (...a) => console.log(...a);
 
 /* ---------------- network helpers ---------------- */
-async function http(url, opt = {}, tries = 2) {
+async function http(url, opt = {}, tries = 3) {
   for (let i = 0; i < tries; i++) {
     const ctl = new AbortController();
     const timer = setTimeout(() => ctl.abort(), opt.timeout || 25000);
@@ -41,7 +41,7 @@ async function http(url, opt = {}, tries = 2) {
       return text;
     } catch (e) {
       if (i === tries - 1) throw e;
-      await sleep(1500);
+      await sleep(3000 * (i + 1));
     } finally { clearTimeout(timer); }
   }
 }
@@ -193,7 +193,7 @@ async function hotCandidates(z) {
 Try several searches, for example: ${z.queries.join(", ")}.
 Write a list of up to 15 specific named places worth walking to (cafés, restaurants, streets, shops, galleries, pop-up stores, landmarks). For each place give its Korean name and every page you found that recommends it.
 Skip bars, pubs, clubs, hotels, motels, clinics, places outside ${z.name.ko}, and pages marked as sponsored (협찬, 체험단, 원고료, 광고).`,
-      6000, { webSearch: 6 });
+      6000, { webSearch: 10 });
   } catch (e) { log(`  ! web search: ${e.message}`); return []; }
   log(`  · web search: ${found.results.length} pages, ${found.citations.length} citations`);
 
@@ -218,7 +218,8 @@ ${pages.map((r) => `- ${r.url} | ${r.title || ""}${r.cited ? " | " + r.cited : "
   const sourceKey = (u) => { try { const x = new URL(u); return x.host + "/" + (x.pathname.split("/")[1] || ""); } catch { return u; } };
   const places = (res.places || []).filter((p) => p && p.name && Array.isArray(p.sources))
     .map((p) => {
-      const extra = cites.filter((c) => c.cited && c.cited.includes(p.name)).map((c) => ({ url: c.url, title: c.title }));
+      const core = coreName(p.name);
+      const extra = [...cites.filter((c) => c.cited && coreName(c.cited).includes(core)), ...found.results.filter((r) => r.title && coreName(r.title).includes(core))].map((c) => ({ url: c.url, title: c.title }));
       const all = [...p.sources, ...extra].filter((x) => known.has(x.url));  // only pages the search really returned
       return { ...p, sources: [...new Map(all.map((x) => [x.url, x])).values()] };
     })
@@ -228,10 +229,11 @@ ${pages.map((r) => `- ${r.url} | ${r.title || ""}${r.cited ? " | " + r.cited : "
   const out = [];
   for (const p of places) {
     const pois = await tmapPoi(`${p.name}`, z.start, Math.ceil((z.radiusM + 300) / 1000));
-    const want = p.name.replace(/\s/g, "");
-    const hit = pois.find((x) => { const n = x.name.replace(/\s/g, ""); return n.includes(want) || want.includes(n); });
-    if (!hit || L.meters(z.start, hit) > z.radiusM + 300) continue;
-    if (!L.allowedCategory(hit.category)) continue;
+    const want = coreName(p.name);
+    const hit = pois.find((x) => { const n = coreName(x.name); return want.length >= 2 && (n.includes(want) || want.includes(n)); });
+    if (!hit) { log(`    - ${p.name}: not found on TMAP`); continue; }
+    if (L.meters(z.start, hit) > z.radiusM + 300) { log(`    - ${p.name}: too far (${Math.round(L.meters(z.start, hit))} m)`); continue; }
+    if (!L.allowedCategory(hit.category)) { log(`    - ${p.name}: category ${hit.category}`); continue; }
     const quoted = cites.filter((c) => p.sources.some((x) => x.url === c.url)).map((c) => c.cited).filter(Boolean).slice(0, 4);
     out.push({
       kind: "hot", lat: hit.lat, lng: hit.lng, nameKo: hit.name, category: hit.category || p.category, address: hit.address,
@@ -241,6 +243,12 @@ ${pages.map((r) => `- ${r.url} | ${r.title || ""}${r.cited ? " | " + r.cited : "
   }
   log(`  · ${out.length} trending places confirmed on the map`);
   return out;
+}
+
+// "카페 레이어드 연남점" → "레이어드연남" style core for loose name matching
+function coreName(t) {
+  return String(t || "").replace(/<[^>]+>/g, "").replace(/\(.*?\)|（.*?）|\[.*?\]/g, "")
+    .replace(/카페|cafe|본점|직영점|지점|매장|스토어|store|팝업스토어|팝업/gi, "").replace(/[^0-9a-z가-힣]/gi, "").replace(/점$/, "").toLowerCase();
 }
 
 /* ---------------- step 2: official places ---------------- */
@@ -342,6 +350,7 @@ ${stops.map((s) => `### STOP ${s.n}\nNAME: ${names.get(s.n) || s.nameEn || s.nam
     s.name = { ...(s.name || {}), en: s.name?.en || names.get(s.n) || s.nameEn };
     for (const l of ["ko", "ja", "zhs", "zht"]) s.name[l] = s.name[l] || t.name[l] || s.nameKo || s.name.en;
     if (s.nameKo) s.name.ko = s.nameKo;
+    else if (s.name.ko) s.name.ko = s.name.ko.replace(/\s*\([가-힣\s]{1,6}\)\s*$/, "");
     s.text = { en: en.get(s.n) || "", ko: t.text.ko, ja: t.text.ja, zhs: t.text.zhs, zht: t.text.zht };
   }
   return intro;
