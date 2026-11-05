@@ -67,9 +67,9 @@
      "ko": "명동역 6번 출구"
     }
    },
-   "stops": 7,
-   "distanceM": 3621,
-   "durationMin": 108,
+   "stops": 6,
+   "distanceM": 2514,
+   "durationMin": 84,
    "updated": "2026-11-05",
    "ai": true
   },
@@ -91,9 +91,9 @@
      "ko": "광화문"
     }
    },
-   "stops": 9,
-   "distanceM": 2961,
-   "durationMin": 113,
+   "stops": 10,
+   "distanceM": 3269,
+   "durationMin": 124,
    "updated": "2026-11-05",
    "ai": true
   },
@@ -115,9 +115,9 @@
      "ko": "화성행궁 광장"
     }
    },
-   "stops": 8,
-   "distanceM": 3777,
-   "durationMin": 116,
+   "stops": 9,
+   "distanceM": 4812,
+   "durationMin": 138,
    "updated": "2026-11-05",
    "ai": true
   }
