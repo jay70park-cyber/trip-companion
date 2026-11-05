@@ -141,55 +141,89 @@ async function walkLeg(a, b) {
   } catch (e) { log(`  ! walk leg: ${e.message}`); return null; }
 }
 
-async function ai(prompt, maxTokens = 4000, { webSearch = 0 } = {}) {
+// Calls the model. With `schema`, the answer comes back through a forced "submit" tool, so it is always valid JSON.
+// With `webSearch`, the model may search the web first; the reply is free text plus citations.
+async function ai(prompt, maxTokens = 4000, { webSearch = 0, schema = null } = {}) {
   const body = { model: KEY.model, max_tokens: maxTokens, messages: [{ role: "user", content: prompt }] };
   if (webSearch) body.tools = [{ type: "web_search_20250305", name: "web_search", max_uses: webSearch, user_location: { type: "approximate", country: "KR", timezone: "Asia/Seoul" } }];
-  const citations = [];
-  let text = "";
-  for (let turn = 0; turn < 3; turn++) {
+  else if (schema) { body.tools = [{ name: "submit", description: "Submit the result.", input_schema: schema }]; body.tool_choice = { type: "tool", name: "submit" }; }
+  const citations = [], results = [];
+  let text = "", submitted = null;
+  for (let turn = 0; turn < 4; turn++) {
     const raw = await http("https://api.anthropic.com/v1/messages", {
-      method: "POST", timeout: 180000,
+      method: "POST", timeout: 240000,
       headers: { "x-api-key": KEY.ai, "anthropic-version": "2023-06-01", "content-type": "application/json" },
       body: JSON.stringify(body),
     });
     const data = JSON.parse(raw);
     for (const c of data.content || []) {
       if (c.type === "text") { text += c.text; for (const ci of c.citations || []) citations.push({ url: ci.url, title: ci.title, cited: ci.cited_text }); }
+      if (c.type === "tool_use" && c.name === "submit") submitted = c.input;
+      if (c.type === "web_search_tool_result" && Array.isArray(c.content)) for (const r of c.content) if (r.url) results.push({ url: r.url, title: r.title, age: r.page_age || "" });
     }
     if (data.stop_reason !== "pause_turn") break;
     body.messages = [...body.messages, { role: "assistant", content: data.content }];  // let a long search finish
   }
-  const out = L.parseJson(text);
-  if (webSearch) out._citations = citations;
-  return out;
+  if (schema && !webSearch) { if (!submitted) throw new Error("model did not return a result"); return submitted; }
+  if (webSearch) return { text, citations, results };
+  return L.parseJson(text);
 }
+
+const S = {
+  str: { type: "string" }, int: { type: "integer" },
+  langs4: { type: "object", properties: { ko: { type: "string" }, ja: { type: "string" }, zhs: { type: "string" }, zht: { type: "string" } }, required: ["ko", "ja", "zhs", "zht"] },
+};
+const SCHEMA = {
+  places: { type: "object", required: ["places"], properties: { places: { type: "array", items: { type: "object", required: ["name", "sources"], properties: {
+    name: S.str, category: S.str, why: S.str,
+    sources: { type: "array", items: { type: "object", required: ["url"], properties: { url: S.str, title: S.str } } } } } } } },
+  draft: { type: "object", required: ["intro", "stops"], properties: { intro: S.str, stops: { type: "array", items: { type: "object", required: ["n", "name_en", "text_en"], properties: { n: S.int, name_en: S.str, text_en: S.str } } } } },
+  checked: { type: "object", required: ["intro", "stops"], properties: { intro: S.str, stops: { type: "array", items: { type: "object", required: ["n", "text_en"], properties: { n: S.int, text_en: S.str } } } } },
+  translated: { type: "object", required: ["intro", "stops"], properties: { intro: S.langs4, stops: { type: "array", items: { type: "object", required: ["n", "name", "text"], properties: { n: S.int, name: S.langs4, text: S.langs4 } } } } },
+};
 
 /* ---------------- step 1: trending places from a web search (AI web search tool + TMAP place check) ---------------- */
 async function hotCandidates(z) {
   if (!KEY.ai || !KEY.tmap) { log("  · trending places skipped (needs AI + TMAP keys)"); return []; }
   const since = new Date(NOW.getTime() - 90 * 86400000).toISOString().slice(0, 10);
+  let found;
+  try {
+    found = await ai(
+`Search the web (Korean blogs, news, travel and magazine sites) for places in or right around ${z.name.ko} (${z.name.en}), Korea, that visitors have been recommending recently (pages dated after ${since}).
+Try several searches, for example: ${z.queries.join(", ")}.
+Write a list of up to 15 specific named places worth walking to (cafés, restaurants, streets, shops, galleries, pop-up stores, landmarks). For each place give its Korean name and every page you found that recommends it.
+Skip bars, pubs, clubs, hotels, motels, clinics, places outside ${z.name.ko}, and pages marked as sponsored (협찬, 체험단, 원고료, 광고).`,
+      6000, { webSearch: 6 });
+  } catch (e) { log(`  ! web search: ${e.message}`); return []; }
+  log(`  · web search: ${found.results.length} pages, ${found.citations.length} citations`);
+
+  const pages = [...new Map([...found.results, ...found.citations].map((r) => [r.url, r])).values()];
   let res;
   try {
     res = await ai(
-`Search the web (Korean blogs, news, travel sites) for places in or right around ${z.name.ko} (${z.name.en}), Seoul/Korea, that visitors have been recommending recently (posts dated after ${since}).
-Useful searches include: ${z.queries.join(", ")}.
-Pick up to 12 specific named places worth walking to: cafés, restaurants, streets, shops, galleries, pop-up stores, landmarks.
-Rules:
-- Each place needs at least 2 different web pages (different sites or authors) that recommend it, dated after ${since}.
-- Skip bars, pubs, clubs, hotels, motels, chain-store branches with nothing special, and places outside ${z.name.ko}.
-- Skip posts marked as sponsored (협찬, 체험단, 원고료, 광고).
-- Use the place name as it is written in Korean.
-- "why" is one short sentence in English that only repeats what the pages say.
-Reply with JSON only:
-{"places":[{"name":"...","category":"cafe|restaurant|street|shop|gallery|popup|landmark|other","why":"...","sources":[{"url":"...","title":"..."}]}]}`,
-      4000, { webSearch: 6 });
-  } catch (e) { log(`  ! web search: ${e.message}`); return []; }
+`Turn these research notes into a list of places. Use only places named in the notes.
+For each place list ALL pages from PAGES that mention or recommend it (use their exact URLs). Do not invent URLs.
+"why" is one short English sentence that only repeats what the notes say about the place.
 
-  const cites = res._citations || [];
+NOTES
+${found.text}
+
+PAGES
+${pages.map((r) => `- ${r.url} | ${r.title || ""}${r.cited ? " | " + r.cited : ""}`).join("\n")}`,
+      4000, { schema: SCHEMA.places });
+  } catch (e) { log(`  ! place list: ${e.message}`); return []; }
+
+  const cites = found.citations;
+  const known = new Set(pages.map((r) => r.url));
+  const sourceKey = (u) => { try { const x = new URL(u); return x.host + "/" + (x.pathname.split("/")[1] || ""); } catch { return u; } };
   const places = (res.places || []).filter((p) => p && p.name && Array.isArray(p.sources))
-    .map((p) => ({ ...p, sources: p.sources.filter((x) => /^https?:\/\//.test(x.url || "")) }))
-    .filter((p) => new Set(p.sources.map((x) => { try { return new URL(x.url).host + new URL(x.url).pathname.split("/")[1]; } catch { return x.url; } })).size >= 2);
-  log(`  · ${places.length} places with 2+ independent sources`);
+    .map((p) => {
+      const extra = cites.filter((c) => c.cited && c.cited.includes(p.name)).map((c) => ({ url: c.url, title: c.title }));
+      const all = [...p.sources, ...extra].filter((x) => known.has(x.url));  // only pages the search really returned
+      return { ...p, sources: [...new Map(all.map((x) => [x.url, x])).values()] };
+    })
+    .filter((p) => new Set(p.sources.map((x) => sourceKey(x.url))).size >= 2);
+  log(`  · ${(res.places || []).length} places named, ${places.length} with 2+ independent sources`);
 
   const out = [];
   for (const p of places) {
@@ -214,8 +248,8 @@ async function officialCandidates(z) {
   if (!KEY.tour) return [];
   const en = await ktoNear("en", z.start, z.radiusM);
   return en
-    .filter((x) => x.title && !/hotel|guesthouse|hostel/i.test(x.title))
-    .map((x) => ({ kind: "official", lat: x.lat, lng: x.lng, nameEn: x.title.replace(/\s*\([^)]*[가-힣][^)]*\)\s*$/, ""), enId: x.contentid, image: (x.firstimage || "").replace(/^http:/, "https:"), dist: +x.dist || L.meters(z.start, x) }))
+    .filter((x) => x.title && L.isSight(x.title))
+    .map((x) => ({ kind: "official", lat: x.lat, lng: x.lng, nameEn: L.stripKoParen(x.title), enId: x.contentid, image: (x.firstimage || "").replace(/^http:/, "https:"), dist: +x.dist || L.meters(z.start, x) }))
     .sort((a, b) => (b.image ? 1 : 0) - (a.image ? 1 : 0) || a.dist - b.dist);
 }
 
@@ -226,7 +260,7 @@ async function enrichOfficial(z, stop) {
     const list = await ktoNear(l, z.start, z.radiusM);
     const near = list.map((x) => ({ x, d: L.meters(stop, x) })).filter((o) => o.d < 80).sort((a, b) => a.d - b.d)[0];
     if (!near) continue;
-    stop.name[l] = String(near.x.title || "").replace(l === "ko" ? /$^/ : /\s*\([^)]*[가-힣][^)]*\)\s*$/, "");
+    stop.name[l] = l === "ko" ? String(near.x.title || "") : L.stripKoParen(near.x.title);
     stop.official[l] = await ktoOverview(l, near.x.contentid);
     if (l === "ko") stop.nameKo = near.x.title;
   }
@@ -265,20 +299,20 @@ Use ONLY facts found in that stop's SOURCES. Do not invent history, dates, price
 For places known only from visitor posts, say what kind of place it is and what visitors mention, e.g. "Visitors often mention…".
 Also give an English display name: the official English name if given, otherwise the Korean name romanized followed by the type, e.g. "Cafe Layered (café)".
 Write a 2-sentence intro for the whole walk using only the sources.
-Reply with JSON only: {"intro":"...","stops":[{"n":1,"name_en":"...","text_en":"..."}]}
+Submit the intro and one entry per stop.
 
-${block}`, 4000);
+${block}`, 6000, { schema: SCHEMA.draft });
 
   const draft = gen.stops.map((g) => `### STOP ${g.n}\nTEXT: ${g.text_en}\nSOURCES:\n${sourcesFor(stops.find((s) => s.n === g.n) || {})}`).join("\n\n");
   const checked = await ai(
 `Fact-check this walking tour. For each stop, delete every sentence in TEXT that makes a claim not supported by that stop's SOURCES (paraphrase is fine; general wording like "a popular spot" is fine only if the sources say visitors recommend it).
 If nothing remains, write one sentence that only states what kind of place it is according to the sources.
 Also check the INTRO against all sources in the same way.
-Reply with JSON only: {"intro":"...","stops":[{"n":1,"text_en":"..."}]}
+Submit the corrected intro and one entry per stop.
 
 INTRO: ${gen.intro}
 
-${draft}`, 4000);
+${draft}`, 6000, { schema: SCHEMA.checked });
 
   const en = new Map(checked.stops.map((x) => [x.n, x.text_en]));
   const names = new Map(gen.stops.map((x) => [x.n, x.name_en]));
@@ -286,18 +320,18 @@ ${draft}`, 4000);
 `Translate this walking tour into Korean (ko), Japanese (ja), Simplified Chinese (zhs) and Traditional Chinese (zht).
 Translate faithfully. Do not add or remove information.
 For the Korean place name, use KO_NAME exactly when it is given.
-Reply with JSON only: {"intro":{"ko":"","ja":"","zhs":"","zht":""},"stops":[{"n":1,"name":{"ko":"","ja":"","zhs":"","zht":""},"text":{"ko":"","ja":"","zhs":"","zht":""}}]}
+Submit the intro and one entry per stop, each with name and text in ko, ja, zhs and zht.
 
 INTRO: ${checked.intro}
 
-${stops.map((s) => `### STOP ${s.n}\nNAME: ${names.get(s.n) || s.nameEn || s.nameKo}\nKO_NAME: ${s.nameKo || ""}\nTEXT: ${en.get(s.n) || ""}`).join("\n\n")}`, 8000);
+${stops.map((s) => `### STOP ${s.n}\nNAME: ${names.get(s.n) || s.nameEn || s.nameKo}\nKO_NAME: ${s.nameKo || ""}\nTEXT: ${en.get(s.n) || ""}`).join("\n\n")}`, 12000, { schema: SCHEMA.translated });
 
   const intro = { en: checked.intro, ...tr.intro };
   for (const s of stops) {
     const t = tr.stops.find((x) => x.n === s.n) || { name: {}, text: {} };
     s.name = { ...(s.name || {}), en: s.name?.en || names.get(s.n) || s.nameEn };
     for (const l of ["ko", "ja", "zhs", "zht"]) s.name[l] = s.name[l] || t.name[l] || s.nameKo || s.name.en;
-    if (s.nameKo) s.name.ko = s.nameKo.replace(/\s*\([^)]*\)\s*$/, "") || s.name.ko;
+    if (s.nameKo) s.name.ko = s.nameKo;
     s.text = { en: en.get(s.n) || "", ko: t.text.ko, ja: t.text.ja, zhs: t.text.zhs, zht: t.text.zht };
   }
   return intro;
@@ -326,7 +360,7 @@ async function buildZone(z) {
   const wantHot = z.type === "hot" ? 6 : 2;
   const wantOfficial = z.type === "hot" ? 3 : 8;
   let cands = L.dedupe([...official.slice(0, wantOfficial), ...hot.slice(0, wantHot), ...official.slice(wantOfficial, wantOfficial + 4)], 40);
-  const fit = L.fitWalk(z.start, cands, { maxLeg: 900, maxTotal: z.type === "hot" ? 3000 : 3800, minStops: 4, maxStops: z.type === "hot" ? 8 : 9 });
+  const fit = L.fitWalk(z.start, cands, { maxLeg: 900, maxTotal: 3000, minStops: 4, maxStops: z.type === "hot" ? 8 : 9 });
   if (!fit) throw new Error("could not fit a walkable course");
   const stops = fit.stops.map((s, i) => ({ ...s, n: i + 1 }));
   log(`  · ${stops.length} stops, ~${fit.straightM} m straight-line`);

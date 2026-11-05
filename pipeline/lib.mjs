@@ -39,7 +39,7 @@ export function recentPosts(posts, now, days = 90) {
 }
 
 // Places we never send visitors to (bars, nightlife, lodging, chains of no interest)
-const EXCLUDED_CATEGORY = /술집|주점|호프|요리주점|포차|바\(BAR\)|클럽|나이트|유흥|모텔|호텔|숙박|노래방|PC방|편의점|은행|병원|약국|부동산|주차장/;
+const EXCLUDED_CATEGORY = /술집|주점|호프|요리주점|포차|바\(BAR\)|클럽|나이트|유흥|모텔|호텔|숙박|노래방|PC방|편의점|은행|병원|의원|의료|성형|피부과|치과|한의원|약국|부동산|주차장/;
 export function allowedCategory(category) {
   return !EXCLUDED_CATEGORY.test(String(category || ""));
 }
@@ -147,4 +147,28 @@ export function validateCourse(c, langs) {
     }
   }
   return problems;
+}
+
+// Medical-tourism and lodging entries that sometimes appear among "attractions"
+const NOT_A_SIGHT = /clinic|hospital|dermatolog|plastic surgery|medical|dental|oriental medicine|hotel|guesthouse|hostel|residence|의원|병원|클리닉|성형|피부과|치과|한의원|호텔|게스트하우스|クリニック|医院|診所|诊所|医疗|醫療/i;
+export function isSight(title) { return !NOT_A_SIGHT.test(String(title || "")); }
+
+// Remove a trailing bracketed part that contains Hangul, e.g. "弘大（홍대）", "KT&G Sangsangmadang (KT&G 상상마당(홍대))"
+export function stripKoParen(title) {
+  let t = String(title || "").trim();
+  for (let guard = 0; guard < 3; guard++) {
+    const last = t.slice(-1);
+    if (last !== ")" && last !== "）") break;
+    let depth = 0, i = t.length - 1;
+    for (; i >= 0; i--) {
+      const ch = t[i];
+      if (ch === ")" || ch === "）") depth++;
+      else if (ch === "(" || ch === "（") { depth--; if (depth === 0) break; }
+    }
+    if (i <= 0) break;
+    const inner = t.slice(i + 1, -1);
+    if (!/[\uac00-\ud7a3]/.test(inner)) break;
+    t = t.slice(0, i).trim();
+  }
+  return t;
 }

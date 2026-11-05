@@ -66,4 +66,12 @@ assert.deepEqual(L.validateCourse(good, ["en", "ko"]), []);
 good.stops[0].text.ko = "";
 assert.equal(L.validateCourse(good, ["en", "ko"]).length, 1);
 
+// names and sights
+assert.equal(L.stripKoParen("弘大（홍대）"), "弘大");
+assert.equal(L.stripKoParen("KT&G Sangsangmadang (KT&G 상상마당(홍대))"), "KT&G Sangsangmadang");
+assert.equal(L.stripKoParen("Hongdae (Hongik University Street)"), "Hongdae (Hongik University Street)");
+assert.equal(L.isSight("ID Clinic Hongdae"), false);
+assert.equal(L.isSight("G-line Book Street"), true);
+assert.equal(L.allowedCategory("의료>성형외과"), false);
+
 console.log("pipeline self-test: all passed");
