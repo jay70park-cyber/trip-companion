@@ -396,7 +396,7 @@ async function buildZone(z) {
   const wantHot = z.type === "hot" ? 6 : 2;
   const wantOfficial = z.type === "hot" ? 3 : 8;
   let cands = L.dedupe([...official.slice(0, wantOfficial), ...hot.slice(0, wantHot), ...official.slice(wantOfficial, wantOfficial + 4)], 40);
-  const fit = L.fitWalk(z.start, cands, { maxLeg: 900, maxTotal: 3200, minStops: 5, maxStops: z.type === "hot" ? 9 : 10 });
+  const fit = L.fitWalk(z.start, cands, { maxLeg: 900, maxTotal: 3200, minStops: 4, maxStops: z.type === "hot" ? 9 : 10 });
   if (!fit) throw new Error("could not fit a walkable course");
   const stops = fit.stops.map((s, i) => ({ ...s, n: i + 1 }));
   log(`  · ${stops.length} stops, ~${fit.straightM} m straight-line`);

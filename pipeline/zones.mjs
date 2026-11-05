@@ -16,7 +16,7 @@ export const ZONES = [
     id: "seongsu", type: "hot",
     name: { en: "Seongsu-dong", ko: "성수동", ja: "聖水洞", zhs: "圣水洞", zht: "聖水洞" },
     start: { lat: 37.5446, lng: 127.0560, label: { en: "Seongsu Station Exit 3", ko: "성수역 3번 출구" } },
-    radiusM: 800,
+    radiusM: 1300,  // few official sites close to the station; reach Seoul Forest and the café streets
     queries: ["성수동 핫플", "성수 팝업", "성수동 가볼만한곳", "성수 카페거리"],
   },
   {
