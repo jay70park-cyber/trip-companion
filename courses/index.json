@@ -19,9 +19,9 @@
      "ko": "홍대입구역 9번 출구"
     }
    },
-   "stops": 6,
-   "distanceM": 2317,
-   "durationMin": 79,
+   "stops": 5,
+   "distanceM": 1990,
+   "durationMin": 67,
    "updated": "2026-11-05",
    "ai": true
   },
@@ -68,10 +68,10 @@
     }
    },
    "stops": 7,
-   "distanceM": 2778,
-   "durationMin": 93,
+   "distanceM": 3621,
+   "durationMin": 108,
    "updated": "2026-11-05",
-   "ai": false
+   "ai": true
   },
   {
    "id": "gyeongbok",
@@ -92,10 +92,10 @@
     }
    },
    "stops": 9,
-   "distanceM": 3161,
-   "durationMin": 114,
+   "distanceM": 3102,
+   "durationMin": 113,
    "updated": "2026-11-05",
-   "ai": false
+   "ai": true
   },
   {
    "id": "hwaseong",
@@ -115,11 +115,11 @@
      "ko": "화성행궁 광장"
     }
    },
-   "stops": 9,
-   "distanceM": 4706,
-   "durationMin": 137,
+   "stops": 8,
+   "distanceM": 3777,
+   "durationMin": 116,
    "updated": "2026-11-05",
-   "ai": false
+   "ai": true
   }
  ]
 }
