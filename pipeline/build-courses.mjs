@@ -5,8 +5,8 @@
 // Keys (environment variables; any that are missing switch that step off):
 //   TOURAPI_KEY          data.go.kr key (Decoding)          → official places, descriptions, Odii audio
 //   TMAP_KEY             SK open API appKey                 → walking paths between stops
-//   NAVER_SEARCH_ID      developers.naver.com Client ID     → recent blog posts, place check
-//   NAVER_SEARCH_SECRET  developers.naver.com Client Secret
+//   NAVER_SEARCH_ID      Naver Client ID (developers.naver.com or NAVER API HUB) → recent blog posts, place check
+//   NAVER_SEARCH_SECRET  Naver Client Secret
 //   ANTHROPIC_API_KEY    AI for place extraction, commentary, fact check and translation
 //   AI_MODEL             optional, defaults to claude-haiku-5-5
 //   ONLY_ZONES           optional, comma-separated zone ids
@@ -101,13 +101,26 @@ async function odiiNear(lang, at, radiusM = 120) {
   }));
 }
 
+// Works with keys from developers.naver.com (openapi.naver.com) or from NAVER API HUB on NAVER Cloud.
+// Tries the first and falls back to the second; remembers which one answered.
+let naverHost = null;
+const NAVER_HOSTS = [
+  { id: "openapi", url: (k, q) => `https://openapi.naver.com/v1/search/${k}.json?${q}`, headers: () => ({ "X-Naver-Client-Id": KEY.nid, "X-Naver-Client-Secret": KEY.nsec }) },
+  { id: "apihub", url: (k, q) => `https://naverapihub.apigw.ntruss.com/search/v1/${k}?${q}`, headers: () => ({ "X-NCP-APIGW-API-KEY-ID": KEY.nid, "X-NCP-APIGW-API-KEY": KEY.nsec }) },
+];
 async function naver(kind, params) {
-  const qs = new URLSearchParams(params);
-  const text = await http(`https://openapi.naver.com/v1/search/${kind}.json?${qs}`, {
-    headers: { "X-Naver-Client-Id": KEY.nid, "X-Naver-Client-Secret": KEY.nsec },
-  });
-  await sleep(150);
-  return JSON.parse(text).items || [];
+  const qs = new URLSearchParams({ format: "json", ...params });
+  const order = naverHost ? [naverHost] : NAVER_HOSTS;
+  let lastErr;
+  for (const h of order) {
+    try {
+      const text = await http(h.url(kind, qs), { headers: h.headers() }, 1);
+      naverHost = h;
+      await sleep(150);
+      return JSON.parse(text).items || [];
+    } catch (e) { lastErr = e; }
+  }
+  throw lastErr;
 }
 
 async function walkLeg(a, b) {
