@@ -177,7 +177,7 @@ const SCHEMA = {
   places: { type: "object", required: ["places"], properties: { places: { type: "array", items: { type: "object", required: ["name", "sources"], properties: {
     name: S.str, category: S.str, why: S.str,
     sources: { type: "array", items: { type: "object", required: ["url"], properties: { url: S.str, title: S.str } } } } } } } },
-  draft: { type: "object", required: ["intro", "stops"], properties: { intro: S.str, stops: { type: "array", items: { type: "object", required: ["n", "name_en", "text_en", "consistent"], properties: { n: S.int, name_en: S.str, text_en: S.str, consistent: { type: "boolean", description: "false if the sources for this stop describe different places (e.g. the English and Korean names/descriptions are about two different things)" } } } } } },
+  draft: { type: "object", required: ["intro", "stops"], properties: { intro: S.str, stops: { type: "array", items: { type: "object", required: ["n", "name_en", "text_en", "consistent"], properties: { n: S.int, name_en: S.str, text_en: S.str, consistent: { type: "boolean", description: "false if the sources for this stop describe different places (e.g. the English and Korean names/descriptions are about two different things)" }, is_sight: { type: "boolean", description: "true only if a tourist would walk there to look around, eat, shop or take photos; false for companies, agencies, clinics, offices, hotels" }, duplicate_of: { type: "integer", description: "number of an earlier stop that is the same place, or 0" } } } } } },
   checked: { type: "object", required: ["intro", "stops"], properties: { intro: S.str, stops: { type: "array", items: { type: "object", required: ["n", "text_en"], properties: { n: S.int, text_en: S.str } } } } },
   translated: { type: "object", required: ["intro", "stops"], properties: { intro: S.langs4, stops: { type: "array", items: { type: "object", required: ["n", "name", "text"], properties: { n: S.int, name: S.langs4, text: S.langs4 } } } } },
 };
@@ -231,12 +231,19 @@ ${pages.map((r) => `- ${r.url} | ${r.title || ""}${r.cited ? " | " + r.cited : "
     const pois = await tmapPoi(`${p.name}`, z.start, Math.ceil((z.radiusM + 300) / 1000));
     const want = coreName(p.name);
     const hit = pois.find((x) => { const n = coreName(x.name); return want.length >= 2 && (n.includes(want) || want.includes(n)); });
-    if (!hit) { log(`    - ${p.name}: not found on TMAP`); continue; }
-    if (L.meters(z.start, hit) > z.radiusM + 300) { log(`    - ${p.name}: too far (${Math.round(L.meters(z.start, hit))} m)`); continue; }
-    if (!L.allowedCategory(hit.category)) { log(`    - ${p.name}: category ${hit.category}`); continue; }
+    let pos = hit;
+    if (!pos) {
+      const kw = await kto("KorService2", "searchKeyword2", { keyword: p.name.replace(/\(.*?\)/g, "").trim(), numOfRows: "10", pageNo: "1", arrange: "A" }).catch(() => []);
+      const k = kw.map((x) => ({ name: x.title, lat: +x.mapy, lng: +x.mapx, category: "" })).find((x) => isFinite(x.lat) && L.meters(z.start, x) <= z.radiusM + 300 && (coreName(x.name).includes(want) || want.includes(coreName(x.name))));
+      if (k) pos = k;
+    }
+    if (!pos) { log(`    - ${p.name}: not found on TMAP or KTO`); continue; }
+    const hitP = pos;
+    if (L.meters(z.start, hitP) > z.radiusM + 300) { log(`    - ${p.name}: too far (${Math.round(L.meters(z.start, hitP))} m)`); continue; }
+    if (!L.allowedCategory(hitP.category)) { log(`    - ${p.name}: category ${hitP.category}`); continue; }
     const quoted = cites.filter((c) => p.sources.some((x) => x.url === c.url)).map((c) => c.cited).filter(Boolean).slice(0, 4);
     out.push({
-      kind: "hot", lat: hit.lat, lng: hit.lng, nameKo: hit.name, category: hit.category || p.category, address: hit.address,
+      kind: "hot", lat: hitP.lat, lng: hitP.lng, nameKo: hitP.name, category: hitP.category || p.category, address: hitP.address || "",
       sources: p.sources.slice(0, 4).map((x) => ({ label: x.title || x.url, url: x.url })),
       blog: [p.why, ...quoted].filter(Boolean),
     });
@@ -306,17 +313,19 @@ For each stop write 2–4 short sentences (max 70 words) in plain English.
 Use ONLY facts found in that stop's SOURCES. Do not invent history, dates, prices, opening hours, menus or rankings.
 For places known only from visitor posts, say what kind of place it is and what visitors mention, e.g. "Visitors often mention…".
 Also give an English display name: the official English name if given, otherwise the Korean name romanized followed by the type, e.g. "Cafe Layered (café)".
+Set "is_sight" to false for anything a visitor would not walk to as a sight, café, restaurant, shop or photo spot (companies, medical or travel agencies, clinics, offices, hotels).
+Set "duplicate_of" to the number of an earlier stop when two stops are the same place under different names (for example "Hwaseong Haenggung" and "Temporary Palace at Hwaseong Fortress"); otherwise 0.
 Set "consistent" to false when a stop's sources describe two different places (for example the English name and the Korean name are different landmarks).
 Write a 2-sentence intro for the whole walk using only the sources.
 Submit the intro and one entry per stop.
 
 ${block}`, 6000, { schema: SCHEMA.draft });
 
-  const bad = new Set(gen.stops.filter((g) => g.consistent === false).map((g) => g.n));
+  const bad = new Set(gen.stops.filter((g) => g.consistent === false || g.is_sight === false || (g.duplicate_of && g.duplicate_of !== g.n)).map((g) => g.n));
   if (bad.size) {
-    log(`  · dropped ${bad.size} stop(s) with conflicting sources`);
+    log(`  · dropped ${bad.size} stop(s): ${gen.stops.filter((g) => bad.has(g.n)).map((g) => `${g.name_en} (${g.consistent === false ? "conflicting" : g.is_sight === false ? "not a sight" : "duplicate"})`).join(", ")}`);
     const keep = stops.filter((s) => !bad.has(s.n));
-    if (keep.length < 4) throw new Error("too few stops after dropping conflicting ones");
+    if (keep.length < 4) throw new Error("too few stops after dropping unsuitable ones");
     const renum = new Map(keep.map((s, i) => [s.n, i + 1]));
     gen.stops = gen.stops.filter((g) => !bad.has(g.n)).map((g) => ({ ...g, n: renum.get(g.n) }));
     stops.length = 0; keep.forEach((s, i) => stops.push({ ...s, n: i + 1 }));
@@ -350,7 +359,7 @@ ${stops.map((s) => `### STOP ${s.n}\nNAME: ${names.get(s.n) || s.nameEn || s.nam
     s.name = { ...(s.name || {}), en: s.name?.en || names.get(s.n) || s.nameEn };
     for (const l of ["ko", "ja", "zhs", "zht"]) s.name[l] = s.name[l] || t.name[l] || s.nameKo || s.name.en;
     if (s.nameKo) s.name.ko = s.nameKo;
-    else if (s.name.ko) s.name.ko = s.name.ko.replace(/\s*\([가-힣\s]{1,6}\)\s*$/, "");
+    else if (s.name.ko) s.name.ko = s.name.ko.replace(/\s*\([^)]*\)\s*$/, "");
     s.text = { en: en.get(s.n) || "", ko: t.text.ko, ja: t.text.ja, zhs: t.text.zhs, zht: t.text.zht };
   }
   return intro;
@@ -387,7 +396,7 @@ async function buildZone(z) {
   const wantHot = z.type === "hot" ? 6 : 2;
   const wantOfficial = z.type === "hot" ? 3 : 8;
   let cands = L.dedupe([...official.slice(0, wantOfficial), ...hot.slice(0, wantHot), ...official.slice(wantOfficial, wantOfficial + 4)], 40);
-  const fit = L.fitWalk(z.start, cands, { maxLeg: 900, maxTotal: 3000, minStops: 4, maxStops: z.type === "hot" ? 8 : 9 });
+  const fit = L.fitWalk(z.start, cands, { maxLeg: 900, maxTotal: 3200, minStops: 5, maxStops: z.type === "hot" ? 9 : 10 });
   if (!fit) throw new Error("could not fit a walkable course");
   const stops = fit.stops.map((s, i) => ({ ...s, n: i + 1 }));
   log(`  · ${stops.length} stops, ~${fit.straightM} m straight-line`);
