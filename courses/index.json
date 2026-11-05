@@ -20,7 +20,7 @@
     }
    },
    "stops": 5,
-   "distanceM": 1990,
+   "distanceM": 1975,
    "durationMin": 67,
    "updated": "2026-11-05",
    "ai": true
@@ -92,8 +92,8 @@
     }
    },
    "stops": 9,
-   "distanceM": 3102,
-   "durationMin": 113,
+   "distanceM": 3161,
+   "durationMin": 114,
    "updated": "2026-11-05",
    "ai": true
   },
