@@ -177,7 +177,7 @@ const SCHEMA = {
   places: { type: "object", required: ["places"], properties: { places: { type: "array", items: { type: "object", required: ["name", "sources"], properties: {
     name: S.str, category: S.str, why: S.str,
     sources: { type: "array", items: { type: "object", required: ["url"], properties: { url: S.str, title: S.str } } } } } } } },
-  draft: { type: "object", required: ["intro", "stops"], properties: { intro: S.str, stops: { type: "array", items: { type: "object", required: ["n", "name_en", "text_en"], properties: { n: S.int, name_en: S.str, text_en: S.str } } } } },
+  draft: { type: "object", required: ["intro", "stops"], properties: { intro: S.str, stops: { type: "array", items: { type: "object", required: ["n", "name_en", "text_en", "consistent"], properties: { n: S.int, name_en: S.str, text_en: S.str, consistent: { type: "boolean", description: "false if the sources for this stop describe different places (e.g. the English and Korean names/descriptions are about two different things)" } } } } } },
   checked: { type: "object", required: ["intro", "stops"], properties: { intro: S.str, stops: { type: "array", items: { type: "object", required: ["n", "text_en"], properties: { n: S.int, text_en: S.str } } } } },
   translated: { type: "object", required: ["intro", "stops"], properties: { intro: S.langs4, stops: { type: "array", items: { type: "object", required: ["n", "name", "text"], properties: { n: S.int, name: S.langs4, text: S.langs4 } } } } },
 };
@@ -258,7 +258,7 @@ async function enrichOfficial(z, stop) {
   stop.name = {}; stop.official = {};
   for (const l of LANGS) {
     const list = await ktoNear(l, z.start, z.radiusM);
-    const near = list.map((x) => ({ x, d: L.meters(stop, x) })).filter((o) => o.d < 80).sort((a, b) => a.d - b.d)[0];
+    const near = list.map((x) => ({ x, d: L.meters(stop, x) })).filter((o) => o.d < 30).sort((a, b) => a.d - b.d)[0];
     if (!near) continue;
     stop.name[l] = l === "ko" ? String(near.x.title || "") : L.stripKoParen(near.x.title);
     stop.official[l] = await ktoOverview(l, near.x.contentid);
@@ -270,7 +270,7 @@ async function enrichAudio(stop) {
   stop.audio = {}; stop.scripts = {};
   if (!KEY.tour) return;
   for (const l of ["en", "ko", "ja"]) {
-    const items = await odiiNear(l, stop, 80);
+    const items = (await odiiNear(l, stop, 80)).filter((x) => !isFinite(x.lat) || L.meters(stop, x) <= 35);
     const a = items.find((x) => x.url) || items[0];
     if (!a) continue;
     if (a.url) stop.audio[l] = { url: a.url, title: a.title };
@@ -298,11 +298,21 @@ For each stop write 2–4 short sentences (max 70 words) in plain English.
 Use ONLY facts found in that stop's SOURCES. Do not invent history, dates, prices, opening hours, menus or rankings.
 For places known only from visitor posts, say what kind of place it is and what visitors mention, e.g. "Visitors often mention…".
 Also give an English display name: the official English name if given, otherwise the Korean name romanized followed by the type, e.g. "Cafe Layered (café)".
+Set "consistent" to false when a stop's sources describe two different places (for example the English name and the Korean name are different landmarks).
 Write a 2-sentence intro for the whole walk using only the sources.
 Submit the intro and one entry per stop.
 
 ${block}`, 6000, { schema: SCHEMA.draft });
 
+  const bad = new Set(gen.stops.filter((g) => g.consistent === false).map((g) => g.n));
+  if (bad.size) {
+    log(`  · dropped ${bad.size} stop(s) with conflicting sources`);
+    const keep = stops.filter((s) => !bad.has(s.n));
+    if (keep.length < 4) throw new Error("too few stops after dropping conflicting ones");
+    const renum = new Map(keep.map((s, i) => [s.n, i + 1]));
+    gen.stops = gen.stops.filter((g) => !bad.has(g.n)).map((g) => ({ ...g, n: renum.get(g.n) }));
+    stops.length = 0; keep.forEach((s, i) => stops.push({ ...s, n: i + 1 }));
+  }
   const draft = gen.stops.map((g) => `### STOP ${g.n}\nTEXT: ${g.text_en}\nSOURCES:\n${sourcesFor(stops.find((s) => s.n === g.n) || {})}`).join("\n\n");
   const checked = await ai(
 `Fact-check this walking tour. For each stop, delete every sentence in TEXT that makes a claim not supported by that stop's SOURCES (paraphrase is fine; general wording like "a popular spot" is fine only if the sources say visitors recommend it).
@@ -355,6 +365,14 @@ async function buildZone(z) {
   const official = await officialCandidates(z);
   log(`  · ${official.length} official places within ${z.radiusM} m`);
   const hot = await hotCandidates(z);
+
+  // a trending place that is already an official site (e.g. the palace itself) is not added twice
+  const koList = await ktoNear("ko", z.start, z.radiusM);
+  const norm = (t) => String(t || "").replace(/\s|\(.*?\)|（.*?）/g, "");
+  for (let i = hot.length - 1; i >= 0; i--) {
+    const h = hot[i], hn = norm(h.nameKo);
+    if (koList.some((k) => L.meters(h, k) < 250 && hn.length >= 2 && (norm(k.title).includes(hn) || hn.includes(norm(k.title))))) hot.splice(i, 1);
+  }
 
   // mix: trending areas lead with trending places; heritage areas lead with official sites
   const wantHot = z.type === "hot" ? 6 : 2;
