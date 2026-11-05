@@ -1,5 +1,7 @@
 [build]
   publish = "."
+  # Skip a deploy (and its credits) when only the course pipeline or workflows changed
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- . ':(exclude)pipeline' ':(exclude).github'"
 
 [functions]
   directory = "netlify/functions"

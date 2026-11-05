@@ -80,6 +80,19 @@ ol.places>li:first-child{border-top:0}
 details summary{cursor:pointer;font-size:14px;font-weight:600}
 /* guide */
 #guide{border-color:var(--accent)}
+.coursecard{display:flex;flex-direction:column;gap:6px;align-items:flex-start;background:var(--surface)}
+.coursecard h2{margin:0}
+.coursecard .note{margin:0}
+.stats{font:600 13px var(--mono);font-variant-numeric:tabular-nums;color:var(--accent)}
+ol.stops{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column}
+ol.stops>li{display:grid;grid-template-columns:30px 1fr;gap:10px;padding:14px 0;border-top:1px solid var(--line);scroll-margin-top:12px}
+ol.stops>li .num{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font:700 13px var(--body);border:2px solid var(--accent);color:var(--ink)}
+ol.stops>li.done .num{background:var(--accent);color:var(--accent-ink)}
+ol.stops>li.here{background:color-mix(in srgb,var(--accent) 8%,transparent);border-radius:8px;padding-inline:6px}
+ol.stops p{margin:6px 0 0;font-size:14px;line-height:1.7;max-width:65ch}
+ol.stops .kind{font-size:12px;color:var(--muted)}
+ul.srcs{margin:6px 0 0;padding-left:18px;font-size:12px}
+ul.srcs a{color:var(--muted);overflow-wrap:anywhere}
 ul.picks{list-style:none;margin:0;padding:0;border:1px solid var(--line);border-radius:8px;max-height:260px;overflow:auto}
 ul.picks li{border-top:1px solid var(--line)}
 ul.picks li:first-child{border-top:0}
@@ -187,6 +200,8 @@ ul.food li:first-child{border-top:0}
     <div class="msg" id="apimsg" hidden></div>
   </section>
 
+  <section class="card coursecard" id="coursecard" hidden></section>
+
   <section class="card" id="guide" hidden></section>
 
   <section class="card">
@@ -237,7 +252,7 @@ const T={
   s2:"Food near the destination",s2none:"No listed restaurants within 1 km.",
   s3:"Walking route",s3btn:"Show walking directions",s3far:"You are more than 3 km away. Walking directions appear when you get closer.",
   s4:"About this place",s4none:"No description available yet.",
-  audioTitle:"Audio guide",officialTitle:"Official description",audioNone:"No audio guide within 120 m of this place.",textOnly:"Text only (no audio yet)",script:"Read the script",odiiCredit:"Audio guide: Korea Tourism Organization (Odii)",install:"Install app",find:"Find",findPh:"Search a place, e.g. Bulguksa, Haeundae",findNone:"No places found. Try another spelling.",agree:"Agree",notNow:"Not now",privacy:"Privacy",terms:"Terms",locTerms:"Location terms",withdraw:"Stop using my location",credits:"Data: Korea Tourism Organization · TMAP · NAVER · Contact: ktrip.help@gmail.com",consentA:"To find places and routes from where you are, K-Trip Companion uses your location for that moment only and does not store it. Please read the ",consentB:" and tap Agree.",noConsent:"Location is off. You can still pick an area to browse.",withdrawn:"Location consent withdrawn. Pick an area to browse.",playGuide:"▶ Play the audio guide",followOn:"Follow me",followOff:"Stop following",whole:"Whole route",tapRoute:"Tap a route to show it on the map.",arrived:n=>"You have arrived at "+n+". See \"About this place\" below.",routeLangNote:"",audioEnNote:"",dest:"Destination",start:"Start",board:"Board at",alight:"get off at",sameStop:"Transfer at the same stop",modes:{WALK:"WALK",BUS:"BUS",SUBWAY:"SUBWAY",EXPRESSBUS:"COACH",TRAIN:"TRAIN",AIRPLANE:"FLIGHT",FERRY:"FERRY"},
+  audioTitle:"Audio guide",officialTitle:"Official description",audioNone:"No audio guide within 120 m of this place.",textOnly:"Text only (no audio yet)",script:"Read the script",odiiCredit:"Audio guide: Korea Tourism Organization (Odii)",install:"Install app",find:"Find",findPh:"Search a place, e.g. Bulguksa, Haeundae",findNone:"No places found. Try another spelling.",agree:"Agree",notNow:"Not now",privacy:"Privacy",terms:"Terms",locTerms:"Location terms",withdraw:"Stop using my location",credits:"Data: Korea Tourism Organization · TMAP · NAVER · Contact: ktrip.help@gmail.com",consentA:"To find places and routes from where you are, K-Trip Companion uses your location for that moment only and does not store it. Please read the ",consentB:" and tap Agree.",noConsent:"Location is off. You can still pick an area to browse.",withdrawn:"Location consent withdrawn. Pick an area to browse.",playGuide:"▶ Play the audio guide",followOn:"Follow me",followOff:"Stop following",whole:"Whole route",tapRoute:"Tap a route to show it on the map.",arrived:n=>"You have arrived at "+n+". See \"About this place\" below.",courseEyebrow:"Walking course",courseStats:(n,km,min)=>n+" stops · "+km+" · about "+min+" min",startWalk:"Start the walk",autoNote:"Built automatically from official tourism data and recent visitor posts.",updatedOn:d=>"Updated "+d+".",startHere:x=>"Starts at "+x,kindHot:"Popular with visitors",kindOfficial:"Official tourist site",listen:"🔊 Listen",stopListen:"■ Stop",audioBtn:"Audio guide",report:"Report a problem",reportBody:"What is wrong? (closed, wrong place, wrong information…)\n\n",sources:"Sources",atStop:(n,x)=>"Stop "+n+": you are at "+x+".",readHere:"Read about this stop",courseDone:"You have visited every stop. Thanks for walking with us!",routeLangNote:"",audioEnNote:"",dest:"Destination",start:"Start",board:"Board at",alight:"get off at",sameStop:"Transfer at the same stop",modes:{WALK:"WALK",BUS:"BUS",SUBWAY:"SUBWAY",EXPRESSBUS:"COACH",TRAIN:"TRAIN",AIRPLANE:"FLIGHT",FERRY:"FERRY"},
   cats:{"":"All",76:"Attractions",temple:"Temples",78:"Culture",85:"Festivals",82:"Food",79:"Shopping",80:"Stay"},food:82},
  ko:{eyebrow:"베타",gps:"내 위치 사용",browse:"둘러볼 지역",
   areaGps:"내 위치",
@@ -259,10 +274,10 @@ const T={
   s2:"도착지 주변 식당",s2none:"1km 안에 등록된 식당이 없습니다.",
   s3:"도보 동선",s3btn:"도보 경로 보기",s3far:"3km 이상 떨어져 있습니다. 가까워지면 도보 경로가 표시됩니다.",
   s4:"장소 소개",s4none:"아직 소개 글이 없습니다.",
-  audioTitle:"오디오 해설",officialTitle:"공식 소개",audioNone:"이 장소 120m 안에 오디오 해설이 없습니다.",textOnly:"대본만 있음 (음성 없음)",script:"대본 보기",odiiCredit:"오디오 해설: 한국관광공사 오디(Odii)",install:"앱 설치",find:"찾기",findPh:"장소 검색 (예: 불국사, 해운대)",findNone:"찾는 장소가 없습니다. 다른 이름으로 검색해 보세요.",agree:"동의",notNow:"나중에",privacy:"개인정보처리방침",terms:"이용약관",locTerms:"위치기반서비스 이용약관",withdraw:"위치 이용 동의 철회",credits:"데이터: 한국관광공사 · TMAP · 네이버 · 문의: ktrip.help@gmail.com",consentA:"현재 위치 주변 장소와 경로를 안내하기 위해 그 순간의 위치만 사용하며 저장하지 않습니다. ",consentB:"을 확인하시고 동의를 눌러주세요.",noConsent:"위치를 쓰지 않습니다. 둘러볼 지역을 골라 계속 이용할 수 있습니다.",withdrawn:"위치 이용 동의를 철회했습니다. 둘러볼 지역을 골라주세요.",playGuide:"▶ 오디오 해설 듣기",followOn:"내 위치 따라가기",followOff:"따라가기 끄기",whole:"전체 경로",tapRoute:"경로를 누르면 지도에 표시됩니다.",arrived:n=>n+"에 도착했습니다. 아래 \"장소 소개\"를 보세요.",routeLangNote:"",audioEnNote:"",dest:"도착지",start:"출발지",board:"승차",alight:"하차",sameStop:"같은 정류장에서 환승",modes:{WALK:"도보",BUS:"버스",SUBWAY:"지하철",EXPRESSBUS:"고속버스",TRAIN:"기차",AIRPLANE:"항공",FERRY:"배"},
+  audioTitle:"오디오 해설",officialTitle:"공식 소개",audioNone:"이 장소 120m 안에 오디오 해설이 없습니다.",textOnly:"대본만 있음 (음성 없음)",script:"대본 보기",odiiCredit:"오디오 해설: 한국관광공사 오디(Odii)",install:"앱 설치",find:"찾기",findPh:"장소 검색 (예: 불국사, 해운대)",findNone:"찾는 장소가 없습니다. 다른 이름으로 검색해 보세요.",agree:"동의",notNow:"나중에",privacy:"개인정보처리방침",terms:"이용약관",locTerms:"위치기반서비스 이용약관",withdraw:"위치 이용 동의 철회",credits:"데이터: 한국관광공사 · TMAP · 네이버 · 문의: ktrip.help@gmail.com",consentA:"현재 위치 주변 장소와 경로를 안내하기 위해 그 순간의 위치만 사용하며 저장하지 않습니다. ",consentB:"을 확인하시고 동의를 눌러주세요.",noConsent:"위치를 쓰지 않습니다. 둘러볼 지역을 골라 계속 이용할 수 있습니다.",withdrawn:"위치 이용 동의를 철회했습니다. 둘러볼 지역을 골라주세요.",playGuide:"▶ 오디오 해설 듣기",followOn:"내 위치 따라가기",followOff:"따라가기 끄기",whole:"전체 경로",tapRoute:"경로를 누르면 지도에 표시됩니다.",arrived:n=>n+"에 도착했습니다. 아래 \"장소 소개\"를 보세요.",courseEyebrow:"도보 코스",courseStats:(n,km,min)=>n+"곳 · "+km+" · 약 "+min+"분",startWalk:"코스 시작",autoNote:"관광공사 공식 정보와 최근 방문 후기를 바탕으로 자동 생성된 코스입니다.",updatedOn:d=>d+" 갱신.",startHere:x=>"출발: "+x,kindHot:"방문객이 많이 찾는 곳",kindOfficial:"공식 관광지",listen:"🔊 듣기",stopListen:"■ 멈춤",audioBtn:"오디오 해설",report:"정보 오류 신고",reportBody:"어떤 점이 틀렸나요? (폐업, 위치 오류, 잘못된 설명 등)\n\n",sources:"출처",atStop:(n,x)=>n+"번 지점 "+x+"에 도착했습니다.",readHere:"이 지점 설명 보기",courseDone:"모든 지점을 둘러보셨습니다. 함께해 주셔서 감사합니다!",routeLangNote:"",audioEnNote:"",dest:"도착지",start:"출발지",board:"승차",alight:"하차",sameStop:"같은 정류장에서 환승",modes:{WALK:"도보",BUS:"버스",SUBWAY:"지하철",EXPRESSBUS:"고속버스",TRAIN:"기차",AIRPLANE:"항공",FERRY:"배"},
   cats:{"":"전체",12:"관광지",temple:"사찰",14:"문화시설",15:"축제",39:"음식점",38:"쇼핑",32:"숙박"},food:39}
 };
-T.ja={...T.en,eyebrow:"ベータ",gps:"現在地を使う",browse:"周辺を見るエリア",areaGps:"現在地",
+T.ja={...T.en,courseEyebrow:"散策コース",courseStats:(n,km,min)=>n+"か所 · "+km+" · 約"+min+"分",startWalk:"コースを開始",autoNote:"韓国観光公社の公式情報と最近の訪問者の投稿をもとに自動作成したコースです。",updatedOn:d=>d+" 更新。",startHere:x=>"出発: "+x,kindHot:"訪問者に人気",kindOfficial:"公式観光地",listen:"🔊 聞く",stopListen:"■ 停止",audioBtn:"音声ガイド",report:"誤りを報告",reportBody:"どこが違っていましたか？（閉店、場所の誤り、説明の誤りなど）\n\n",sources:"出典",atStop:(n,x)=>n+"番目の地点「"+x+"」に到着しました。",readHere:"この地点の説明を見る",courseDone:"すべての地点を回りました。ご利用ありがとうございました！",eyebrow:"ベータ",gps:"現在地を使う",browse:"周辺を見るエリア",areaGps:"現在地",
   idle:"現在地はまだ取得していません",live:"現在地（リアルタイム）",stopped:"現在地を取得できません",
   acc:a=>"精度 ± "+a+" m",searchTitle:"周辺スポット",radius:"検索範囲",search:"検索",
   needPos:"現在地を使うか、エリアを選んでください。",
@@ -290,7 +305,7 @@ T.ja={...T.en,eyebrow:"ベータ",gps:"現在地を使う",browse:"周辺を見�
   modes:{WALK:"徒歩",BUS:"バス",SUBWAY:"地下鉄",EXPRESSBUS:"高速バス",TRAIN:"鉄道",AIRPLANE:"飛行機",FERRY:"フェリー"},
   cats:{"":"すべて",76:"観光地",temple:"寺院",78:"文化施設",85:"祭り",82:"グルメ",79:"ショッピング",80:"宿泊"},food:82,
   routeLangNote:"経路の駅名・路線名は英語で表示されます。",audioEnNote:"日本語の音声ガイドがないため、英語版を表示しています。"};
-T.zhs={...T.en,eyebrow:"测试版",gps:"使用我的位置",browse:"浏览周边区域",areaGps:"我的位置",
+T.zhs={...T.en,courseEyebrow:"步行路线",courseStats:(n,km,min)=>n+" 个地点 · "+km+" · 约 "+min+" 分钟",startWalk:"开始路线",autoNote:"本路线根据韩国观光公社官方信息和近期游客分享自动生成。",updatedOn:d=>d+" 更新。",startHere:x=>"起点: "+x,kindHot:"游客热门",kindOfficial:"官方景点",listen:"🔊 收听",stopListen:"■ 停止",audioBtn:"语音导览",report:"报告错误",reportBody:"哪里不对？（已关闭、位置错误、介绍有误等）\n\n",sources:"来源",atStop:(n,x)=>"第 "+n+" 站: 您已到达"+x+"。",readHere:"查看本站介绍",courseDone:"您已走完所有地点，感谢使用！",eyebrow:"测试版",gps:"使用我的位置",browse:"浏览周边区域",areaGps:"我的位置",
   idle:"尚未获取位置",live:"我的位置（实时）",stopped:"无法获取位置",
   acc:a=>"精度 ± "+a+" 米",searchTitle:"周边景点",radius:"搜索范围",search:"搜索",
   needPos:"请使用我的位置或选择一个区域。",
@@ -318,7 +333,7 @@ T.zhs={...T.en,eyebrow:"测试版",gps:"使用我的位置",browse:"浏览周边
   modes:{WALK:"步行",BUS:"公交",SUBWAY:"地铁",EXPRESSBUS:"长途巴士",TRAIN:"火车",AIRPLANE:"飞机",FERRY:"渡轮"},
   cats:{"":"全部",76:"景点",temple:"寺庙",78:"文化设施",85:"节庆",82:"美食",79:"购物",80:"住宿"},food:82,
   routeLangNote:"路线中的站名和线路名以英文显示。",audioEnNote:"暂无中文语音导览，以下为英文版。"};
-T.zht={...T.zhs,eyebrow:"測試版",gps:"使用我的位置",browse:"瀏覽周邊區域",areaGps:"我的位置",
+T.zht={...T.zhs,courseEyebrow:"步行路線",courseStats:(n,km,min)=>n+" 個地點 · "+km+" · 約 "+min+" 分鐘",startWalk:"開始路線",autoNote:"本路線依據韓國觀光公社官方資訊和近期旅客分享自動產生。",updatedOn:d=>d+" 更新。",startHere:x=>"起點: "+x,kindHot:"旅客熱門",kindOfficial:"官方景點",listen:"🔊 收聽",stopListen:"■ 停止",audioBtn:"語音導覽",report:"回報錯誤",reportBody:"哪裡不對？（已歇業、位置錯誤、介紹有誤等）\n\n",sources:"來源",atStop:(n,x)=>"第 "+n+" 站: 您已抵達"+x+"。",readHere:"查看本站介紹",courseDone:"您已走完所有地點，感謝使用！",eyebrow:"測試版",gps:"使用我的位置",browse:"瀏覽周邊區域",areaGps:"我的位置",
   idle:"尚未取得位置",live:"我的位置（即時）",stopped:"無法取得位置",
   acc:a=>"精確度 ± "+a+" 公尺",searchTitle:"周邊景點",radius:"搜尋範圍",search:"搜尋",
   needPos:"請使用我的位置或選擇一個區域。",
@@ -358,6 +373,7 @@ const AREAS=[
   {g:"seoul",id:"namsan",en:"N Seoul Tower, Namsan",ko:"남산서울타워",lat:37.5512,lng:126.9882},
   {g:"seoul",id:"ddp",en:"Dongdaemun (DDP)",ko:"동대문 DDP",lat:37.5665,lng:127.0092},
   {g:"seoul",id:"hongdae",en:"Hongdae",ko:"홍대",lat:37.5563,lng:126.9236},
+  {g:"seoul",id:"seongsu",en:"Seongsu-dong",ko:"성수동",lat:37.5446,lng:127.0560},
   {g:"seoul",id:"gangnam",en:"Gangnam / COEX",ko:"강남 코엑스",lat:37.5116,lng:127.0595},
   {g:"seoul",id:"jamsil",en:"Jamsil / Lotte World",ko:"잠실 롯데월드",lat:37.5125,lng:127.1025},
   {g:"gyeonggi",id:"hwaseong",en:"Hwaseong Haenggung, Suwon",ko:"수원 화성행궁",lat:37.2819,lng:127.0136},
@@ -544,6 +560,7 @@ async function parseDataGo(res){
 function tour(op,extra){return dataGo(SERVICE[lang],op,extra);}
 async function search(){
   show("apimsg","");
+  renderCourseCard();
   if(!SERVER.tour&&!localKey("key")){show("apimsg",t("needKey"));$("keybox").open=true;return;}
   const pos=areaPos();if(!pos){show("apimsg",t("needPos"));return;}
   $("count").textContent=t("loading");$("list").innerHTML="";$("search").disabled=true;
@@ -597,6 +614,7 @@ function step(n,title){
   const body=el("div");s.append(h,body);return {s,body};
 }
 function openGuide(it){
+  stopSpeaking();activeCourse=null;
   current=it;const g=$("guide");g.innerHTML="";g.hidden=false;
   if(it.firstimage)g.append(img({firstimage:it.firstimage},"hero"));
   g.append(el("h2",null,it.title||""),el("div","meta",[it.addr1,it.addr2].filter(Boolean).join(" ")));
@@ -794,7 +812,7 @@ function loadNaver(){
   if(!id||naverFailed)return Promise.resolve(false);
   if(naverReady)return naverReady;
   naverReady=new Promise(res=>{
-    window.navermap_authFailure=()=>{naverFailed=true;showMapNote(t("naverFail"));if(engine==="naver"&&current){initMap(current,originLL?{lat:originLL[0],lng:originLL[1]}:origin());}};
+    window.navermap_authFailure=()=>{naverFailed=true;showMapNote(t("naverFail"));if(engine==="naver"&&current){const cc=current.course;initMap(current,originLL?{lat:originLL[0],lng:originLL[1]}:origin(),{noDest:!!cc}).then(()=>{if(cc)drawCourse(cc);});}};
     const sc=document.createElement("script");
     sc.src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId="+encodeURIComponent(id)+"&language="+API_LANG[lang];
     sc.onload=()=>res(!!(window.naver&&window.naver.maps));sc.onerror=()=>res(false);
@@ -825,7 +843,7 @@ function addDot(ll,fill,size,title){
   if(title)m.bindTooltip(title,{direction:"top"});
   return m;
 }
-async function initMap(it,o){
+async function initMap(it,o,opts={}){
   if(map){try{engine==="naver"?map.destroy():map.remove();}catch(e){}map=null;}
   meDot=null;meAcc=null;routeObjs=[];fixedObjs=[];arrivedFor=null;
   destLL=[+it.mapy,+it.mapx];originLL=[o.lat,o.lng];
@@ -845,7 +863,7 @@ async function initMap(it,o){
     if(!naverFailed)showMapNote("© OpenStreetMap");
     setTimeout(()=>map&&map.invalidateSize(),300);
   }else{box.textContent="Map library failed to load.";return;}
-  fixedObjs.push(addDot(destLL,cssVar("--warn"),18,it.title));
+  if(!opts.noDest)fixedObjs.push(addDot(destLL,cssVar("--warn"),18,it.title));
   fixedObjs.push(addDot(originLL,cssVar("--muted"),12));
   setFollow(false);fitAll();
   if(gpsPos)updateMe(gpsPos,null);
@@ -901,6 +919,7 @@ function updateMe(pos,acc){
       if(follow)map.panTo(ll,{animate:!matchMedia("(prefers-reduced-motion: reduce)").matches});
     }
   }
+  if(current&&current.course){checkStops(pos);return;}
   if(current&&destLL){
     const d=meters(pos.lat,pos.lng,destLL[0],destLL[1]);
     const box=$("arrived");
@@ -915,6 +934,141 @@ function updateMe(pos,acc){
   }
 }
 const ARRIVE_M=50;
+
+/* ---------- Walking courses (built monthly by .github/workflows/courses.yml, served from the data branch) ---------- */
+const COURSE_BASE="https://raw.githubusercontent.com/jay70park-cyber/trip-companion/data/courses/";
+let courseIndex=null,courseIndexReq=null,activeCourse=null,visited=new Set(),courseMarkers=[];
+const STOP_M=40;
+function loadCourseIndex(){
+  if(courseIndexReq)return courseIndexReq;
+  courseIndexReq=fetch(COURSE_BASE+"index.json?d="+new Date().toISOString().slice(0,10),{cache:"no-cache"})
+    .then(r=>r.ok?r.json():null).then(j=>{courseIndex=j&&Array.isArray(j.zones)?j:null;return courseIndex;}).catch(()=>null);
+  return courseIndexReq;
+}
+function courseForArea(){
+  if(!courseIndex)return null;
+  const z=courseIndex.zones.find(x=>x.id===areaId);if(z)return z;
+  const p=areaPos();if(!p)return null;
+  let best=null,bd=1500;
+  for(const x of courseIndex.zones){const d=meters(p.lat,p.lng,x.start.lat,x.start.lng);if(d<bd){bd=d;best=x;}}
+  return best;
+}
+const L10=(o)=>o?(o[lang]||o.en||o.ko||""):"";
+const fmtKm=m=>(m/1000).toFixed(1)+" km";
+async function renderCourseCard(){
+  const box=$("coursecard");
+  await loadCourseIndex();
+  const z=courseForArea();
+  if(!z){box.hidden=true;return;}
+  box.innerHTML="";box.hidden=false;
+  box.append(el("div","eyebrow",t("courseEyebrow")),el("h2",null,L10(z.name)),el("div","stats",t("courseStats")(z.stops,fmtKm(z.distanceM),z.durationMin)));
+  const b=el("button",null,t("startWalk"));b.type="button";b.onclick=()=>openCourse(z.id);
+  box.append(el("p","note",t("autoNote")+" "+t("updatedOn")(z.updated)),b);
+}
+
+async function openCourse(id){
+  const g=$("guide");g.hidden=false;g.innerHTML="";g.append(el("div","loading",t("loading")));
+  g.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
+  let c;
+  try{const r=await fetch(COURSE_BASE+id+".json?d="+new Date().toISOString().slice(0,10),{cache:"no-cache"});if(!r.ok)throw 0;c=await r.json();}
+  catch(e){g.innerHTML="";g.append(el("div","msg",t("netErr")));return;}
+  stopSpeaking();activeCourse=c;visited=new Set();
+  g.innerHTML="";
+  g.append(el("div","eyebrow",t("courseEyebrow")),el("h2",null,L10(c.name)),
+    el("div","stats",t("courseStats")(c.stops.length,fmtKm(c.distanceM),c.durationMin)),
+    el("div","meta",t("startHere")(L10(c.start.label))));
+  if(c.intro&&L10(c.intro))g.append(el("p","overview",L10(c.intro)));
+  const mapBox=el("div");mapBox.id="map";g.append(mapBox);
+  const tools=el("div","maptools");
+  const fb=el("button","small",t("followOn"));fb.type="button";fb.id="followBtn";
+  fb.onclick=()=>{if(!gpsPos&&watchId===null)$("gps").click();setFollow(!follow);if(follow&&gpsPos&&map){if(engine==="naver"){map.setCenter(N([gpsPos.lat,gpsPos.lng]));if(map.getZoom()<17)map.setZoom(17);}else map.setView([gpsPos.lat,gpsPos.lng],Math.max(map.getZoom(),17));}};
+  const ab=el("button","ghost small",t("whole"));ab.type="button";ab.onclick=()=>{setFollow(false);fitAll();};
+  const mn=el("span","meta");mn.id="mapnote";tools.append(fb,ab,mn);g.append(tools);
+  const arr=el("div","arrived");arr.id="arrived";arr.hidden=true;g.append(arr);
+
+  const ol=el("ol","stops");
+  for(const s of c.stops){
+    const li=el("li");li.id="stop-"+s.n;
+    li.append(el("span","num",String(s.n)));
+    const body=el("div","info");
+    const head=el("div","t",L10(s.name));body.append(head);
+    const tag=el("div","kind",s.kind==="hot"?t("kindHot"):t("kindOfficial"));body.append(tag);
+    if(s.image){const im=img({firstimage:s.image},"hero");im.style.maxHeight="160px";im.style.margin="8px 0";body.append(im);}
+    body.append(el("p",null,L10(s.text)));
+    const acts=el("div","acts");
+    if("speechSynthesis" in window){const lb=el("button","small",t("listen"));lb.type="button";lb.dataset.stop=s.n;lb.onclick=()=>toggleSpeak(s,lb);acts.append(lb);}
+    const au=s.audio&&(s.audio[{en:"en",ko:"ko",ja:"ja"}[lang]]||s.audio.en);
+    if(au&&au.url){const a=document.createElement("audio");a.controls=true;a.preload="none";a.src=au.url;a.style.width="100%";a.style.marginTop="8px";
+      a.addEventListener("play",()=>{stopSpeaking();document.querySelectorAll("audio").forEach(x=>{if(x!==a)x.pause();});});
+      body.append(el("div","meta",t("audioBtn")+(au.title?" · "+au.title:"")),a);}
+    const rp=el("a","btn ghost small",t("report"));
+    rp.href="mailto:ktrip.help@gmail.com?subject="+encodeURIComponent("[K-Trip] "+c.id+" #"+s.n+" "+L10(s.name))+"&body="+encodeURIComponent(t("reportBody"));
+    acts.append(rp);body.append(acts);
+    if(s.sources&&s.sources.length){const d=document.createElement("details");d.append(el("summary",null,t("sources")));
+      const ul=el("ul","srcs");for(const x of s.sources){const li2=el("li");const a=el("a",null,x.label||x.url);a.href=x.url;a.target="_blank";a.rel="noopener";li2.append(a);ul.append(li2);}d.append(ul);body.append(d);}
+    li.append(body);ol.append(li);
+  }
+  g.append(ol,el("p","note",t("autoNote")+" "+t("updatedOn")(c.updated)));
+
+  const last=c.stops[c.stops.length-1];
+  current={course:c,contentid:"course:"+c.id,title:L10(c.name),mapy:last.lat,mapx:last.lng};
+  await initMap(current,{lat:c.start.lat,lng:c.start.lng},{noDest:true});
+  drawCourse(c);
+  if(watchId===null&&hasConsent()&&navigator.geolocation&&window.isSecureContext)$("gps").click();
+}
+
+function numHtml(n,done){return '<div style="width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font:700 13px/1 system-ui,sans-serif;color:'+(done?'#fff':'#22262b')+';background:'+(done?'#2f5d50':'#fffdf8')+';border:2px solid #2f5d50;box-shadow:0 1px 4px rgba(0,0,0,.3);transform:translate(-50%,-50%)">'+n+'</div>';}
+function addNum(ll,n,done){
+  if(engine==="naver")return new naver.maps.Marker({map,position:N(ll),icon:{content:numHtml(n,done),anchor:new naver.maps.Point(0,0)},zIndex:50+n});
+  return L.marker(ll,{icon:L.divIcon({className:"",html:numHtml(n,done),iconSize:[0,0]}),zIndexOffset:500+n}).addTo(map);
+}
+function drawCourse(c){
+  if(!map||!c)return;
+  clearRoute();
+  for(const m of courseMarkers){try{engine==="naver"?m.setMap(null):m.remove();}catch(e){}}
+  courseMarkers=[];
+  routePts=c.path||[];
+  addLine(routePts,{color:cssVar("--accent"),weight:5,opacity:.85});
+  for(const s of c.stops)courseMarkers.push(addNum([s.lat,s.lng],s.n,visited.has(s.n)));
+  setFollow(false);fitAll();
+}
+
+/* read aloud with the phone's own voice */
+let speakingBtn=null;
+function stopSpeaking(){try{speechSynthesis.cancel();}catch(e){}if(speakingBtn){speakingBtn.textContent=t("listen");speakingBtn=null;}}
+function toggleSpeak(s,btn){
+  if(speakingBtn===btn){stopSpeaking();return;}
+  stopSpeaking();document.querySelectorAll("audio").forEach(x=>x.pause());
+  const u=new SpeechSynthesisUtterance(L10(s.name)+". "+L10(s.text));
+  const code={en:"en-US",ko:"ko-KR",ja:"ja-JP",zhs:"zh-CN",zht:"zh-TW"}[lang];u.lang=code;
+  const v=speechSynthesis.getVoices().find(x=>x.lang&&x.lang.replace("_","-").toLowerCase().startsWith(code.toLowerCase()))||speechSynthesis.getVoices().find(x=>x.lang&&x.lang.toLowerCase().startsWith(code.slice(0,2)));
+  if(v)u.voice=v;u.rate=.95;
+  u.onend=u.onerror=()=>{if(speakingBtn===btn){btn.textContent=t("listen");speakingBtn=null;}};
+  speakingBtn=btn;btn.textContent=t("stopListen");speechSynthesis.speak(u);
+}
+
+/* arrival at each stop */
+function checkStops(pos){
+  const c=current&&current.course;if(!c)return;
+  for(const s of c.stops){
+    if(visited.has(s.n))continue;
+    if(meters(pos.lat,pos.lng,s.lat,s.lng)>STOP_M)continue;
+    visited.add(s.n);
+    document.querySelectorAll("ol.stops li").forEach(li=>li.classList.toggle("here",li.id==="stop-"+s.n));
+    const li=$("stop-"+s.n);if(li)li.classList.add("done");
+    const box=$("arrived");box.innerHTML="";box.hidden=false;
+    box.append(el("div",null,t("atStop")(s.n,L10(s.name))));
+    const row=el("div","row");row.style.marginTop="8px";
+    const go=el("button","small",t("readHere"));go.type="button";go.style.background="var(--accent-ink)";go.style.color="var(--accent)";
+    go.onclick=()=>{if(li)li.scrollIntoView({behavior:"smooth",block:"start"});const lb=li&&li.querySelector("button[data-stop]");if(lb&&speakingBtn!==lb)lb.click();};
+    row.append(go);box.append(row);
+    if(visited.size===c.stops.length)box.append(el("div","meta",t("courseDone")));
+    try{navigator.vibrate&&navigator.vibrate([150,80,150]);}catch(e){}
+    drawCourse(c);
+    break;
+  }
+}
+
 
 /* ---------- App install (PWA) ---------- */
 let installEvt=null;

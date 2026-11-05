@@ -1,0 +1,62 @@
+name: Build walking courses
+
+on:
+  schedule:
+    - cron: "0 18 1 * *"   # 1st of every month, 03:00 Korea time (2nd)
+  workflow_dispatch:
+    inputs:
+      zones:
+        description: "Only these zone ids (comma-separated, empty = all)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: courses
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Self-test
+        run: node pipeline/test.mjs
+
+      - name: Open the data branch
+        run: |
+          if git ls-remote --exit-code --heads origin data >/dev/null; then
+            git fetch --depth 1 origin data:data
+            git worktree add out data
+          else
+            git worktree add -b data out
+            (cd out && git rm -rq --cached . && find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +)
+          fi
+
+      - name: Build courses
+        env:
+          TOURAPI_KEY: ${{ secrets.TOURAPI_KEY }}
+          TMAP_KEY: ${{ secrets.TMAP_KEY }}
+          NAVER_SEARCH_ID: ${{ secrets.NAVER_SEARCH_ID }}
+          NAVER_SEARCH_SECRET: ${{ secrets.NAVER_SEARCH_SECRET }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          AI_MODEL: ${{ vars.AI_MODEL }}
+          ONLY_ZONES: ${{ github.event.inputs.zones }}
+        run: node pipeline/build-courses.mjs out
+
+      - name: Publish to the data branch
+        run: |
+          cd out
+          git add -A courses
+          if git diff --cached --quiet; then echo "No changes"; exit 0; fi
+          git -c user.name="K-Trip course bot" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -q -m "Update walking courses $(date -u +%Y-%m-%d)"
+          git push origin data
