@@ -5,9 +5,7 @@
 // Keys (environment variables; any that are missing switch that step off):
 //   TOURAPI_KEY          data.go.kr key (Decoding)          → official places, descriptions, Odii audio
 //   TMAP_KEY             SK open API appKey                 → walking paths between stops
-//   NAVER_SEARCH_ID      Naver Client ID (developers.naver.com or NAVER API HUB) → recent blog posts, place check
-//   NAVER_SEARCH_SECRET  Naver Client Secret
-//   ANTHROPIC_API_KEY    AI for place extraction, commentary, fact check and translation
+//   ANTHROPIC_API_KEY    AI with web search: trending places (with sources), commentary, fact check, translation
 //   AI_MODEL             optional, defaults to claude-haiku-5-5
 //   ONLY_ZONES           optional, comma-separated zone ids
 //
@@ -24,7 +22,6 @@ const DIR = path.join(OUT, "courses");
 const env = (k) => (process.env[k] || "").replace(/[^\x21-\x7E]/g, "");
 const KEY = {
   tour: env("TOURAPI_KEY"), tmap: env("TMAP_KEY"),
-  nid: env("NAVER_SEARCH_ID"), nsec: env("NAVER_SEARCH_SECRET"),
   ai: env("ANTHROPIC_API_KEY"), model: env("AI_MODEL") || "claude-haiku-5-5",
 };
 const NOW = new Date();
@@ -101,26 +98,25 @@ async function odiiNear(lang, at, radiusM = 120) {
   }));
 }
 
-// Works with keys from developers.naver.com (openapi.naver.com) or from NAVER API HUB on NAVER Cloud.
-// Tries the first and falls back to the second; remembers which one answered.
-let naverHost = null;
-const NAVER_HOSTS = [
-  { id: "openapi", url: (k, q) => `https://openapi.naver.com/v1/search/${k}.json?${q}`, headers: () => ({ "X-Naver-Client-Id": KEY.nid, "X-Naver-Client-Secret": KEY.nsec }) },
-  { id: "apihub", url: (k, q) => `https://naverapihub.apigw.ntruss.com/search/v1/${k}?${q}`, headers: () => ({ "X-NCP-APIGW-API-KEY-ID": KEY.nid, "X-NCP-APIGW-API-KEY": KEY.nsec }) },
-];
-async function naver(kind, params) {
-  const qs = new URLSearchParams({ format: "json", ...params });
-  const order = naverHost ? [naverHost] : NAVER_HOSTS;
-  let lastErr;
-  for (const h of order) {
-    try {
-      const text = await http(h.url(kind, qs), { headers: h.headers() }, 1);
-      naverHost = h;
-      await sleep(150);
-      return JSON.parse(text).items || [];
-    } catch (e) { lastErr = e; }
-  }
-  throw lastErr;
+// TMAP place search: confirms a place exists and gives its position (free daily quota on the TMAP plan).
+async function tmapPoi(keyword, near, radiusKm = 2) {
+  if (!KEY.tmap) return [];
+  const qs = new URLSearchParams({
+    version: "1", searchKeyword: keyword, searchType: "all", page: "1", count: "5",
+    reqCoordType: "WGS84GEO", resCoordType: "WGS84GEO", searchtypCd: "A",
+    centerLon: String(near.lng), centerLat: String(near.lat), radius: String(radiusKm),
+  });
+  try {
+    const text = await http(`https://apis.openapi.sk.com/tmap/pois?${qs}`, { headers: { appKey: KEY.tmap, Accept: "application/json" } });
+    await sleep(200);
+    if (!text.trim()) return [];
+    const pois = JSON.parse(text)?.searchPoiInfo?.pois?.poi || [];
+    return pois.map((p) => ({
+      name: p.name || "", lat: +(p.noorLat || p.frontLat), lng: +(p.noorLon || p.frontLon),
+      category: [p.upperBizName, p.middleBizName, p.lowerBizName, p.detailBizName].filter(Boolean).join(">"),
+      address: p.newAddressList?.newAddress?.[0]?.fullAddressRoad || [p.upperAddrName, p.middleAddrName, p.lowerAddrName].filter(Boolean).join(" "),
+    })).filter((p) => isFinite(p.lat) && isFinite(p.lng));
+  } catch (e) { log(`  ! place search ${keyword}: ${e.message}`); return []; }
 }
 
 async function walkLeg(a, b) {
@@ -145,62 +141,68 @@ async function walkLeg(a, b) {
   } catch (e) { log(`  ! walk leg: ${e.message}`); return null; }
 }
 
-async function ai(prompt, maxTokens = 4000) {
-  const text = await http("https://api.anthropic.com/v1/messages", {
-    method: "POST", timeout: 120000,
-    headers: { "x-api-key": KEY.ai, "anthropic-version": "2023-06-01", "content-type": "application/json" },
-    body: JSON.stringify({ model: KEY.model, max_tokens: maxTokens, messages: [{ role: "user", content: prompt }] }),
-  });
-  const data = JSON.parse(text);
-  const out = (data.content || []).filter((c) => c.type === "text").map((c) => c.text).join("\n");
-  return L.parseJson(out);
+async function ai(prompt, maxTokens = 4000, { webSearch = 0 } = {}) {
+  const body = { model: KEY.model, max_tokens: maxTokens, messages: [{ role: "user", content: prompt }] };
+  if (webSearch) body.tools = [{ type: "web_search_20250305", name: "web_search", max_uses: webSearch, user_location: { type: "approximate", country: "KR", timezone: "Asia/Seoul" } }];
+  const citations = [];
+  let text = "";
+  for (let turn = 0; turn < 3; turn++) {
+    const raw = await http("https://api.anthropic.com/v1/messages", {
+      method: "POST", timeout: 180000,
+      headers: { "x-api-key": KEY.ai, "anthropic-version": "2023-06-01", "content-type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    const data = JSON.parse(raw);
+    for (const c of data.content || []) {
+      if (c.type === "text") { text += c.text; for (const ci of c.citations || []) citations.push({ url: ci.url, title: ci.title, cited: ci.cited_text }); }
+    }
+    if (data.stop_reason !== "pause_turn") break;
+    body.messages = [...body.messages, { role: "assistant", content: data.content }];  // let a long search finish
+  }
+  const out = L.parseJson(text);
+  if (webSearch) out._citations = citations;
+  return out;
 }
 
-/* ---------------- step 1: trending places from recent blog posts ---------------- */
+/* ---------------- step 1: trending places from a web search (AI web search tool + TMAP place check) ---------------- */
 async function hotCandidates(z) {
-  if (!KEY.nid || !KEY.nsec || !KEY.ai) { log("  · trending places skipped (needs Naver search + AI keys)"); return []; }
-  let posts = [];
-  for (const q of z.queries) {
-    for (const start of [1, 101]) {
-      const items = await naver("blog", { query: q, display: "100", start: String(start), sort: "date" }).catch((e) => { log(`  ! blog ${q}: ${e.message}`); return []; });
-      posts = posts.concat(items);
-    }
-  }
-  const seen = new Set();
-  posts = L.recentPosts(posts, NOW, 90).filter((p) => (seen.has(p.link) ? false : (seen.add(p.link), true)));
-  log(`  · ${posts.length} recent non-sponsored posts`);
-  if (posts.length < 10) return [];
-  posts = posts.slice(0, 300);
-  const lines = posts.map((p, i) => `[${i}] ${L.stripTags(p.title)} — ${L.stripTags(p.description)}`).join("\n");
-  const ex = await ai(
-`These are snippets of recent Korean blog posts about ${z.name.ko}.
-List the specific named places in or near ${z.name.ko} that the posts recommend visiting: cafes, restaurants, streets, shops, galleries, pop-up stores, landmarks.
+  if (!KEY.ai || !KEY.tmap) { log("  · trending places skipped (needs AI + TMAP keys)"); return []; }
+  const since = new Date(NOW.getTime() - 90 * 86400000).toISOString().slice(0, 10);
+  let res;
+  try {
+    res = await ai(
+`Search the web (Korean blogs, news, travel sites) for places in or right around ${z.name.ko} (${z.name.en}), Seoul/Korea, that visitors have been recommending recently (posts dated after ${since}).
+Useful searches include: ${z.queries.join(", ")}.
+Pick up to 12 specific named places worth walking to: cafés, restaurants, streets, shops, galleries, pop-up stores, landmarks.
 Rules:
-- Use the place name exactly as written in Korean in the snippets.
-- Skip bars, pubs, clubs, hotels, motels, hospitals, and generic words (e.g. "카페거리" alone is fine only if it is a named street).
-- For each place, list the indices of the snippets that mention it.
-Reply with JSON only: {"places":[{"name":"...","category":"cafe|restaurant|street|shop|gallery|popup|landmark|other","posts":[0,5]}]}
+- Each place needs at least 2 different web pages (different sites or authors) that recommend it, dated after ${since}.
+- Skip bars, pubs, clubs, hotels, motels, chain-store branches with nothing special, and places outside ${z.name.ko}.
+- Skip posts marked as sponsored (협찬, 체험단, 원고료, 광고).
+- Use the place name as it is written in Korean.
+- "why" is one short sentence in English that only repeats what the pages say.
+Reply with JSON only:
+{"places":[{"name":"...","category":"cafe|restaurant|street|shop|gallery|popup|landmark|other","why":"...","sources":[{"url":"...","title":"..."}]}]}`,
+      4000, { webSearch: 6 });
+  } catch (e) { log(`  ! web search: ${e.message}`); return []; }
 
-SNIPPETS
-${lines}`, 4000).catch((e) => { log(`  ! extract: ${e.message}`); return { places: [] }; });
+  const cites = res._citations || [];
+  const places = (res.places || []).filter((p) => p && p.name && Array.isArray(p.sources))
+    .map((p) => ({ ...p, sources: p.sources.filter((x) => /^https?:\/\//.test(x.url || "")) }))
+    .filter((p) => new Set(p.sources.map((x) => { try { return new URL(x.url).host + new URL(x.url).pathname.split("/")[1]; } catch { return x.url; } })).size >= 2);
+  log(`  · ${places.length} places with 2+ independent sources`);
 
-  const scored = L.scoreMentions(ex.places, posts).filter((p) => p.bloggers >= 3).slice(0, 15);
-  log(`  · ${scored.length} places mentioned by 3+ bloggers`);
   const out = [];
-  for (const s of scored) {
-    const items = await naver("local", { query: `${z.name.ko} ${s.name}`, display: "5" }).catch(() => []);
-    const want = s.name.replace(/\s/g, "");
-    const hit = items.find((it) => L.stripTags(it.title).replace(/\s/g, "").includes(want) || want.includes(L.stripTags(it.title).replace(/\s/g, "")));
-    if (!hit) continue;
-    const pos = L.naverCoord(hit.mapx, hit.mapy);
-    if (!pos || L.meters(z.start, pos) > z.radiusM + 300) continue;
+  for (const p of places) {
+    const pois = await tmapPoi(`${p.name}`, z.start, Math.ceil((z.radiusM + 300) / 1000));
+    const want = p.name.replace(/\s/g, "");
+    const hit = pois.find((x) => { const n = x.name.replace(/\s/g, ""); return n.includes(want) || want.includes(n); });
+    if (!hit || L.meters(z.start, hit) > z.radiusM + 300) continue;
     if (!L.allowedCategory(hit.category)) continue;
-    const snippets = posts.filter((p, i) => (ex.places.find((e) => e.name === s.name)?.posts || []).includes(i)).slice(0, 6);
+    const quoted = cites.filter((c) => p.sources.some((x) => x.url === c.url)).map((c) => c.cited).filter(Boolean).slice(0, 4);
     out.push({
-      kind: "hot", ...pos, nameKo: L.stripTags(hit.title), category: hit.category || s.category,
-      address: hit.roadAddress || hit.address || "", bloggers: s.bloggers,
-      sources: snippets.map((p) => ({ label: L.stripTags(p.title), url: p.link })),
-      blog: snippets.map((p) => L.stripTags(p.description)),
+      kind: "hot", lat: hit.lat, lng: hit.lng, nameKo: hit.name, category: hit.category || p.category, address: hit.address,
+      sources: p.sources.slice(0, 4).map((x) => ({ label: x.title || x.url, url: x.url })),
+      blog: [p.why, ...quoted].filter(Boolean),
     });
   }
   log(`  · ${out.length} trending places confirmed on the map`);
@@ -250,7 +252,7 @@ function sourcesFor(s) {
   if (s.category) parts.push(`Category: ${s.category}`);
   for (const l of ["en", "ko"]) if (s.official && s.official[l]) parts.push(`Official description (${l}): ${L.firstSentences(s.official[l], 6)}`);
   for (const l of ["en", "ko"]) if (s.scripts && s.scripts[l]) parts.push(`Audio guide script (${l}): ${s.scripts[l].slice(0, 700)}`);
-  if (s.blog && s.blog.length) parts.push(`Recent visitor posts: ${s.blog.map((b) => `"${b}"`).join(" | ")}`);
+  if (s.blog && s.blog.length) parts.push(`Recent web mentions: ${s.blog.map((b) => `"${b}"`).join(" | ")}`);
   return parts.join("\n");
 }
 

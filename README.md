@@ -22,10 +22,10 @@ Deployed automatically to Netlify from the `main` branch.
 
 `.github/workflows/courses.yml` runs on the 1st of every month (and on demand from the Actions tab).
 It runs `pipeline/build-courses.mjs`, which builds a walking course for each zone in `pipeline/zones.mjs`
-from KTO official places, Odii audio stories and recent Naver blog posts, checks every stop on the map,
+from KTO official places, Odii audio stories and places that recent web pages recommend (found with the AI web search tool, each needing two independent sources), checks every stop with TMAP place search,
 lays out a walkable route with TMAP, writes commentary with an AI model that is fact-checked against the
 sources, and translates it into five languages. Courses are written to the `data` branch
 (`courses/index.json`, `courses/<zone>.json`), which the app reads directly, so no Netlify deploy is needed.
 
-Repository secrets used: `TOURAPI_KEY`, `TMAP_KEY`, `NAVER_SEARCH_ID`, `NAVER_SEARCH_SECRET`, `ANTHROPIC_API_KEY`.
-Optional repository variable: `AI_MODEL`. Without the Naver/AI keys the courses use official places only.
+Repository secrets used: `TOURAPI_KEY`, `TMAP_KEY`, `ANTHROPIC_API_KEY`.
+Optional repository variable: `AI_MODEL`. Without the AI key the courses use official places and official descriptions only.

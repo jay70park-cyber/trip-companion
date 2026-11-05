@@ -45,8 +45,6 @@ jobs:
         env:
           TOURAPI_KEY: ${{ secrets.TOURAPI_KEY }}
           TMAP_KEY: ${{ secrets.TMAP_KEY }}
-          NAVER_SEARCH_ID: ${{ secrets.NAVER_SEARCH_ID }}
-          NAVER_SEARCH_SECRET: ${{ secrets.NAVER_SEARCH_SECRET }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           AI_MODEL: ${{ vars.AI_MODEL }}
           ONLY_ZONES: ${{ github.event.inputs.zones }}
