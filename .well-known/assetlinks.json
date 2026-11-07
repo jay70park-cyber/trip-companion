@@ -7,7 +7,8 @@
       "namespace": "android_app",
       "package_name": "com.ktripcompanion.app",
       "sha256_cert_fingerprints": [
-        "79:BD:24:52:92:AE:0D:F0:48:3F:1E:82:CE:36:DD:FD:5D:95:A1:DE:59:F6:B1:7A:A0:31:86:49:6B:C1:49:47"
+        "79:BD:24:52:92:AE:0D:F0:48:3F:1E:82:CE:36:DD:FD:5D:95:A1:DE:59:F6:B1:7A:A0:31:86:49:6B:C1:49:47",
+        "9D:4D:EA:5A:DA:A7:A3:71:7B:91:D2:89:C3:96:0C:1A:82:25:4B:C5:E4:11:AF:4A:B7:36:0A:80:5D:6C:95:3E"
       ]
     }
   }
