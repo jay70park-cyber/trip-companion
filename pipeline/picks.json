@@ -1,4 +1,32 @@
 {
-  "note": "Restaurants Jay recommends. Add one object per place. lat/lng are filled in automatically from the address.",
-  "picks": []
+ "note": "Restaurants Jay recommends. Add one object per place. lat/lng are filled in automatically from the address.",
+ "picks": [
+  {
+   "id": "sutonggol-gamnamujip",
+   "area": "대전 수통골",
+   "address": "대전 유성구 수통골로 69",
+   "name": {
+    "ko": "수통골감나무집 본점",
+    "en": "Sutonggol Gamnamujip (Main)",
+    "ja": "スットンゴル・カムナムチプ本店",
+    "zhs": "水桶谷柿子树之家 本店",
+    "zht": "水桶谷柿子樹之家 本店"
+   },
+   "menu": {
+    "ko": "오리수육 · 오리누룽지백숙",
+    "en": "Boiled duck slices · duck & scorched-rice soup",
+    "ja": "鴨肉のスユク・鴨のおこげ参鶏湯風煮込み",
+    "zhs": "白切鸭肉 · 锅巴鸭汤",
+    "zht": "白切鴨肉 · 鍋巴鴨湯"
+   },
+   "text": {
+    "ko": "수통골 계곡 입구의 오리 요리 전문점, 등산 후 식사로 인기",
+    "en": "Duck specialist at the Sutonggol valley trailhead, a favorite meal after a hike",
+    "ja": "スットンゴル渓谷入口の鴨料理専門店。登山後の食事に人気",
+    "zhs": "位于水桶谷溪谷入口的鸭肉专门店，登山后用餐的人气之选",
+    "zht": "位於水桶谷溪谷入口的鴨肉專門店，登山後用餐的人氣之選"
+   },
+   "source": "https://naver.me/FnsoTHFB"
+  }
+ ]
 }
