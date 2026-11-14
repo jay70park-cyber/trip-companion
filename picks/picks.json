@@ -29,6 +29,35 @@
    "source": "https://naver.me/FnsoTHFB",
    "lat": 36.346589,
    "lng": 127.291937
+  },
+  {
+   "id": "sutonggol-maha",
+   "area": "대전 수통골",
+   "address": "대전 유성구 수통골로 53",
+   "name": {
+    "ko": "마하 (베이커리 카페)",
+    "en": "MAHA Bakery Café",
+    "ja": "MAHA（ベーカリーカフェ）",
+    "zhs": "MAHA 烘焙咖啡馆",
+    "zht": "MAHA 烘焙咖啡館"
+   },
+   "menu": {
+    "ko": "갓 구운 빵 · 무화과요거트케이크 · 로열 밀크티",
+    "en": "Fresh-baked bread · fig yogurt cake · royal milk tea",
+    "ja": "焼きたてパン・イチジクヨーグルトケーキ・ロイヤルミルクティー",
+    "zhs": "现烤面包 · 无花果酸奶蛋糕 · 皇家奶茶",
+    "zht": "現烤麵包 · 無花果優格蛋糕 · 皇家奶茶"
+   },
+   "text": {
+    "ko": "수통골 입구의 대형 베이커리 카페, 2·3층 통창과 테라스에서 계룡산 풍경",
+    "en": "Large bakery café at the Sutonggol entrance with mountain views of Gyeryongsan from its windows and terrace",
+    "ja": "スットンゴル入口の大型ベーカリーカフェ。大きな窓とテラスから鶏龍山の眺め",
+    "zhs": "水桶谷入口的大型烘焙咖啡馆，落地窗和露台可眺望鸡龙山",
+    "zht": "水桶谷入口的大型烘焙咖啡館，落地窗和露台可眺望雞龍山"
+   },
+   "source": "https://naver.me/GGhU8ibo",
+   "lat": 36.346021,
+   "lng": 127.290091
   }
  ]
 }
