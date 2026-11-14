@@ -136,6 +136,8 @@ ul.food{list-style:none;margin:8px 0 0;padding:0}
 ul.food li{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-top:1px solid var(--line);font-size:14px}
 ul.food li:first-child{border-top:0}
 ul.food li.pick{flex-wrap:wrap}
+#list .badge{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:var(--rust,#b8532c);border-radius:4px;padding:0 5px;margin-right:6px;vertical-align:2px}
+#list .pm{font-size:12.5px;color:var(--muted,#5b625d);line-height:1.4;margin-top:2px}
 ul.food li.pick .pk{flex:1 1 60%;min-width:0}
 ul.food li.pick .badge{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:var(--rust,#b8532c);border-radius:4px;padding:0 5px;margin-right:6px;vertical-align:1px}
 ul.food li.pick .pm{display:block;font-size:12.5px;color:var(--muted,#5b625d);margin-top:2px;line-height:1.4}
@@ -573,9 +575,13 @@ async function search(){
   if(temple){extra.contentTypeId=lang==="ko"?"12":"76";extra.numOfRows="200";}
   else if(cat)extra.contentTypeId=cat;
   try{
-    let items=await tour("locationBasedList2",extra);
+    const wantPicks=!cat||String(cat)===String(t("food"));
+    const [res,picks]=await Promise.all([tour("locationBasedList2",extra).then(v=>({v}),e=>({e})),wantPicks?loadPicks():Promise.resolve([])]);
+    const near=pickItems(picks,pos,+$("radius").value);
+    if(res.e&&!near.length)throw res.e;
+    let items=res.v||[];
     if(temple)items=items.filter(isTemple);
-    lastItems=items;renderList(lastItems);
+    lastItems=mergePicks(near,items);renderList(lastItems);
   }
   catch(e){$("count").textContent="";show("apimsg",e&&e.api?t("apiErr")(e.api):t("netErr"));}
   finally{$("search").disabled=false;}
@@ -596,6 +602,17 @@ function img(it,cls){
   if(!src){return el("div",cls);}
   const i=el("img",cls);i.alt="";i.loading="lazy";i.src=src.replace(/^http:/,"https:");i.onerror=()=>{const ph=el("div",cls);i.replaceWith(ph);};return i;
 }
+/* Jay's restaurant picks as list items (they sort in by distance, marked ★) */
+function pickItems(picks,pos,radius){
+  return picks.filter(p=>isFinite(p.lat)&&isFinite(p.lng)).map(p=>({pick:p,contentid:"pick:"+p.id,title:pickTxt(p.name),addr1:p.address||"",
+    mapy:p.lat,mapx:p.lng,dist:String(meters(pos.lat,pos.lng,p.lat,p.lng))})).filter(x=>+x.dist<=radius);
+}
+const normName=x=>String(x||"").replace(/\s|\(.*?\)/g,"").toLowerCase();
+function mergePicks(near,items){
+  if(!near.length)return items;
+  const taken=new Set();for(const x of near)for(const k of Object.values(x.pick.name||{}))taken.add(normName(k));
+  return near.concat(items.filter(it=>!taken.has(normName(it.title)))).sort((a,b)=>(parseFloat(a.dist)||0)-(parseFloat(b.dist)||0));
+}
 function renderList(items){
   $("list").innerHTML="";$("count").textContent=items.length?t("found")(items.length):t("none");
   for(const it of items){
@@ -603,7 +620,9 @@ function renderList(items){
     const info=el("div","info");
     const m2=parseFloat(it.dist);
     const addr=el("div","a");if(!isNaN(m2))addr.append(el("span","d",fmtD(m2)));addr.append(document.createTextNode([it.addr1,it.addr2].filter(Boolean).join(" ")));
-    info.append(el("div","t",it.title||""),addr);
+    const tt=el("div","t");if(it.pick)tt.append(el("span","badge","★ "+t("pick")));tt.append(document.createTextNode(it.title||""));
+    info.append(tt,addr);
+    if(it.pick){const pm=[pickTxt(it.pick.menu),pickTxt(it.pick.text)].filter(Boolean).join(" · ");if(pm)info.append(el("div","pm",pm));}
     const acts=el("div","acts");
     const g=el("button","small",t("guide"));g.type="button";g.onclick=()=>openGuide(it);
     const m=el("a","btn ghost small",t("map"));m.href=kakaoLink(it);m.target="_blank";m.rel="noopener";
@@ -672,7 +691,8 @@ async function loadFood(it,box){
     loadPicks(),
     tour("locationBasedList2",{numOfRows:"5",pageNo:"1",arrange:"E",mapX:String(it.mapx),mapY:String(it.mapy),radius:"1000",contentTypeId:String(t("food"))}).then(v=>({v}),e=>({e}))
   ]);
-  const near=picks.filter(p=>isFinite(p.lat)&&isFinite(p.lng)).map(p=>({p,d:meters(lat,lng,p.lat,p.lng)}))
+  const self=it.pick&&it.pick.id;
+  const near=picks.filter(p=>p.id!==self&&isFinite(p.lat)&&isFinite(p.lng)).map(p=>({p,d:meters(lat,lng,p.lat,p.lng)}))
     .filter(x=>x.d<=PICK_M).sort((a,b)=>a.d-b.d).slice(0,5);
   const items=tourRes.v||[];
   box.className="";box.innerHTML="";
@@ -737,6 +757,10 @@ async function loadOdii(it,box){
   }catch(e){box.className="msg";box.textContent=e&&e.api?t("apiErr")(e.api):t("netErr");}
 }
 async function loadOverview(it,box){
+  if(it.pick){box.className="overview";box.innerHTML="";
+    const lines=[pickTxt(it.pick.menu),pickTxt(it.pick.text)].filter(Boolean);
+    if(!lines.length){box.className="meta";box.textContent=t("s4none");return;}
+    for(const l of lines)box.append(el("p",null,l));return;}
   try{
     const items=await tour("detailCommon2",{contentId:String(it.contentid)});
     const ov=items[0]&&items[0].overview;
