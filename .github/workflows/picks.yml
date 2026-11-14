@@ -1,0 +1,44 @@
+name: Publish restaurant picks
+
+on:
+  push:
+    branches: [dev, main]
+    paths: [pipeline/picks.json, pipeline/build-picks.mjs]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: data-branch
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Open the data branch
+        run: |
+          git fetch --depth 1 origin data:data
+          git worktree add out data
+
+      - name: Find locations
+        env:
+          TMAP_KEY: ${{ secrets.TMAP_KEY }}
+        run: node pipeline/build-picks.mjs out
+
+      - name: Publish to the data branch
+        run: |
+          cd out
+          git add -A picks
+          if git diff --cached --quiet; then echo "No changes"; exit 0; fi
+          git -c user.name="K-Trip course bot" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -q -m "Update restaurant picks $(date -u +%Y-%m-%d)"
+          git push origin data

@@ -135,6 +135,10 @@ ol.turns li{margin:3px 0}
 ul.food{list-style:none;margin:8px 0 0;padding:0}
 ul.food li{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-top:1px solid var(--line);font-size:14px}
 ul.food li:first-child{border-top:0}
+ul.food li.pick{flex-wrap:wrap}
+ul.food li.pick .pk{flex:1 1 60%;min-width:0}
+ul.food li.pick .badge{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:var(--rust,#b8532c);border-radius:4px;padding:0 5px;margin-right:6px;vertical-align:1px}
+ul.food li.pick .pm{display:block;font-size:12.5px;color:var(--muted,#5b625d);margin-top:2px;line-height:1.4}
 .loading{font-size:13px;color:var(--muted)}
 </style>
 </head>
@@ -249,7 +253,7 @@ const T={
   needT:"Enter your TMAP appKey (bottom of the page) to see routes.",cors:"TMAP did not answer this request. Check that the Transit product is enabled for your appKey; if it is, tell Claude this message.",
   min:"min",transfers:n=>n+" transfer"+(n===1?"":"s"),walk:"walk",fare:"fare",stops:n=>n+" stops",
   handoff:"Navigate step by step in",naver:"Naver Map",kakao:"Kakao Map",
-  s2:"Food near the destination",s2none:"No listed restaurants within 1 km.",
+  s2:"Food near the destination",s2none:"No listed restaurants within 1 km.",pick:"Local pick",
   s3:"Walking route",s3btn:"Show walking directions",s3far:"You are more than 3 km away. Walking directions appear when you get closer.",
   s4:"About this place",s4none:"No description available yet.",
   audioTitle:"Audio guide",officialTitle:"Official description",audioNone:"No audio guide within 120 m of this place.",textOnly:"Text only (no audio yet)",script:"Read the script",odiiCredit:"Audio guide: Korea Tourism Organization (Odii)",install:"Install app",find:"Find",findPh:"Search a place, e.g. Bulguksa, Haeundae",findNone:"No places found. Try another spelling.",agree:"Agree",notNow:"Not now",privacy:"Privacy",terms:"Terms",locTerms:"Location terms",withdraw:"Stop using my location",credits:"Data: Korea Tourism Organization · TMAP · NAVER · Contact: ktrip.help@gmail.com",consentA:"To find places and routes from where you are, K-Trip Companion uses your location for that moment only and does not store it. Please read the ",consentB:" and tap Agree.",noConsent:"Location is off. You can still pick an area to browse.",withdrawn:"Location consent withdrawn. Pick an area to browse.",playGuide:"▶ Play the audio guide",followOn:"Follow me",followOff:"Stop following",whole:"Whole route",tapRoute:"Tap a route to show it on the map.",arrived:n=>"You have arrived at "+n+". See \"About this place\" below.",courseEyebrow:"Walking course",courseStats:(n,km,min)=>n+" stops · "+km+" · about "+min+" min",startWalk:"Start the walk",autoNote:"Built automatically from official tourism data and recent visitor posts.",updatedOn:d=>"Updated "+d+".",startHere:x=>"Starts at "+x,kindHot:"Popular with visitors",kindOfficial:"Official tourist site",listen:"🔊 Listen",stopListen:"■ Stop",audioBtn:"Audio guide",report:"Report a problem",reportBody:"What is wrong? (closed, wrong place, wrong information…)\n\n",sources:"Sources",atStop:(n,x)=>"Stop "+n+": you are at "+x+".",readHere:"Read about this stop",courseDone:"You have visited every stop. Thanks for walking with us!",routeLangNote:"",audioEnNote:"",dest:"Destination",start:"Start",board:"Board at",alight:"get off at",sameStop:"Transfer at the same stop",modes:{WALK:"WALK",BUS:"BUS",SUBWAY:"SUBWAY",EXPRESSBUS:"COACH",TRAIN:"TRAIN",AIRPLANE:"FLIGHT",FERRY:"FERRY"},
@@ -271,7 +275,7 @@ const T={
   needT:"경로를 보려면 TMAP appKey를 입력하세요 (페이지 맨 아래).",cors:"TMAP이 이 요청에 응답하지 않았습니다. appKey에 대중교통 상품이 신청되어 있는지 확인하고, 신청되어 있는데도 이 문구가 나오면 Claude에게 알려주세요.",
   min:"분",transfers:n=>"환승 "+n+"회",walk:"도보",fare:"요금",stops:n=>n+"개 정류장",
   handoff:"단계별 길안내 열기",naver:"네이버지도",kakao:"카카오맵",
-  s2:"도착지 주변 식당",s2none:"1km 안에 등록된 식당이 없습니다.",
+  s2:"도착지 주변 식당",s2none:"1km 안에 등록된 식당이 없습니다.",pick:"추천",
   s3:"도보 동선",s3btn:"도보 경로 보기",s3far:"3km 이상 떨어져 있습니다. 가까워지면 도보 경로가 표시됩니다.",
   s4:"장소 소개",s4none:"아직 소개 글이 없습니다.",
   audioTitle:"오디오 해설",officialTitle:"공식 소개",audioNone:"이 장소 120m 안에 오디오 해설이 없습니다.",textOnly:"대본만 있음 (음성 없음)",script:"대본 보기",odiiCredit:"오디오 해설: 한국관광공사 오디(Odii)",install:"앱 설치",find:"찾기",findPh:"장소 검색 (예: 불국사, 해운대)",findNone:"찾는 장소가 없습니다. 다른 이름으로 검색해 보세요.",agree:"동의",notNow:"나중에",privacy:"개인정보처리방침",terms:"이용약관",locTerms:"위치기반서비스 이용약관",withdraw:"위치 이용 동의 철회",credits:"데이터: 한국관광공사 · TMAP · 네이버 · 문의: ktrip.help@gmail.com",consentA:"현재 위치 주변 장소와 경로를 안내하기 위해 그 순간의 위치만 사용하며 저장하지 않습니다. ",consentB:"을 확인하시고 동의를 눌러주세요.",noConsent:"위치를 쓰지 않습니다. 둘러볼 지역을 골라 계속 이용할 수 있습니다.",withdrawn:"위치 이용 동의를 철회했습니다. 둘러볼 지역을 골라주세요.",playGuide:"▶ 오디오 해설 듣기",followOn:"내 위치 따라가기",followOff:"따라가기 끄기",whole:"전체 경로",tapRoute:"경로를 누르면 지도에 표시됩니다.",arrived:n=>n+"에 도착했습니다. 아래 \"장소 소개\"를 보세요.",courseEyebrow:"도보 코스",courseStats:(n,km,min)=>n+"곳 · "+km+" · 약 "+min+"분",startWalk:"코스 시작",autoNote:"관광공사 공식 정보와 최근 방문 후기를 바탕으로 자동 생성된 코스입니다.",updatedOn:d=>d+" 갱신.",startHere:x=>"출발: "+x,kindHot:"방문객이 많이 찾는 곳",kindOfficial:"공식 관광지",listen:"🔊 듣기",stopListen:"■ 멈춤",audioBtn:"오디오 해설",report:"정보 오류 신고",reportBody:"어떤 점이 틀렸나요? (폐업, 위치 오류, 잘못된 설명 등)\n\n",sources:"출처",atStop:(n,x)=>n+"번 지점 "+x+"에 도착했습니다.",readHere:"이 지점 설명 보기",courseDone:"모든 지점을 둘러보셨습니다. 함께해 주셔서 감사합니다!",routeLangNote:"",audioEnNote:"",dest:"도착지",start:"출발지",board:"승차",alight:"하차",sameStop:"같은 정류장에서 환승",modes:{WALK:"도보",BUS:"버스",SUBWAY:"지하철",EXPRESSBUS:"고속버스",TRAIN:"기차",AIRPLANE:"항공",FERRY:"배"},
@@ -291,7 +295,7 @@ T.ja={...T.en,courseEyebrow:"散策コース",courseStats:(n,km,min)=>n+"か所 
   cors:"経路サービスが応答しませんでした。時間をおいて再度お試しください。",
   min:"分",transfers:n=>"乗換"+n+"回",walk:"徒歩",fare:"運賃",stops:n=>n+"駅/停留所",
   handoff:"ナビを開く",naver:"NAVER Map",kakao:"Kakao Map",
-  s2:"目的地周辺の飲食店",s2none:"1km以内に登録された飲食店はありません。",
+  s2:"目的地周辺の飲食店",s2none:"1km以内に登録された飲食店はありません。",pick:"おすすめ",
   s3:"徒歩ルート",s3btn:"徒歩ルートを表示",s3far:"3km以上離れています。近づくと徒歩ルートが表示されます。",
   s4:"スポット紹介",s4none:"紹介文はまだありません。",
   audioTitle:"音声ガイド",officialTitle:"公式紹介",audioNone:"このスポットの120m以内に音声ガイドはありません。",textOnly:"テキストのみ（音声なし）",script:"台本を読む",odiiCredit:"音声ガイド: 韓国観光公社（Odii）",
@@ -319,7 +323,7 @@ T.zhs={...T.en,courseEyebrow:"步行路线",courseStats:(n,km,min)=>n+" 个地�
   cors:"路线服务没有响应，请稍后再试。",
   min:"分钟",transfers:n=>"换乘 "+n+" 次",walk:"步行",fare:"票价",stops:n=>n+" 站",
   handoff:"打开导航",naver:"NAVER Map",kakao:"Kakao Map",
-  s2:"目的地附近餐厅",s2none:"1公里内没有登记的餐厅。",
+  s2:"目的地附近餐厅",s2none:"1公里内没有登记的餐厅。",pick:"推荐",
   s3:"步行路线",s3btn:"显示步行路线",s3far:"距离超过3公里，靠近后会显示步行路线。",
   s4:"景点介绍",s4none:"暂无介绍。",
   audioTitle:"语音导览",officialTitle:"官方介绍",audioNone:"此地点120米内没有语音导览。",textOnly:"仅有文字（暂无语音）",script:"查看讲解稿",odiiCredit:"语音导览: 韩国观光公社（Odii）",
@@ -347,7 +351,7 @@ T.zht={...T.zhs,courseEyebrow:"步行路線",courseStats:(n,km,min)=>n+" 個地�
   cors:"路線服務沒有回應，請稍後再試。",
   min:"分鐘",transfers:n=>"轉乘 "+n+" 次",walk:"步行",fare:"票價",stops:n=>n+" 站",
   handoff:"開啟導航",
-  s2:"目的地附近餐廳",s2none:"1公里內沒有登錄的餐廳。",
+  s2:"目的地附近餐廳",s2none:"1公里內沒有登錄的餐廳。",pick:"推薦",
   s3:"步行路線",s3btn:"顯示步行路線",s3far:"距離超過3公里，靠近後會顯示步行路線。",
   s4:"景點介紹",s4none:"暫無介紹。",
   audioTitle:"語音導覽",officialTitle:"官方介紹",audioNone:"此地點120公尺內沒有語音導覽。",textOnly:"僅有文字（暫無語音）",script:"查看解說稿",odiiCredit:"語音導覽: 韓國觀光公社（Odii）",
@@ -652,16 +656,47 @@ function openGuide(it){
   loadFood(it,r2);loadOverview(it,r4);loadOdii(it,ra);
 }
 
+/* Restaurants Jay adds himself (data branch, picks/picks.json) come first */
+const PICKS_URL="https://raw.githubusercontent.com/jay70park-cyber/trip-companion/data/picks/picks.json";
+const PICK_M=1500;
+let picksReq=null;
+function loadPicks(){
+  if(!picksReq)picksReq=fetch(PICKS_URL+"?d="+new Date().toISOString().slice(0,10),{cache:"no-cache"})
+    .then(r=>r.ok?r.json():{picks:[]}).then(d=>Array.isArray(d.picks)?d.picks:[]).catch(()=>[]);
+  return picksReq;
+}
+function pickTxt(o){return o?(o[lang]||o.en||o.ko||""):"";}
 async function loadFood(it,box){
-  try{
-    const items=await tour("locationBasedList2",{numOfRows:"5",pageNo:"1",arrange:"E",mapX:String(it.mapx),mapY:String(it.mapy),radius:"1000",contentTypeId:String(t("food"))});
-    box.className="";box.innerHTML="";
-    if(!items.length){box.append(el("div","meta",t("s2none")));return;}
-    const ul=el("ul","food");
-    for(const f of items){const li=el("li");const a=el("a",null,f.title);a.href=kakaoLink(f);a.target="_blank";a.rel="noopener";
-      li.append(a,el("span","dist",fmtD(parseFloat(f.dist)||0)));ul.append(li);}
-    box.append(ul);
-  }catch(e){box.className="msg";box.textContent=e&&e.api?t("apiErr")(e.api):t("netErr");}
+  const lat=+it.mapy,lng=+it.mapx;
+  const [picks,tourRes]=await Promise.all([
+    loadPicks(),
+    tour("locationBasedList2",{numOfRows:"5",pageNo:"1",arrange:"E",mapX:String(it.mapx),mapY:String(it.mapy),radius:"1000",contentTypeId:String(t("food"))}).then(v=>({v}),e=>({e}))
+  ]);
+  const near=picks.filter(p=>isFinite(p.lat)&&isFinite(p.lng)).map(p=>({p,d:meters(lat,lng,p.lat,p.lng)}))
+    .filter(x=>x.d<=PICK_M).sort((a,b)=>a.d-b.d).slice(0,5);
+  const items=tourRes.v||[];
+  box.className="";box.innerHTML="";
+  if(!near.length&&tourRes.e){const e=tourRes.e;box.className="msg";box.textContent=e&&e.api?t("apiErr")(e.api):t("netErr");return;}
+  if(!near.length&&!items.length){box.append(el("div","meta",t("s2none")));return;}
+  const ul=el("ul","food");
+  const norm=x=>String(x||"").replace(/\s|\(.*?\)/g,"").toLowerCase();
+  const taken=new Set();
+  for(const {p,d} of near){
+    const li=el("li","pick");const wrap=el("span","pk");
+    const name=pickTxt(p.name);
+    const a=el("a",null,name);a.href=kakaoLink({title:p.name&&p.name.ko||name,mapy:p.lat,mapx:p.lng});a.target="_blank";a.rel="noopener";
+    wrap.append(el("span","badge","★ "+t("pick")),a);
+    const menu=pickTxt(p.menu),txt=pickTxt(p.text);
+    if(menu||txt)wrap.append(el("span","pm",[menu,txt].filter(Boolean).join(" · ")));
+    li.append(wrap,el("span","dist",fmtD(d)));ul.append(li);
+    for(const k of Object.values(p.name||{}))taken.add(norm(k));
+  }
+  for(const f of items){
+    if(taken.has(norm(f.title)))continue;
+    const li=el("li");const a=el("a",null,f.title);a.href=kakaoLink(f);a.target="_blank";a.rel="noopener";
+    li.append(a,el("span","dist",fmtD(parseFloat(f.dist)||0)));ul.append(li);
+  }
+  box.append(ul);
 }
 /* ---------- Odii audio guide (KTO) ---------- */
 const ODII_LANG={en:"en",ko:"ko",ja:"jp",zhs:"en",zht:"en"};  // Odii has ko / en / jp only

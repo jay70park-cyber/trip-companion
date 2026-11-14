@@ -14,7 +14,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: courses
+  group: data-branch
   cancel-in-progress: false
 
 jobs:
