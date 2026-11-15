@@ -54,6 +54,33 @@
     "zht": "水桶谷入口的大型烘焙咖啡館，落地窗和露台可眺望雞龍山"
    },
    "source": "https://naver.me/GGhU8ibo"
+  },
+  {
+   "id": "sungsimdang-main",
+   "area": "대전 원도심",
+   "address": "대전 중구 대종로480번길 15",
+   "name": {
+    "ko": "성심당 본점",
+    "en": "Sungsimdang Bakery (Main Store)",
+    "ja": "聖心堂（ソンシムダン）本店",
+    "zhs": "圣心堂 本店",
+    "zht": "聖心堂 本店"
+   },
+   "menu": {
+    "ko": "튀김소보로 · 판타롱부추빵",
+    "en": "Fried soboro bun · chive pastry (Pantalong Buchu-ppang)",
+    "ja": "揚げソボロパン・ニラパン（パンタロンプチュパン）",
+    "zhs": "油炸酥菠萝面包 · 韭菜面包",
+    "zht": "油炸酥菠蘿麵包 · 韭菜麵包"
+   },
+   "text": {
+    "ko": "1956년 문을 연 대전 대표 빵집, 대전 여행의 필수 코스",
+    "en": "Daejeon's iconic bakery since 1956, a must-stop on any Daejeon trip; expect a queue",
+    "ja": "1956年創業の大田を代表するパン屋。大田旅行の定番で行列は覚悟",
+    "zhs": "创立于1956年的大田代表面包店，大田旅行必去，常需排队",
+    "zht": "創立於1956年的大田代表麵包店，大田旅行必去，常需排隊"
+   },
+   "source": "https://naver.me/56XCdpWz"
   }
  ]
 }
