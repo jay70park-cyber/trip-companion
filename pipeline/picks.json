@@ -81,6 +81,33 @@
     "zht": "創立於1956年的大田代表麵包店，大田旅行必去，常需排隊"
    },
    "source": "https://naver.me/56XCdpWz"
+  },
+  {
+   "id": "sungsimdang-lotte",
+   "area": "대전 둔산",
+   "address": "대전 서구 계룡로 598",
+   "name": {
+    "ko": "성심당 롯데백화점 대전점",
+    "en": "Sungsimdang Bakery (Lotte Dept. Store Daejeon)",
+    "ja": "聖心堂（ソンシムダン）ロッテ百貨店大田店",
+    "zhs": "圣心堂 乐天百货大田店",
+    "zht": "聖心堂 樂天百貨大田店"
+   },
+   "menu": {
+    "ko": "튀김소보로 · 판타롱부추빵",
+    "en": "Fried soboro bun · chive pastry (Pantalong Buchu-ppang)",
+    "ja": "揚げソボロパン・ニラパン（パンタロンプチュパン）",
+    "zhs": "油炸酥菠萝面包 · 韭菜面包",
+    "zht": "油炸酥菠蘿麵包 · 韭菜麵包"
+   },
+   "text": {
+    "ko": "대전 대표 빵집 성심당의 롯데백화점 1층 매장, 서구·둔산 쪽에서 들르기 좋음",
+    "en": "Branch of Daejeon's iconic bakery on the 1st floor of Lotte Department Store, handy on the west side of the city",
+    "ja": "大田を代表するパン屋・聖心堂のロッテ百貨店1階店。市の西側から立ち寄りやすい",
+    "zhs": "大田代表面包店圣心堂的乐天百货1楼分店，从市区西侧前往方便",
+    "zht": "大田代表麵包店聖心堂的樂天百貨1樓分店，從市區西側前往方便"
+   },
+   "source": "https://naver.me/xy7bVXaj"
   }
  ]
 }
