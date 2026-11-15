@@ -3,7 +3,7 @@ name: Publish restaurant picks
 on:
   push:
     branches: [dev, main]
-    paths: [pipeline/picks.json, pipeline/build-picks.mjs]
+    paths: [pipeline/picks.json, pipeline/build-picks.mjs, "pipeline/pick-images/**"]
   workflow_dispatch:
 
 permissions:
@@ -32,6 +32,7 @@ jobs:
       - name: Find locations
         env:
           TMAP_KEY: ${{ secrets.TMAP_KEY }}
+          TOURAPI_KEY: ${{ secrets.TOURAPI_KEY }}
         run: node pipeline/build-picks.mjs out
 
       - name: Publish to the data branch

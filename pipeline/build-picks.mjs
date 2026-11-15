@@ -3,6 +3,7 @@
 // Output: <outDir>/picks/picks.json
 // A pick without lat/lng gets them from its address (TMAP address search), then from its Korean name.
 // Coordinates found earlier are reused, so a rerun does not need TMAP.
+// Photo: pipeline/pick-images/<id>.jpg (Jay's own photo) wins; otherwise the KTO photo of the same place, if KTO lists it.
 import fs from "node:fs";
 import path from "node:path";
 
@@ -10,6 +11,24 @@ const OUT = path.resolve(process.argv[2] || "out");
 const SRC = new URL("./picks.json", import.meta.url);
 const DEST = path.join(OUT, "picks", "picks.json");
 const TMAP = process.env.TMAP_KEY || "";
+const TOUR = process.env.TOURAPI_KEY || "";
+const IMG_DIR = new URL("./pick-images/", import.meta.url);
+const RAW = "https://raw.githubusercontent.com/jay70park-cyber/trip-companion/data/picks/img/";
+const norm = (x) => String(x || "").replace(/\s|\(.*?\)|본점|점$/g, "").toLowerCase();
+const meters = (a, b) => { const R = 6371000, r = Math.PI / 180, x = Math.sin((b.lat - a.lat) * r / 2) ** 2 + Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin((b.lng - a.lng) * r / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(x)); };
+
+async function ktoPhoto(name, pos) {
+  if (!TOUR) return "";
+  const enc = TOUR.includes("%") ? TOUR : encodeURIComponent(TOUR);
+  const qs = new URLSearchParams({ MobileOS: "ETC", MobileApp: "KTripCompanion", _type: "json", keyword: name.replace(/\(.*?\)/g, "").trim(), numOfRows: "10", pageNo: "1", arrange: "A" });
+  const res = await fetch(`https://apis.data.go.kr/B551011/KorService2/searchKeyword2?serviceKey=${enc}&${qs}`);
+  const d = JSON.parse(await res.text());
+  let items = d?.response?.body?.items?.item || [];
+  if (!Array.isArray(items)) items = [items];
+  const hit = items.find((it) => it.firstimage && meters(pos, { lat: +it.mapy, lng: +it.mapx }) < 250 &&
+    (norm(it.title).includes(norm(name)) || norm(name).includes(norm(it.title))));
+  return hit ? hit.firstimage.replace(/^http:/, "https:") : "";
+}
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const inKorea = (lat, lng) => lat > 33 && lat < 39 && lng > 124 && lng < 132;
 
@@ -60,8 +79,19 @@ for (const p of src.picks || []) {
     await sleep(250);
   }
   if (!pos) { console.log(`✗ ${label}: location not found — check the address`); continue; }
-  out.push({ ...p, lat: +pos.lat.toFixed(6), lng: +pos.lng.toFixed(6) });
-  console.log(`✓ ${label}  ${pos.lat.toFixed(5)}, ${pos.lng.toFixed(5)}`);
+  let image = "", photo = "";
+  for (const ext of ["jpg", "jpeg", "png", "webp"]) {
+    const f = new URL(`${p.id}.${ext}`, IMG_DIR);
+    if (fs.existsSync(f)) {
+      fs.mkdirSync(path.join(OUT, "picks", "img"), { recursive: true });
+      fs.copyFileSync(f, path.join(OUT, "picks", "img", `${p.id}.${ext}`));
+      image = `${RAW}${p.id}.${ext}?v=${fs.statSync(f).size}`; photo = "own"; break;
+    }
+  }
+  if (!image && old && old.photo === "kto" && old.image) { image = old.image; photo = "kto"; }
+  if (!image) { try { image = await ktoPhoto(label, pos); if (image) photo = "kto"; } catch (e) { console.log(`  ! KTO photo ${label}: ${e.message}`); } }
+  out.push({ ...p, lat: +pos.lat.toFixed(6), lng: +pos.lng.toFixed(6), ...(image ? { image, photo } : {}) });
+  console.log(`✓ ${label}  ${pos.lat.toFixed(5)}, ${pos.lng.toFixed(5)}  photo: ${photo || "none"}`);
 }
 
 fs.mkdirSync(path.dirname(DEST), { recursive: true });

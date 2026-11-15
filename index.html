@@ -669,7 +669,7 @@ function img(it,cls){
 }
 /* Jay's restaurant picks as list items (they sort in by distance, marked ★) */
 function pickItems(picks,pos,radius){
-  return picks.filter(p=>isFinite(p.lat)&&isFinite(p.lng)).map(p=>({pick:p,contentid:"pick:"+p.id,title:pickTxt(p.name),addr1:p.address||"",
+  return picks.filter(p=>isFinite(p.lat)&&isFinite(p.lng)).map(p=>({pick:p,contentid:"pick:"+p.id,title:pickTxt(p.name),addr1:p.address||"",firstimage:p.image||"",
     mapy:p.lat,mapx:p.lng,dist:String(meters(pos.lat,pos.lng,p.lat,p.lng))})).filter(x=>+x.dist<=radius);
 }
 const normName=x=>String(x||"").replace(/\s|\(.*?\)/g,"").toLowerCase();
