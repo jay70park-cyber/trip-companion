@@ -17,18 +17,38 @@ const RAW = "https://raw.githubusercontent.com/jay70park-cyber/trip-companion/da
 const norm = (x) => String(x || "").replace(/\s|\(.*?\)|본점|점$/g, "").toLowerCase();
 const meters = (a, b) => { const R = 6371000, r = Math.PI / 180, x = Math.sin((b.lat - a.lat) * r / 2) ** 2 + Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin((b.lng - a.lng) * r / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(x)); };
 
-async function ktoPhoto(name, pos) {
-  if (!TOUR) return "";
+async function ktoSearch(keyword) {
   const enc = TOUR.includes("%") ? TOUR : encodeURIComponent(TOUR);
-  const qs = new URLSearchParams({ MobileOS: "ETC", MobileApp: "KTripCompanion", _type: "json", keyword: name.replace(/\(.*?\)/g, "").trim(), numOfRows: "10", pageNo: "1", arrange: "A" });
+  const qs = new URLSearchParams({ MobileOS: "ETC", MobileApp: "KTripCompanion", _type: "json", keyword, numOfRows: "20", pageNo: "1", arrange: "A" });
   const res = await fetch(`https://apis.data.go.kr/B551011/KorService2/searchKeyword2?serviceKey=${enc}&${qs}`);
   const d = JSON.parse(await res.text());
-  let items = d?.response?.body?.items?.item || [];
-  if (!Array.isArray(items)) items = [items];
-  const hit = items.find((it) => it.firstimage && meters(pos, { lat: +it.mapy, lng: +it.mapx }) < 250 &&
-    (norm(it.title).includes(norm(name)) || norm(name).includes(norm(it.title))));
-  if (!hit) console.log(`  · KTO: ${d?.response?.header?.resultMsg || "?"}; candidates: ${items.slice(0, 5).map((it) => `${it.title}${it.firstimage ? "📷" : ""} ${Math.round(meters(pos, { lat: +it.mapy, lng: +it.mapx }))}m`).join(", ") || "none"}`);
-  return hit ? hit.firstimage.replace(/^http:/, "https:") : "";
+  const items = d?.response?.body?.items?.item || [];
+  await sleep(150);
+  return Array.isArray(items) ? items : [items];
+}
+
+// KTO titles are spaced differently ("수통골 감나무집 본점") and branches are often listed under the brand name,
+// so try the full name, then without the branch part, then its first word (the brand), then the tail of a long first word.
+function keywords(name) {
+  const base = name.replace(/\(.*?\)/g, "").trim();
+  const noBranch = base.replace(/\s*(본점|[^\s]*점)$/, "").trim();
+  const first = noBranch.split(/\s+/)[0] || "";   // the brand: "성심당 롯데백화점" → "성심당", never "롯데백화점"
+  const tail = first.length >= 5 ? first.slice(-4) : "";  // "수통골감나무집" → "감나무집"
+  return [...new Set([base, noBranch, first, tail])].filter((k) => k.length >= 2);
+}
+
+async function ktoPhoto(name, pos) {
+  if (!TOUR) return "";
+  const seen = [];
+  for (const kw of keywords(name)) {
+    const items = await ktoSearch(kw);
+    const near = items.filter((it) => meters(pos, { lat: +it.mapy, lng: +it.mapx }) < 250);
+    seen.push(...near.map((it) => `${it.title}${it.firstimage ? "📷" : ""}`));
+    const hit = near.find((it) => it.firstimage);
+    if (hit) { console.log(`  · KTO photo from "${hit.title}" (keyword ${kw})`); return hit.firstimage.replace(/^http:/, "https:"); }
+  }
+  console.log(`  · KTO: no photo nearby (${keywords(name).join(" / ")}; within 250 m: ${seen.join(", ") || "none"})`);
+  return "";
 }
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const inKorea = (lat, lng) => lat > 33 && lat < 39 && lng > 124 && lng < 132;
