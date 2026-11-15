@@ -27,6 +27,7 @@ async function ktoPhoto(name, pos) {
   if (!Array.isArray(items)) items = [items];
   const hit = items.find((it) => it.firstimage && meters(pos, { lat: +it.mapy, lng: +it.mapx }) < 250 &&
     (norm(it.title).includes(norm(name)) || norm(name).includes(norm(it.title))));
+  if (!hit) console.log(`  · KTO: ${d?.response?.header?.resultMsg || "?"}; candidates: ${items.slice(0, 5).map((it) => `${it.title}${it.firstimage ? "📷" : ""} ${Math.round(meters(pos, { lat: +it.mapy, lng: +it.mapx }))}m`).join(", ") || "none"}`);
   return hit ? hit.firstimage.replace(/^http:/, "https:") : "";
 }
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
