@@ -28,7 +28,9 @@
    },
    "source": "https://naver.me/FnsoTHFB",
    "lat": 36.346589,
-   "lng": 127.291937
+   "lng": 127.291937,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/95/2740795_image2_1.jpg",
+   "photo": "kto"
   },
   {
    "id": "sutonggol-maha",
@@ -86,7 +88,9 @@
    },
    "source": "https://naver.me/56XCdpWz",
    "lat": 36.327722,
-   "lng": 127.427313
+   "lng": 127.427313,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/32/2938932_image2_1.bmp",
+   "photo": "kto"
   },
   {
    "id": "sungsimdang-lotte",
