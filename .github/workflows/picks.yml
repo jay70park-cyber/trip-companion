@@ -4,6 +4,8 @@ on:
   push:
     branches: [dev, main]
     paths: [pipeline/picks.json, pipeline/build-picks.mjs, "pipeline/pick-images/**"]
+  schedule:
+    - cron: "30 18 1 * *"   # 03:30 KST on the 2nd, after the walking courses
   workflow_dispatch:
 
 permissions:

@@ -821,11 +821,22 @@ async function loadOdii(it,box){
     box.append(ul,el("div","note",t("odiiCredit")));
   }catch(e){box.className="msg";box.textContent=e&&e.api?t("apiErr")(e.api):t("netErr");}
 }
+/* A pick that KTO also lists: find the KTO entry in the current language (nearest within 60 m of KTO's own point) */
+async function ktoTwin(p){
+  if(!p.kto)return null;
+  const near=await tour("locationBasedList2",{numOfRows:"10",pageNo:"1",arrange:"E",mapX:String(p.kto.lng),mapY:String(p.kto.lat),radius:"100"});
+  const hit=near.filter(x=>meters(p.kto.lat,p.kto.lng,+x.mapy,+x.mapx)<=60).sort((a,b)=>(parseFloat(a.dist)||0)-(parseFloat(b.dist)||0))[0];
+  return hit||null;
+}
 async function loadOverview(it,box){
   if(it.pick){box.className="overview";box.innerHTML="";
     const lines=[pickTxt(it.pick.menu),pickTxt(it.pick.text)].filter(Boolean);
-    if(!lines.length){box.className="meta";box.textContent=t("s4none");return;}
-    for(const l of lines)box.append(el("p",null,l));return;}
+    for(const l of lines)box.append(el("p",null,l));
+    let twin=null;try{twin=await ktoTwin(it.pick);}catch(e){}
+    if(twin){const more=el("div");more.className="overview";box.append(more);await loadOverview(twin,more);
+      if(more.className!=="overview")more.remove();}
+    if(!box.childNodes.length){box.className="meta";box.textContent=t("s4none");}
+    return;}
   try{
     const items=await tour("detailCommon2",{contentId:String(it.contentid)});
     const ov=items[0]&&items[0].overview;

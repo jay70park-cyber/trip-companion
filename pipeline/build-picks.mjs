@@ -4,6 +4,7 @@
 // A pick without lat/lng gets them from its address (TMAP address search), then from its Korean name.
 // Coordinates found earlier are reused, so a rerun does not need TMAP.
 // Photo: pipeline/pick-images/<id>.jpg (Jay's own photo) wins; otherwise the KTO photo of the same place, if KTO lists it.
+// KTO is checked again on every run, so a changed or removed KTO photo is picked up within a month.
 import fs from "node:fs";
 import path from "node:path";
 
@@ -37,18 +38,23 @@ function keywords(name) {
   return [...new Set([base, noBranch, first, tail])].filter((k) => k.length >= 2);
 }
 
-async function ktoPhoto(name, pos) {
-  if (!TOUR) return "";
+// The KTO (Korean) entry for this place: nearest result within 250 m for any keyword variant.
+// Returns { image, kto: { id, lat, lng } } — the app uses kto's point to fetch KTO's live description in each language.
+async function ktoMatch(name, pos) {
+  if (!TOUR) return null;
   const seen = [];
   for (const kw of keywords(name)) {
     const items = await ktoSearch(kw);
-    const near = items.filter((it) => meters(pos, { lat: +it.mapy, lng: +it.mapx }) < 250);
-    seen.push(...near.map((it) => `${it.title}${it.firstimage ? "📷" : ""}`));
-    const hit = near.find((it) => it.firstimage);
-    if (hit) { console.log(`  · KTO photo from "${hit.title}" (keyword ${kw})`); return hit.firstimage.replace(/^http:/, "https:"); }
+    const near = items.map((it) => ({ it, d: meters(pos, { lat: +it.mapy, lng: +it.mapx }) })).filter((x) => x.d < 250).sort((a, b) => a.d - b.d);
+    seen.push(...near.map((x) => `${x.it.title}${x.it.firstimage ? "📷" : ""}`));
+    const hit = (near.find((x) => x.it.firstimage) || near[0])?.it;
+    if (hit) {
+      console.log(`  · KTO match "${hit.title}" (keyword ${kw})${hit.firstimage ? ", with photo" : ""}`);
+      return { image: (hit.firstimage || "").replace(/^http:/, "https:"), kto: { id: String(hit.contentid), lat: +(+hit.mapy).toFixed(6), lng: +(+hit.mapx).toFixed(6) } };
+    }
   }
-  console.log(`  · KTO: no photo nearby (${keywords(name).join(" / ")}; within 250 m: ${seen.join(", ") || "none"})`);
-  return "";
+  console.log(`  · KTO: not listed nearby (${keywords(name).join(" / ")}; within 250 m: ${seen.join(", ") || "none"})`);
+  return null;
 }
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const inKorea = (lat, lng) => lat > 33 && lat < 39 && lng > 124 && lng < 132;
@@ -109,9 +115,17 @@ for (const p of src.picks || []) {
       image = `${RAW}${p.id}.${ext}?v=${fs.statSync(f).size}`; photo = "own"; break;
     }
   }
-  if (!image && old && old.photo === "kto" && old.image) { image = old.image; photo = "kto"; }
-  if (!image) { try { image = await ktoPhoto(label, pos); if (image) photo = "kto"; } catch (e) { console.log(`  ! KTO photo ${label}: ${e.message}`); } }
-  out.push({ ...p, lat: +pos.lat.toFixed(6), lng: +pos.lng.toFixed(6), ...(image ? { image, photo } : {}) });
+  // Checked again on every run (monthly and on each change), so KTO's current photo is used; if KTO cannot be reached, keep last time's.
+  let kto = null;
+  try {
+    const m = await ktoMatch(label, pos);
+    if (m) { kto = m.kto; if (!image && m.image) { image = m.image; photo = "kto"; } }
+  } catch (e) {
+    console.log(`  ! KTO ${label}: ${e.message} — keeping last result`);
+    if (old?.kto) kto = old.kto;
+    if (!image && old?.photo === "kto" && old.image) { image = old.image; photo = "kto"; }
+  }
+  out.push({ ...p, lat: +pos.lat.toFixed(6), lng: +pos.lng.toFixed(6), ...(image ? { image, photo } : {}), ...(kto ? { kto } : {}) });
   console.log(`✓ ${label}  ${pos.lat.toFixed(5)}, ${pos.lng.toFixed(5)}  photo: ${photo || "none"}`);
 }
 
