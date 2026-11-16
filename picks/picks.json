@@ -30,7 +30,12 @@
    "lat": 36.346589,
    "lng": 127.291937,
    "image": "https://tong.visitkorea.or.kr/cms/resource/95/2740795_image2_1.jpg",
-   "photo": "kto"
+   "photo": "kto",
+   "kto": {
+    "id": "2738668",
+    "lat": 36.346223,
+    "lng": 127.291938
+   }
   },
   {
    "id": "sutonggol-maha",
@@ -90,7 +95,12 @@
    "lat": 36.327722,
    "lng": 127.427313,
    "image": "https://tong.visitkorea.or.kr/cms/resource/32/2938932_image2_1.bmp",
-   "photo": "kto"
+   "photo": "kto",
+   "kto": {
+    "id": "1796079",
+    "lat": 36.327685,
+    "lng": 127.427224
+   }
   },
   {
    "id": "sungsimdang-lotte",
@@ -141,17 +151,22 @@
     "zht": "海上吊橋 · 觀景台 · 西海落日"
    },
    "text": {
-    "ko": "전곡항 옆 고렴산 수변공원의 출렁다리, 요트와 서해랑 케이블카가 한눈에. 무료·상시 개방",
-    "en": "Suspension bridge in Goryeomsan Waterside Park next to Jeongok Port, with views of the yachts and the Seohaerang cable car. Free, open all day",
-    "ja": "全谷港そばのコリョムサン水辺公園にある吊り橋。ヨットと西海郎ケーブルカーを一望。無料・常時開放",
-    "zhs": "全谷港旁高廉山水边公园的吊桥，可一览游艇与西海郎缆车。免费、全天开放",
-    "zht": "全谷港旁高廉山水邊公園的吊橋，可一覽遊艇與西海郎纜車。免費、全天開放"
+    "ko": "전곡항 옆 고렴산 수변공원의 출렁다리, 요트와 서해랑 케이블카가 한눈에",
+    "en": "Suspension bridge in Goryeomsan Waterside Park next to Jeongok Port, with views of the yachts and the Seohaerang cable car",
+    "ja": "全谷港そばのコリョムサン水辺公園にある吊り橋。ヨットと西海郎ケーブルカーを一望",
+    "zhs": "全谷港旁高廉山水边公园的吊桥，可一览游艇与西海郎缆车",
+    "zht": "全谷港旁高廉山水邊公園的吊橋，可一覽遊艇與西海郎纜車"
    },
    "source": "https://naver.me/GT4Erchy",
    "lat": 37.183875,
    "lng": 126.651655,
    "image": "https://tong.visitkorea.or.kr/cms/resource/33/4059533_image2_1.jpg",
-   "photo": "kto"
+   "photo": "kto",
+   "kto": {
+    "id": "4059517",
+    "lat": 37.183985,
+    "lng": 126.651521
+   }
   }
  ]
 }
