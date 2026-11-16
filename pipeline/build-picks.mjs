@@ -1,5 +1,5 @@
 // Publishes Jay's own restaurant picks for the app's "Food near the destination" step.
-// Input:  pipeline/picks.json  — { picks: [{ id, area, address, name:{ko,en,ja,zhs,zht}, menu:{…}, text:{…}, lat?, lng? }] }
+// Input:  pipeline/picks.json  — { picks: [{ id, kind ("food" default | "sight"), area, address, name:{ko,en,ja,zhs,zht}, menu:{…}, text:{…}, lat?, lng? }] }
 // Output: <outDir>/picks/picks.json
 // A pick without lat/lng gets them from its address (TMAP address search), then from its Korean name.
 // Coordinates found earlier are reused, so a rerun does not need TMAP.

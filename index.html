@@ -640,8 +640,8 @@ async function search(){
   if(temple){extra.contentTypeId=lang==="ko"?"12":"76";extra.numOfRows="200";}
   else if(cat)extra.contentTypeId=cat;
   try{
-    const wantPicks=!cat||String(cat)===String(t("food"));
-    const [res,picks]=await Promise.all([tour("locationBasedList2",extra).then(v=>({v}),e=>({e})),wantPicks?loadPicks():Promise.resolve([])]);
+    const pickKind=!cat?"":String(cat)===String(t("food"))?"food":(cat==="12"||cat==="76")?"sight":null;
+    const [res,picks]=await Promise.all([tour("locationBasedList2",extra).then(v=>({v}),e=>({e})),pickKind!==null?loadPicks().then(ps=>ps.filter(p=>!pickKind||(p.kind||"food")===pickKind)):Promise.resolve([])]);
     const near=pickItems(picks,pos,+$("radius").value);
     if(res.e&&!near.length)throw res.e;
     let items=res.v||[];
@@ -753,7 +753,7 @@ function pickTxt(o){return o?(o[lang]||o.en||o.ko||""):"";}
 async function loadFood(it,box){
   const lat=+it.mapy,lng=+it.mapx;
   const [picks,tourRes]=await Promise.all([
-    loadPicks(),
+    loadPicks().then(ps=>ps.filter(p=>(p.kind||"food")==="food")),
     tour("locationBasedList2",{numOfRows:"5",pageNo:"1",arrange:"E",mapX:String(it.mapx),mapY:String(it.mapy),radius:"1000",contentTypeId:String(t("food"))}).then(v=>({v}),e=>({e}))
   ]);
   const self=it.pick&&it.pick.id;

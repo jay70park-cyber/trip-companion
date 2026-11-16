@@ -108,6 +108,34 @@
     "zht": "大田代表麵包店聖心堂的樂天百貨1樓分店，從市區西側前往方便"
    },
    "source": "https://naver.me/xy7bVXaj"
+  },
+  {
+   "id": "goryeomsan-bridge",
+   "kind": "sight",
+   "area": "화성 전곡항",
+   "address": "경기 화성시 만세구 서신면 전곡항로 1-1",
+   "name": {
+    "ko": "고렴산 출렁다리",
+    "en": "Goryeomsan Suspension Bridge",
+    "ja": "コリョムサン吊り橋",
+    "zhs": "高廉山吊桥",
+    "zht": "高廉山吊橋"
+   },
+   "menu": {
+    "ko": "바다 위 출렁다리 · 전망대 · 서해 낙조",
+    "en": "Sea-view suspension bridge · lookout · West Sea sunset",
+    "ja": "海の上の吊り橋・展望台・西海の夕日",
+    "zhs": "海上吊桥 · 观景台 · 西海落日",
+    "zht": "海上吊橋 · 觀景台 · 西海落日"
+   },
+   "text": {
+    "ko": "전곡항 옆 고렴산 수변공원의 출렁다리, 요트와 서해랑 케이블카가 한눈에. 무료·상시 개방",
+    "en": "Suspension bridge in Goryeomsan Waterside Park next to Jeongok Port, with views of the yachts and the Seohaerang cable car. Free, open all day",
+    "ja": "全谷港そばのコリョムサン水辺公園にある吊り橋。ヨットと西海郎ケーブルカーを一望。無料・常時開放",
+    "zhs": "全谷港旁高廉山水边公园的吊桥，可一览游艇与西海郎缆车。免费、全天开放",
+    "zht": "全谷港旁高廉山水邊公園的吊橋，可一覽遊艇與西海郎纜車。免費、全天開放"
+   },
+   "source": "https://naver.me/GT4Erchy"
   }
  ]
 }
