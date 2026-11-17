@@ -577,7 +577,7 @@ async function main() {
   // a manual run for named zones rebuilds them, unless "rebuild" is unchecked (then the normal monthly due-check runs)
   const force = env("REBUILD") === "true" || (!!only.length && env("REBUILD") !== "false");
   const zones = ZONES.filter((z) => !only.length || only.includes(z.id));
-  const index = { updated: TODAY, zones: prev.zones.filter((p) => !zones.some((z) => z.id === p.id)) };
+  const index = { updated: TODAY, zones: prev.zones.filter((p) => !zones.some((z) => z.id === p.id)), failed: { ...(prev.failed || {}) } };
   let built = 0;
   for (const z of zones) {
     const prevPath = path.join(DIR, `${z.id}.json`);
@@ -586,16 +586,21 @@ async function main() {
       const old = prev.zones.find((p) => p.id === z.id);
       if (old) { index.zones.push(old); continue; }
     }
+    // a zone that could not be built is tried again only once a quarter, so it does not cost a web search every month
+    if (!force && !prevCourse && index.failed[z.id] && daysSince(index.failed[z.id]) < 85) {
+      log(`\n▶ ${z.id}: no course yet (last attempt ${index.failed[z.id]}) — next try after ${Math.ceil(85 - daysSince(index.failed[z.id]))} days`);
+      continue;
+    }
     try {
       const c = await buildZone(z, prevCourse);
       fs.writeFileSync(path.join(DIR, `${z.id}.json`), JSON.stringify(c));
       index.zones.push({ id: c.id, type: c.type, name: c.name, start: c.start, stops: c.stops.length, distanceM: c.distanceM, durationMin: c.durationMin, updated: c.updated, ai: c.generator.ai });
-      built++;
+      built++; delete index.failed[z.id];
       log(`  ✓ ${c.stops.length} stops, ${c.distanceM} m, ~${c.durationMin} min`);
     } catch (e) {
       log(`  ✗ ${z.id}: ${e.message} — keeping last month's course if there is one`);
       const old = prev.zones.find((p) => p.id === z.id);
-      if (old) index.zones.push(old);
+      if (old) index.zones.push(old); else index.failed[z.id] = TODAY;
     }
   }
   index.zones.sort((a, b) => ZONES.findIndex((z) => z.id === a.id) - ZONES.findIndex((z) => z.id === b.id));
