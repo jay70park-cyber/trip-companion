@@ -189,17 +189,22 @@ const SCHEMA = {
 };
 
 /* ---------------- step 1: trending places from a web search (AI web search tool + TMAP place check) ---------------- */
-async function hotCandidates(z) {
+// landmarks: true looks for the area's main sights (used where KTO's location list is thin), not recent trends
+async function hotCandidates(z, { landmarks = false } = {}) {
   if (!KEY.ai || !KEY.tmap) { log("  · trending places skipped (needs AI + TMAP keys)"); return []; }
   const since = new Date(NOW.getTime() - 90 * 86400000).toISOString().slice(0, 10);
-  let found;
-  try {
-    found = await ai(
-`Search the web (Korean blogs, news, travel and magazine sites) for places in or right around ${z.name.ko} (${z.name.en}), Korea, that visitors have been recommending recently (pages dated after ${since}).
+  const ask = landmarks
+? `Search the web (official tourism sites, Korean travel guides, news and blogs) for the main sights a visitor walks between in ${z.name.ko} (${z.name.en}), Korea, within about ${Math.round(z.radiusM / 100) / 10} km of ${z.start.label.ko}.
+Try several searches, for example: ${z.name.ko} 도보 여행 코스, ${z.name.ko} 가볼만한 명소, ${z.start.label.ko} 주변 관광지.
+Write a list of up to 15 specific named sights (historic sites, palaces, temples, museums, galleries, parks, viewpoints, markets, famous streets). For each give its Korean name and every page you found that describes it.
+Skip restaurants, cafés, shops, bars, hotels, clinics, places outside the area, and pages marked as sponsored (협찬, 체험단, 원고료, 광고).`
+: `Search the web (Korean blogs, news, travel and magazine sites) for places in or right around ${z.name.ko} (${z.name.en}), Korea, that visitors have been recommending recently (pages dated after ${since}).
 Try several searches, for example: ${z.queries.join(", ")}.
 Write a list of up to 15 specific named places worth walking to (cafés, restaurants, streets, shops, galleries, pop-up stores, landmarks). For each place give its Korean name and every page you found that recommends it.
-Skip bars, pubs, clubs, hotels, motels, clinics, places outside ${z.name.ko}, and pages marked as sponsored (협찬, 체험단, 원고료, 광고).`,
-      6000, { webSearch: 10 });
+Skip bars, pubs, clubs, hotels, motels, clinics, places outside ${z.name.ko}, and pages marked as sponsored (협찬, 체험단, 원고료, 광고).`;
+  let found;
+  try {
+    found = await ai(ask, 6000, { webSearch: 10 });
   } catch (e) { log(`  ! web search: ${e.message}`); return []; }
   log(`  · web search: ${found.results.length} pages, ${found.citations.length} citations`);
 
@@ -249,12 +254,12 @@ ${pages.map((r) => `- ${r.url} | ${r.title || ""}${r.cited ? " | " + r.cited : "
     if (!L.allowedCategory(hitP.category)) { log(`    - ${p.name}: category ${hitP.category}`); continue; }
     const quoted = cites.filter((c) => p.sources.some((x) => x.url === c.url)).map((c) => c.cited).filter(Boolean).slice(0, 4);
     out.push({
-      kind: "hot", lat: hitP.lat, lng: hitP.lng, nameKo: hitP.name, category: hitP.category || p.category, address: hitP.address || "",
+      kind: landmarks ? "landmark" : "hot", lat: hitP.lat, lng: hitP.lng, nameKo: hitP.name, category: hitP.category || p.category, address: hitP.address || "",
       sources: p.sources.slice(0, 4).map((x) => ({ label: x.title || x.url, url: x.url })),
       blog: [p.why, ...quoted].filter(Boolean),
     });
   }
-  log(`  · ${out.length} trending places confirmed on the map`);
+  log(`  · ${out.length} ${landmarks ? "sights" : "trending places"} confirmed on the map`);
   return out;
 }
 
@@ -395,6 +400,13 @@ async function buildZone(z) {
   const official = await officialCandidates(z);
   log(`  · ${official.length} official places within ${z.radiusM} m`);
   const hot = await hotCandidates(z);
+  // KTO's location list is thin outside Seoul: find the area's main sights on the web and treat them like official sites
+  if (official.length < 6) {
+    log(`  · only ${official.length} official sites — searching the web for the main sights`);
+    const marks = await hotCandidates(z, { landmarks: true });
+    const fresh = marks.filter((m) => !official.some((o) => L.meters(o, m) < 60));
+    official.push(...fresh);
+  }
 
   // a trending place that is already an official site (e.g. the palace itself) is not added twice
   const koList = await ktoNear("ko", z.start, z.radiusM);
@@ -433,7 +445,11 @@ async function buildZone(z) {
   }
 
   for (const s of stops) {
-    if (s.kind === "official") { await enrichOfficial(z, s); await enrichAudio(s); }
+    if (s.kind === "official" || s.kind === "landmark") {
+      const ko = s.nameKo;
+      await enrichOfficial(z, s); await enrichAudio(s);
+      if (ko) { s.nameKo = s.nameKo || ko; s.name.ko = s.name.ko || ko; }
+    }
     else { s.name = { ko: s.nameKo }; s.audio = {}; s.scripts = {}; }  // audio stories are about heritage sites, not shops
   }
 
