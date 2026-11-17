@@ -216,7 +216,7 @@ Write a list of up to 15 specific named places worth walking to (cafés, restaur
 Skip bars, pubs, clubs, hotels, motels, clinics, places outside ${z.name.ko}, and pages marked as sponsored (협찬, 체험단, 원고료, 광고).`;
   let found;
   try {
-    found = await ai(ask, 6000, { webSearch: 5 });
+    found = await ai(ask, 6000, { webSearch: z.type === "hot" && !landmarks ? 5 : 3 });
   } catch (e) { log(`  ! web search: ${e.message}`); return []; }
   log(`  · web search: ${found.results.length} pages, ${found.citations.length} citations`);
 
@@ -547,12 +547,14 @@ async function buildZone(z, prev) {
 
 /* ---------------- what to rebuild ---------------- */
 const daysSince = (d) => (NOW - new Date(d + "T00:00:00Z")) / 86400000;
-// Trending areas change every month; heritage areas get a full rebuild every quarter.
-// In between, a free check (TMAP place search) looks for cafés or shops on the course that have closed.
+// Trending areas: half of them each month (every zone every two months). Heritage areas: every quarter.
+// In the months between, a free check (TMAP place search) looks for cafés or shops on the course that have closed.
 async function isDue(z, prevCourse) {
-  if (z.type === "hot") return true;
   const age = daysSince(prevCourse.updated || "2000-01-01");
-  if (age >= 85) return true;
+  if (z.type === "hot") {
+    const idx = ZONES.filter((x) => x.type === "hot").findIndex((x) => x.id === z.id);
+    if (age >= 62 || (age >= 25 && (NOW.getUTCMonth() + idx) % 2 === 0)) return true;
+  } else if (age >= 85) return true;
   for (const s of prevCourse.stops.filter((x) => x.kind === "hot")) {
     const name = s.name?.ko || "";
     const pois = await tmapPoi(name, s, 1);
@@ -560,7 +562,7 @@ async function isDue(z, prevCourse) {
     const still = pois.some((p) => L.meters(p, s) < 120 && (coreName(p.name).includes(want) || want.includes(coreName(p.name))));
     if (!still) { log(`\n▶ ${z.id}: "${name}" not found on the map any more — rebuilding`); return true; }
   }
-  log(`\n▶ ${z.id}: unchanged (heritage; full check after ${Math.ceil(85 - age)} more days)`);
+  log(`\n▶ ${z.id}: no closures found — keeping the course (last full update ${prevCourse.updated})`);
   return false;
 }
 
