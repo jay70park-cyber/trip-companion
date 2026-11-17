@@ -149,6 +149,17 @@ async function walkLegRaw(a, b) {
 
 // Calls the model. With `schema`, the answer comes back through a forced "submit" tool, so it is always valid JSON.
 // With `webSearch`, the model may search the web first; the reply is free text plus citations.
+// what this run spent on the Claude API (Haiku 5.5: $0.10 / $0.50 per million tokens up to 100K-token prompts, 5x above; web search $10 per 1,000)
+const USAGE = { calls: 0, inTok: 0, outTok: 0, searches: 0, usd: 0 };
+function addUsage(u) {
+  if (!u) return;
+  const inTok = (u.input_tokens || 0) + (u.cache_read_input_tokens || 0) + (u.cache_creation_input_tokens || 0);
+  const big = inTok > 100000 ? 5 : 1;
+  const searches = u.server_tool_use?.web_search_requests || 0;
+  USAGE.calls++; USAGE.inTok += inTok; USAGE.outTok += u.output_tokens || 0; USAGE.searches += searches;
+  USAGE.usd += (inTok * 0.10 + (u.output_tokens || 0) * 0.50) * big / 1e6 + searches * 0.01;
+}
+
 async function ai(prompt, maxTokens = 4000, { webSearch = 0, schema = null } = {}) {
   const body = { model: KEY.model, max_tokens: maxTokens, messages: [{ role: "user", content: prompt }] };
   if (webSearch) body.tools = [{ type: "web_search_20250305", name: "web_search", max_uses: webSearch, user_location: { type: "approximate", country: "KR", timezone: "Asia/Seoul" } }];
@@ -162,6 +173,7 @@ async function ai(prompt, maxTokens = 4000, { webSearch = 0, schema = null } = {
       body: JSON.stringify(body),
     });
     const data = JSON.parse(raw);
+    addUsage(data.usage);
     for (const c of data.content || []) {
       if (c.type === "text") { text += c.text; for (const ci of c.citations || []) citations.push({ url: ci.url, title: ci.title, cited: ci.cited_text }); }
       if (c.type === "tool_use" && c.name === "submit") submitted = c.input;
@@ -204,7 +216,7 @@ Write a list of up to 15 specific named places worth walking to (cafés, restaur
 Skip bars, pubs, clubs, hotels, motels, clinics, places outside ${z.name.ko}, and pages marked as sponsored (협찬, 체험단, 원고료, 광고).`;
   let found;
   try {
-    found = await ai(ask, 6000, { webSearch: 10 });
+    found = await ai(ask, 6000, { webSearch: 5 });
   } catch (e) { log(`  ! web search: ${e.message}`); return []; }
   log(`  · web search: ${found.results.length} pages, ${found.citations.length} citations`);
 
@@ -322,7 +334,7 @@ function sourcesFor(s) {
   return parts.join("\n");
 }
 
-async function writeCommentary(z, stops) {
+async function writeCommentary(z, stops, { minKeep = 4 } = {}) {
   const block = stops.map((s) => `### STOP ${s.n}\n${sourcesFor(s)}`).join("\n\n");
   const gen = await ai(
 `You write a self-guided walking tour of ${z.name.en} (${z.name.ko}), Korea, for foreign visitors.
@@ -342,10 +354,11 @@ ${block}`, 6000, { schema: SCHEMA.draft });
   if (bad.size) {
     log(`  · dropped ${bad.size} stop(s): ${gen.stops.filter((g) => bad.has(g.n)).map((g) => `${g.name_en} (${g.consistent === false ? "conflicting" : g.is_sight === false ? "not a sight" : "duplicate"})`).join(", ")}`);
     const keep = stops.filter((s) => !bad.has(s.n));
-    if (keep.length < 4) throw new Error("too few stops after dropping unsuitable ones");
+    if (keep.length < minKeep) throw new Error("too few stops after dropping unsuitable ones");
     const renum = new Map(keep.map((s, i) => [s.n, i + 1]));
     gen.stops = gen.stops.filter((g) => !bad.has(g.n)).map((g) => ({ ...g, n: renum.get(g.n) }));
     stops.length = 0; keep.forEach((s, i) => stops.push({ ...s, n: i + 1 }));
+    if (!stops.length) return null;
   }
   const draft = gen.stops.map((g) => `### STOP ${g.n}\nTEXT: ${g.text_en}\nSOURCES:\n${sourcesFor(stops.find((s) => s.n === g.n) || {})}`).join("\n\n");
   const checked = await ai(
@@ -395,17 +408,27 @@ function officialCommentary(z, stops) {
 }
 
 /* ---------------- step 5: assemble one zone ---------------- */
-async function buildZone(z) {
+async function buildZone(z, prev) {
   log(`\n▶ ${z.id} (${z.type})`);
   const official = await officialCandidates(z);
   log(`  · ${official.length} official places within ${z.radiusM} m`);
   const hot = await hotCandidates(z);
   // KTO's location list is thin outside Seoul: find the area's main sights on the web and treat them like official sites
+  // the list of main sights rarely changes, so a web search for it is reused for six months
+  let landmarkCache = null;
   if (official.length < 6) {
-    log(`  · only ${official.length} official sites — searching the web for the main sights`);
-    const marks = await hotCandidates(z, { landmarks: true });
+    const c = prev?.cache;
+    let marks;
+    if (c?.landmarks && c.landmarksAt && daysSince(c.landmarksAt) < 180) {
+      marks = c.landmarks; landmarkCache = c;
+      log(`  · only ${official.length} official sites — reusing the main-sights list from ${c.landmarksAt}`);
+    } else {
+      log(`  · only ${official.length} official sites — searching the web for the main sights`);
+      marks = await hotCandidates(z, { landmarks: true });
+      landmarkCache = { landmarks: marks, landmarksAt: TODAY };
+    }
     const fresh = marks.filter((m) => !official.some((o) => L.meters(o, m) < 60));
-    official.push(...fresh);
+    official.push(...fresh.map((m) => ({ ...m })));
   }
 
   // a trending place that is already an official site (e.g. the palace itself) is not added twice
@@ -453,10 +476,35 @@ async function buildZone(z) {
     else { s.name = { ko: s.nameKo }; s.audio = {}; s.scripts = {}; }  // audio stories are about heritage sites, not shops
   }
 
+  // reuse last time's checked text for stops that are still on the course; only new stops go to the AI
+  const reuse = (s) => (prev?.generator?.ai ? prev.stops : []).find((p) => L.meters(p, s) < 40 && p.text?.en && p.name?.en);
   let intro = null;
-  if (KEY.ai) {
-    try { intro = await writeCommentary(z, stops); }
-    catch (e) { log(`  ! AI commentary failed, using official text: ${e.message}`); }
+  const fresh = stops.filter((s) => !reuse(s));
+  for (const s of stops) {
+    const p = reuse(s);
+    if (p) { s.name = p.name; s.text = p.text; s.sources = s.sources?.length ? s.sources : p.sources; s.reused = true; }
+  }
+  if (!fresh.length && prev?.intro) {
+    intro = prev.intro;
+    log(`  · all ${stops.length} stops unchanged — reusing last time's commentary (no AI)`);
+  } else if (KEY.ai) {
+    try {
+      if (fresh.length < stops.length) log(`  · ${stops.length - fresh.length} stops reused, writing ${fresh.length} new`);
+      const batch = fresh.map((s, i) => ({ ...s, n: i + 1, origN: s.n }));
+      const newIntro = await writeCommentary(z, batch, { minKeep: fresh.length === stops.length ? 4 : 0 });
+      const done = new Map(batch.map((b) => [b.origN, b]));
+      for (let i = stops.length - 1; i >= 0; i--) {
+        const s = stops[i];
+        if (s.reused) continue;
+        const b = done.get(s.n);
+        if (!b) { stops.splice(i, 1); continue; }   // dropped by the AI (not a sight, duplicate…)
+        s.name = b.name; s.text = b.text;
+      }
+      stops.forEach((s, i) => { s.n = i + 1; });
+      if (stops.length < 4) throw new Error("too few stops after dropping unsuitable ones");
+      intro = prev?.intro && fresh.length < stops.length / 2 ? prev.intro : newIntro || prev?.intro || null;
+    }
+    catch (e) { log(`  ! AI commentary failed, using official text: ${e.message}`); intro = null; }
   }
   if (!intro) {
     // without AI, only official places have trustworthy text
@@ -482,6 +530,7 @@ async function buildZone(z) {
     name: z.name, start: z.start, intro,
     distanceM: Math.round(walkM), durationMin: Math.round(walkS / 60 + stops.length * 8),
     generator: { ai: !!intro, model: intro ? KEY.model : null },
+    ...(landmarkCache ? { cache: landmarkCache } : {}),
     stops: stops.map((s) => ({
       n: s.n, kind: s.kind, lat: +s.lat.toFixed(6), lng: +s.lng.toFixed(6),
       category: s.category || null, image: s.image || null,
@@ -496,6 +545,25 @@ async function buildZone(z) {
   return course;
 }
 
+/* ---------------- what to rebuild ---------------- */
+const daysSince = (d) => (NOW - new Date(d + "T00:00:00Z")) / 86400000;
+// Trending areas change every month; heritage areas get a full rebuild every quarter.
+// In between, a free check (TMAP place search) looks for cafés or shops on the course that have closed.
+async function isDue(z, prevCourse) {
+  if (z.type === "hot") return true;
+  const age = daysSince(prevCourse.updated || "2000-01-01");
+  if (age >= 85) return true;
+  for (const s of prevCourse.stops.filter((x) => x.kind === "hot")) {
+    const name = s.name?.ko || "";
+    const pois = await tmapPoi(name, s, 1);
+    const want = coreName(name);
+    const still = pois.some((p) => L.meters(p, s) < 120 && (coreName(p.name).includes(want) || want.includes(coreName(p.name))));
+    if (!still) { log(`\n▶ ${z.id}: "${name}" not found on the map any more — rebuilding`); return true; }
+  }
+  log(`\n▶ ${z.id}: unchanged (heritage; full check after ${Math.ceil(85 - age)} more days)`);
+  return false;
+}
+
 /* ---------------- main ---------------- */
 async function main() {
   fs.mkdirSync(DIR, { recursive: true });
@@ -504,12 +572,20 @@ async function main() {
   if (!KEY.tour) { log("TOURAPI_KEY is missing — nothing to build."); process.exitCode = 1; return; }
 
   const only = env("ONLY_ZONES").split(",").filter(Boolean);
+  // a manual run for named zones rebuilds them, unless "rebuild" is unchecked (then the normal monthly due-check runs)
+  const force = env("REBUILD") === "true" || (!!only.length && env("REBUILD") !== "false");
   const zones = ZONES.filter((z) => !only.length || only.includes(z.id));
   const index = { updated: TODAY, zones: prev.zones.filter((p) => !zones.some((z) => z.id === p.id)) };
   let built = 0;
   for (const z of zones) {
+    const prevPath = path.join(DIR, `${z.id}.json`);
+    const prevCourse = fs.existsSync(prevPath) ? JSON.parse(fs.readFileSync(prevPath, "utf8")) : null;
+    if (!force && prevCourse && !(await isDue(z, prevCourse))) {
+      const old = prev.zones.find((p) => p.id === z.id);
+      if (old) { index.zones.push(old); continue; }
+    }
     try {
-      const c = await buildZone(z);
+      const c = await buildZone(z, prevCourse);
       fs.writeFileSync(path.join(DIR, `${z.id}.json`), JSON.stringify(c));
       index.zones.push({ id: c.id, type: c.type, name: c.name, start: c.start, stops: c.stops.length, distanceM: c.distanceM, durationMin: c.durationMin, updated: c.updated, ai: c.generator.ai });
       built++;
@@ -523,6 +599,7 @@ async function main() {
   index.zones.sort((a, b) => ZONES.findIndex((z) => z.id === a.id) - ZONES.findIndex((z) => z.id === b.id));
   fs.writeFileSync(prevIndexPath, JSON.stringify(index, null, 1));
   log(`\nDone: ${built}/${zones.length} zones rebuilt, ${index.zones.length} courses published.`);
+  log(`Claude API this run: ${USAGE.calls} calls, ${USAGE.inTok} input + ${USAGE.outTok} output tokens, ${USAGE.searches} web searches ≈ $${USAGE.usd.toFixed(3)}`);
 }
 
 main().catch((e) => { console.error(e); process.exitCode = 1; });

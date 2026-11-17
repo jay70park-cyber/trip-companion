@@ -9,6 +9,10 @@ on:
         description: "Only these zone ids (comma-separated, empty = all)"
         required: false
         default: ""
+      rebuild:
+        description: "Rebuild the named zones even if nothing is due (uncheck to run the monthly due-check)"
+        type: boolean
+        default: true
 
 permissions:
   contents: write
@@ -48,6 +52,7 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           AI_MODEL: ${{ vars.AI_MODEL }}
           ONLY_ZONES: ${{ github.event.inputs.zones }}
+          REBUILD: ${{ github.event.inputs.rebuild }}
         run: node pipeline/build-courses.mjs out
 
       - name: Publish to the data branch
