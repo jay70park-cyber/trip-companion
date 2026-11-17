@@ -19,10 +19,10 @@
      "ko": "홍대입구역 9번 출구"
     }
    },
-   "stops": 5,
-   "distanceM": 1975,
-   "durationMin": 67,
-   "updated": "2026-11-05",
+   "stops": 9,
+   "distanceM": 3273,
+   "durationMin": 117,
+   "updated": "2026-11-17",
    "ai": true
   },
   {
@@ -307,9 +307,9 @@
      "ko": "대릉원"
     }
    },
-   "stops": 7,
-   "distanceM": 4601,
-   "durationMin": 116,
+   "stops": 9,
+   "distanceM": 3507,
+   "durationMin": 120,
    "updated": "2026-11-17",
    "ai": true
   },
