@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-05",
+ "updated": "2026-11-17",
  "zones": [
   {
    "id": "hongdae",
@@ -119,6 +119,174 @@
    "distanceM": 4812,
    "durationMin": 138,
    "updated": "2026-11-05",
+   "ai": true
+  },
+  {
+   "id": "insadong",
+   "type": "heritage",
+   "name": {
+    "en": "Insadong & Ikseondong",
+    "ko": "인사동·익선동",
+    "ja": "仁寺洞・益善洞",
+    "zhs": "仁寺洞·益善洞",
+    "zht": "仁寺洞·益善洞"
+   },
+   "start": {
+    "lat": 37.576,
+    "lng": 126.9855,
+    "label": {
+     "en": "Anguk Station Exit 6",
+     "ko": "안국역 6번 출구"
+    }
+   },
+   "stops": 10,
+   "distanceM": 4338,
+   "durationMin": 140,
+   "updated": "2026-11-17",
+   "ai": true
+  },
+  {
+   "id": "changdeok",
+   "type": "heritage",
+   "name": {
+    "en": "Changdeokgung & Changgyeonggung",
+    "ko": "창덕궁·창경궁",
+    "ja": "昌徳宮・昌慶宮",
+    "zhs": "昌德宫·昌庆宫",
+    "zht": "昌德宮·昌慶宮"
+   },
+   "start": {
+    "lat": 37.5794,
+    "lng": 126.991,
+    "label": {
+     "en": "Donhwamun Gate, Changdeokgung",
+     "ko": "창덕궁 돈화문"
+    }
+   },
+   "stops": 7,
+   "distanceM": 3999,
+   "durationMin": 111,
+   "updated": "2026-11-17",
+   "ai": true
+  },
+  {
+   "id": "ddp",
+   "type": "hot",
+   "name": {
+    "en": "Dongdaemun, DDP & Euljiro",
+    "ko": "동대문·DDP·을지로",
+    "ja": "東大門・DDP・乙支路",
+    "zhs": "东大门·DDP·乙支路",
+    "zht": "東大門·DDP·乙支路"
+   },
+   "start": {
+    "lat": 37.5665,
+    "lng": 127.0092,
+    "label": {
+     "en": "Dongdaemun Design Plaza (DDP)",
+     "ko": "동대문디자인플라자(DDP)"
+    }
+   },
+   "stops": 5,
+   "distanceM": 3064,
+   "durationMin": 84,
+   "updated": "2026-11-17",
+   "ai": true
+  },
+  {
+   "id": "chinatown",
+   "type": "heritage",
+   "name": {
+    "en": "Incheon Chinatown & Open Port",
+    "ko": "인천 차이나타운·개항장",
+    "ja": "仁川チャイナタウン・開港場",
+    "zhs": "仁川唐人街·开港场",
+    "zht": "仁川中華街·開港場"
+   },
+   "start": {
+    "lat": 37.4764,
+    "lng": 126.6168,
+    "label": {
+     "en": "Incheon Station",
+     "ko": "인천역"
+    }
+   },
+   "stops": 5,
+   "distanceM": 1194,
+   "durationMin": 56,
+   "updated": "2026-11-17",
+   "ai": true
+  },
+  {
+   "id": "jeonju",
+   "type": "heritage",
+   "name": {
+    "en": "Jeonju Hanok Village",
+    "ko": "전주 한옥마을",
+    "ja": "全州韓屋村",
+    "zhs": "全州韩屋村",
+    "zht": "全州韓屋村"
+   },
+   "start": {
+    "lat": 35.8153,
+    "lng": 127.15,
+    "label": {
+     "en": "Gyeonggijeon Shrine",
+     "ko": "경기전"
+    }
+   },
+   "stops": 4,
+   "distanceM": 3276,
+   "durationMin": 74,
+   "updated": "2026-11-17",
+   "ai": true
+  },
+  {
+   "id": "yeosu",
+   "type": "hot",
+   "name": {
+    "en": "Yeosu Harbor",
+    "ko": "여수 이순신광장·낭만포차",
+    "ja": "麗水 李舜臣広場",
+    "zhs": "丽水 李舜臣广场",
+    "zht": "麗水 李舜臣廣場"
+   },
+   "start": {
+    "lat": 34.7385,
+    "lng": 127.7371,
+    "label": {
+     "en": "Yi Sun-sin Square",
+     "ko": "이순신광장"
+    }
+   },
+   "stops": 8,
+   "distanceM": 11452,
+   "durationMin": 208,
+   "updated": "2026-11-17",
+   "ai": true
+  },
+  {
+   "id": "daegu",
+   "type": "hot",
+   "name": {
+    "en": "Daegu: Modern Alleys & Dongseongno",
+    "ko": "대구 근대골목·동성로",
+    "ja": "大邱 近代路地・東城路",
+    "zhs": "大邱 近代胡同·东城路",
+    "zht": "大邱 近代胡同·東城路"
+   },
+   "start": {
+    "lat": 35.869,
+    "lng": 128.595,
+    "label": {
+     "en": "Dongseongno",
+     "ko": "동성로"
+    }
+   },
+   "stops": 7,
+   "distanceM": 2750,
+   "durationMin": 94,
+   "updated": "2026-11-17",
    "ai": true
   }
  ]
