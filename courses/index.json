@@ -260,8 +260,32 @@
     }
    },
    "stops": 8,
-   "distanceM": 11452,
-   "durationMin": 208,
+   "distanceM": 3261,
+   "durationMin": 106,
+   "updated": "2026-11-17",
+   "ai": true
+  },
+  {
+   "id": "gyeongju",
+   "type": "heritage",
+   "name": {
+    "en": "Gyeongju: Daereungwon & Hwangnidan-gil",
+    "ko": "경주 대릉원·황리단길",
+    "ja": "慶州 大陵苑・皇理団通り",
+    "zhs": "庆州 大陵苑·皇理团路",
+    "zht": "慶州 大陵苑·皇理團路"
+   },
+   "start": {
+    "lat": 35.838,
+    "lng": 129.212,
+    "label": {
+     "en": "Daereungwon Tomb Complex",
+     "ko": "대릉원"
+    }
+   },
+   "stops": 4,
+   "distanceM": 2369,
+   "durationMin": 63,
    "updated": "2026-11-17",
    "ai": true
   },
@@ -286,6 +310,30 @@
    "stops": 7,
    "distanceM": 2750,
    "durationMin": 94,
+   "updated": "2026-11-17",
+   "ai": true
+  },
+  {
+   "id": "jeju_city",
+   "type": "heritage",
+   "name": {
+    "en": "Jeju Old Town",
+    "ko": "제주 원도심",
+    "ja": "済州 旧市街",
+    "zhs": "济州 旧城区",
+    "zht": "濟州 舊城區"
+   },
+   "start": {
+    "lat": 33.5115,
+    "lng": 126.5269,
+    "label": {
+     "en": "Dongmun Market",
+     "ko": "동문시장"
+    }
+   },
+   "stops": 4,
+   "distanceM": 2254,
+   "durationMin": 62,
    "updated": "2026-11-17",
    "ai": true
   }
