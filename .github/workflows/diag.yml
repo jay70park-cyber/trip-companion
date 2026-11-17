@@ -1,0 +1,18 @@
+name: diag
+on: workflow_dispatch
+jobs:
+  d:
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          K: ${{ secrets.TOURAPI_KEY }}
+        run: |
+          node -e '
+          const K=process.env.K;const enc=K.includes("%")?K:encodeURIComponent(K);
+          const go=async(svc,p)=>{const qs=new URLSearchParams({MobileOS:"ETC",MobileApp:"diag",_type:"json",...p});
+            const t=await (await fetch(`https://apis.data.go.kr/B551011/${svc}/locationBasedList2?serviceKey=${enc}&${qs}`)).text();
+            try{const d=JSON.parse(t);const b=d.response.body;const it=b.items&&b.items.item||[];return `${d.response.header.resultCode} total=${b.totalCount} got=${(Array.isArray(it)?it:[it]).length} first=${(Array.isArray(it)?it:[it]).slice(0,4).map(x=>x.title+"@"+x.dist).join(" | ")}`}catch(e){return t.slice(0,200)}};
+          (async()=>{for(const [n,lat,lng] of [["gyeongju",35.8380,129.2120],["haeundae",35.1631,129.1590],["gyeongbok",37.5760,126.9769]]){
+            for(const [svc,ct] of [["KorService2","12"],["KorService2",""],["EngService2","76"]]){
+              const p={mapX:String(lng),mapY:String(lat),radius:"1200",arrange:"E",numOfRows:"40",pageNo:"1"};if(ct)p.contentTypeId=ct;
+              console.log(n,svc,ct||"all",await go(svc,p));}}})()'
