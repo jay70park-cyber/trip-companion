@@ -19,9 +19,9 @@
      "ko": "홍대입구역 9번 출구"
     }
    },
-   "stops": 9,
-   "distanceM": 3273,
-   "durationMin": 117,
+   "stops": 6,
+   "distanceM": 2493,
+   "durationMin": 82,
    "updated": "2026-11-17",
    "ai": true
   },
@@ -218,6 +218,30 @@
    "ai": true
   },
   {
+   "id": "jamsil",
+   "type": "hot",
+   "name": {
+    "en": "Jamsil & Seokchon Lake",
+    "ko": "잠실·석촌호수",
+    "ja": "蚕室・石村湖",
+    "zhs": "蚕室·石村湖",
+    "zht": "蠶室·石村湖"
+   },
+   "start": {
+    "lat": 37.5125,
+    "lng": 127.1025,
+    "label": {
+     "en": "Lotte World Tower",
+     "ko": "롯데월드타워"
+    }
+   },
+   "stops": 9,
+   "distanceM": 4239,
+   "durationMin": 128,
+   "updated": "2026-11-17",
+   "ai": true
+  },
+  {
    "id": "chinatown",
    "type": "heritage",
    "name": {
@@ -238,6 +262,30 @@
    "stops": 5,
    "distanceM": 1194,
    "durationMin": 56,
+   "updated": "2026-11-17",
+   "ai": true
+  },
+  {
+   "id": "gongju",
+   "type": "heritage",
+   "name": {
+    "en": "Gongju: Gongsanseong & Jeminchon",
+    "ko": "공주 공산성·제민천",
+    "ja": "公州 公山城・済民川",
+    "zhs": "公州 公山城·济民川",
+    "zht": "公州 公山城·濟民川"
+   },
+   "start": {
+    "lat": 36.4628,
+    "lng": 127.125,
+    "label": {
+     "en": "Gongsanseong Fortress",
+     "ko": "공산성"
+    }
+   },
+   "stops": 6,
+   "distanceM": 2661,
+   "durationMin": 85,
    "updated": "2026-11-17",
    "ai": true
   },
@@ -338,6 +386,30 @@
    "ai": true
   },
   {
+   "id": "busan_haeundae",
+   "type": "hot",
+   "name": {
+    "en": "Busan Haeundae",
+    "ko": "부산 해운대",
+    "ja": "釜山 海雲台",
+    "zhs": "釜山 海云台",
+    "zht": "釜山 海雲臺"
+   },
+   "start": {
+    "lat": 35.1631,
+    "lng": 129.159,
+    "label": {
+     "en": "Haeundae Station Exit 5",
+     "ko": "해운대역 5번 출구"
+    }
+   },
+   "stops": 5,
+   "distanceM": 2147,
+   "durationMin": 69,
+   "updated": "2026-11-17",
+   "ai": true
+  },
+  {
    "id": "busan_nampo",
    "type": "hot",
    "name": {
@@ -382,6 +454,30 @@
    "stops": 8,
    "distanceM": 3509,
    "durationMin": 112,
+   "updated": "2026-11-17",
+   "ai": true
+  },
+  {
+   "id": "seogwipo",
+   "type": "heritage",
+   "name": {
+    "en": "Seogwipo Old Town",
+    "ko": "서귀포 이중섭거리·올레시장",
+    "ja": "西帰浦 李仲燮通り",
+    "zhs": "西归浦 李仲燮街",
+    "zht": "西歸浦 李仲燮街"
+   },
+   "start": {
+    "lat": 33.2464,
+    "lng": 126.5642,
+    "label": {
+     "en": "Lee Jung-seop Street",
+     "ko": "이중섭거리"
+    }
+   },
+   "stops": 5,
+   "distanceM": 2898,
+   "durationMin": 80,
    "updated": "2026-11-17",
    "ai": true
   }
