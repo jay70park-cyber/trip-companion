@@ -119,7 +119,13 @@ async function tmapPoi(keyword, near, radiusKm = 2) {
   } catch (e) { log(`  ! place search ${keyword}: ${e.message}`); return []; }
 }
 
+const walkCache = new Map();
 async function walkLeg(a, b) {
+  const k = `${a.lat},${a.lng}>${b.lat},${b.lng}`;
+  if (!walkCache.has(k)) walkCache.set(k, walkLegRaw(a, b));
+  return walkCache.get(k);
+}
+async function walkLegRaw(a, b) {
   if (!KEY.tmap) return null;
   try {
     const text = await http("https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1", {
@@ -259,13 +265,19 @@ function coreName(t) {
 }
 
 /* ---------------- step 2: official places ---------------- */
+// English KTO entries first; outside Seoul the English list is thin, so Korean entries that have no English twin
+// (nothing within 30 m) are added too — the AI writes their English names and the translations.
 async function officialCandidates(z) {
   if (!KEY.tour) return [];
-  const en = await ktoNear("en", z.start, z.radiusM);
-  return en
-    .filter((x) => x.title && L.isSight(x.title))
-    .map((x) => ({ kind: "official", lat: x.lat, lng: x.lng, nameEn: L.stripKoParen(x.title), enId: x.contentid, image: (x.firstimage || "").replace(/^http:/, "https:"), dist: +x.dist || L.meters(z.start, x) }))
-    .sort((a, b) => (b.image ? 1 : 0) - (a.image ? 1 : 0) || a.dist - b.dist);
+  const en = (await ktoNear("en", z.start, z.radiusM)).filter((x) => x.title && L.isSight(x.title));
+  const ko = (await ktoNear("ko", z.start, z.radiusM)).filter((x) => x.title && L.isSight(x.title) && !en.some((e) => L.meters(e, x) < 30));
+  const out = [
+    ...en.map((x) => ({ kind: "official", lat: x.lat, lng: x.lng, nameEn: L.stripKoParen(x.title), enId: x.contentid, image: (x.firstimage || "").replace(/^http:/, "https:"), dist: +x.dist || L.meters(z.start, x) })),
+    ...ko.map((x) => ({ kind: "official", lat: x.lat, lng: x.lng, nameKo: x.title, koOnly: true, image: (x.firstimage || "").replace(/^http:/, "https:"), dist: +x.dist || L.meters(z.start, x) })),
+  ];
+  if (ko.length) log(`  · ${en.length} English + ${ko.length} Korean-only official places`);
+  // English-listed and photographed places first, then by distance
+  return out.sort((a, b) => (a.koOnly ? 1 : 0) - (b.koOnly ? 1 : 0) || (b.image ? 1 : 0) - (a.image ? 1 : 0) || a.dist - b.dist);
 }
 
 /* ---------------- step 3: names, descriptions and audio per stop ---------------- */
@@ -398,8 +410,27 @@ async function buildZone(z) {
   let cands = L.dedupe([...official.slice(0, wantOfficial), ...hot.slice(0, wantHot), ...official.slice(wantOfficial, wantOfficial + 4)], 40);
   const fit = L.fitWalk(z.start, cands, { maxLeg: 900, maxTotal: 3200, minStops: 4, maxStops: z.type === "hot" ? 9 : 10 });
   if (!fit) throw new Error("could not fit a walkable course");
-  const stops = fit.stops.map((s, i) => ({ ...s, n: i + 1 }));
+  let stops = fit.stops.map((s, i) => ({ ...s, n: i + 1 }));
   log(`  · ${stops.length} stops, ~${fit.straightM} m straight-line`);
+
+  // real walking check: water, rail lines or hills can make a short hop a long detour (e.g. a lighthouse across a harbour)
+  for (let guard = 0; guard < 6; guard++) {
+    let worst = -1, worstRatio = 0, total = 0;
+    for (let i = 0; i < stops.length; i++) {
+      const a = i ? stops[i - 1] : z.start, b = stops[i];
+      const leg = await walkLeg(a, b);
+      const d = leg && leg.distance != null ? leg.distance : L.meters(a, b) * 1.3;
+      total += d;
+      const ratio = d / Math.max(150, L.meters(a, b));
+      if (d > 1300 && ratio > worstRatio) { worst = i; worstRatio = ratio; }
+    }
+    if (worst < 0 && total <= 5500) break;
+    if (worst < 0) worst = stops.length - 1;   // too long overall: drop the last stop
+    log(`  · dropped "${stops[worst].nameEn || stops[worst].nameKo}" — real walk too long (${Math.round(total)} m in all)`);
+    stops.splice(worst, 1);
+    if (stops.length < 4) throw new Error("could not fit a walkable course (real walking distance)");
+    stops = stops.map((s, i) => ({ ...s, n: i + 1 }));
+  }
 
   for (const s of stops) {
     if (s.kind === "official") { await enrichOfficial(z, s); await enrichAudio(s); }
