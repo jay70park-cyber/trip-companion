@@ -170,6 +170,30 @@
    "ai": true
   },
   {
+   "id": "namsan",
+   "type": "heritage",
+   "name": {
+    "en": "Namsan & N Seoul Tower",
+    "ko": "남산·N서울타워",
+    "ja": "南山・Nソウルタワー",
+    "zhs": "南山·N首尔塔",
+    "zht": "南山·N首爾塔"
+   },
+   "start": {
+    "lat": 37.5512,
+    "lng": 126.9882,
+    "label": {
+     "en": "N Seoul Tower",
+     "ko": "N서울타워"
+    }
+   },
+   "stops": 5,
+   "distanceM": 2390,
+   "durationMin": 74,
+   "updated": "2026-11-17",
+   "ai": true
+  },
+  {
    "id": "ddp",
    "type": "hot",
    "name": {
@@ -235,9 +259,9 @@
      "ko": "경기전"
     }
    },
-   "stops": 4,
-   "distanceM": 3276,
-   "durationMin": 74,
+   "stops": 8,
+   "distanceM": 3711,
+   "durationMin": 114,
    "updated": "2026-11-17",
    "ai": true
   },
@@ -283,9 +307,9 @@
      "ko": "대릉원"
     }
    },
-   "stops": 4,
-   "distanceM": 2369,
-   "durationMin": 63,
+   "stops": 7,
+   "distanceM": 4601,
+   "durationMin": 116,
    "updated": "2026-11-17",
    "ai": true
   },
@@ -314,6 +338,30 @@
    "ai": true
   },
   {
+   "id": "busan_nampo",
+   "type": "hot",
+   "name": {
+    "en": "Busan Nampo-dong & Jagalchi",
+    "ko": "부산 남포동·자갈치",
+    "ja": "釜山 南浦洞・チャガルチ",
+    "zhs": "釜山 南浦洞·札嘎其",
+    "zht": "釜山 南浦洞·札嘎其"
+   },
+   "start": {
+    "lat": 35.0966,
+    "lng": 129.0306,
+    "label": {
+     "en": "Nampo Station",
+     "ko": "남포역"
+    }
+   },
+   "stops": 8,
+   "distanceM": 3802,
+   "durationMin": 116,
+   "updated": "2026-11-17",
+   "ai": true
+  },
+  {
    "id": "jeju_city",
    "type": "heritage",
    "name": {
@@ -331,9 +379,9 @@
      "ko": "동문시장"
     }
    },
-   "stops": 4,
-   "distanceM": 2254,
-   "durationMin": 62,
+   "stops": 8,
+   "distanceM": 3509,
+   "durationMin": 112,
    "updated": "2026-11-17",
    "ai": true
   }
