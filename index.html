@@ -741,7 +741,7 @@ function openGuide(it){
   loadFood(it,r2);loadOverview(it,r4);loadOdii(it,ra);
 }
 
-/* Restaurants Jay adds himself (data branch, picks/picks.json) come first */
+/* Restaurants Jay adds himself (data branch, picks/picks.json): shown in distance order with a ★ badge, never ranked higher */
 const PICKS_URL="https://raw.githubusercontent.com/jay70park-cyber/trip-companion/data/picks/picks.json";
 const PICK_M=1500;
 let picksReq=null;
@@ -767,20 +767,23 @@ async function loadFood(it,box){
   const ul=el("ul","food");
   const norm=x=>String(x||"").replace(/\s|\(.*?\)/g,"").toLowerCase();
   const taken=new Set();
-  for(const {p,d} of near){
-    const li=el("li","pick");const wrap=el("span","pk");
-    const name=pickTxt(p.name);
-    const a=el("a",null,name);a.href=kakaoLink({title:p.name&&p.name.ko||name,mapy:p.lat,mapx:p.lng});a.target="_blank";a.rel="noopener";
-    wrap.append(el("span","badge","★ "+t("pick")),a);
-    const menu=pickTxt(p.menu),txt=pickTxt(p.text);
-    if(menu||txt)wrap.append(el("span","pm",[menu,txt].filter(Boolean).join(" · ")));
-    li.append(wrap,el("span","dist",fmtD(d)));ul.append(li);
-    for(const k of Object.values(p.name||{}))taken.add(norm(k));
-  }
-  for(const f of items){
-    if(taken.has(norm(f.title)))continue;
-    const li=el("li");const a=el("a",null,f.title);a.href=kakaoLink(f);a.target="_blank";a.rel="noopener";
-    li.append(a,el("span","dist",fmtD(parseFloat(f.dist)||0)));ul.append(li);
+  for(const {p} of near)for(const k of Object.values(p.name||{}))taken.add(norm(k));
+  // one list in distance order: a local pick gets a ★ badge, never a higher place
+  const rows=near.map(x=>({d:x.d,p:x.p})).concat(items.filter(f=>!taken.has(norm(f.title))).map(f=>({d:parseFloat(f.dist)||0,f})))
+    .sort((a,b)=>a.d-b.d).slice(0,6);
+  for(const r of rows){
+    if(r.p){const p=r.p;
+      const li=el("li","pick");const wrap=el("span","pk");
+      const name=pickTxt(p.name);
+      const a=el("a",null,name);a.href=kakaoLink({title:p.name&&p.name.ko||name,mapy:p.lat,mapx:p.lng});a.target="_blank";a.rel="noopener";
+      wrap.append(el("span","badge","★ "+t("pick")),a);
+      const menu=pickTxt(p.menu),txt=pickTxt(p.text);
+      if(menu||txt)wrap.append(el("span","pm",[menu,txt].filter(Boolean).join(" · ")));
+      li.append(wrap,el("span","dist",fmtD(r.d)));ul.append(li);
+    }else{const f=r.f;
+      const li=el("li");const a=el("a",null,f.title);a.href=kakaoLink(f);a.target="_blank";a.rel="noopener";
+      li.append(a,el("span","dist",fmtD(r.d)));ul.append(li);
+    }
   }
   box.append(ul);
 }
