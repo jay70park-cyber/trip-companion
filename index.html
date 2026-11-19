@@ -1153,7 +1153,7 @@ async function openCourse(id){
     if(s.image){const im=img({firstimage:s.image},"hero");im.style.maxHeight="160px";im.style.margin="8px 0";body.append(im);}
     body.append(el("p",null,L10(s.text)));
     const acts=el("div","acts");
-    if("speechSynthesis" in window){const lb=el("button","small",t("listen"));lb.type="button";lb.dataset.stop=s.n;lb.onclick=()=>toggleSpeak(s,lb);acts.append(lb);}
+    if("speechSynthesis" in window||recordedFor(s)){const lb=el("button","small",t("listen"));lb.type="button";lb.dataset.stop=s.n;lb.onclick=()=>toggleSpeak(s,lb);acts.append(lb);}
     const au=s.audio&&(s.audio[{en:"en",ko:"ko",ja:"ja"}[lang]]||s.audio.en);
     if(au&&au.url){const a=document.createElement("audio");a.controls=true;a.preload="none";a.src=au.url;a.style.width="100%";a.style.marginTop="8px";
       a.addEventListener("play",()=>{stopSpeaking();document.querySelectorAll("audio").forEach(x=>{if(x!==a)x.pause();});});
@@ -1218,7 +1218,13 @@ function toggleSpeak(s,btn){
   const done=()=>{if(speakingBtn===btn){btn.textContent=t("listen");speakingBtn=null;}narr=null;};
   speakingBtn=btn;btn.textContent=t("stopListen");
   const rec=recordedFor(s);
-  if(rec){narr=new Audio(rec);narr.onended=narr.onerror=done;narr.play().catch(done);return;}
+  // recorded narration first; if the file cannot be loaded (offline, removed, service stopped) the phone's voice reads it instead
+  if(rec){let fell=false;const fall=()=>{if(fell||speakingBtn!==btn)return;fell=true;narr=null;deviceSpeak(s,btn,done);};
+    narr=new Audio(rec);narr.onended=done;narr.onerror=fall;narr.play().catch(fall);return;}
+  deviceSpeak(s,btn,done);
+}
+function deviceSpeak(s,btn,done){
+  if(!("speechSynthesis" in window)){done();return;}
   const code={en:"en-US",ko:"ko-KR",ja:"ja-JP",zhs:"zh-CN",zht:"zh-TW"}[lang];
   const v=bestVoice(code);
   // one sentence at a time, so the phone pauses naturally between sentences instead of reading one long block

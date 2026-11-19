@@ -60,7 +60,7 @@ async function main() {
   if (process.env.SAMPLE) return samples();
   const voices = await pickVoices();
   const files = {};
-  let chars = 0, made = 0, kept = 0, capped = 0;
+  let chars = 0, made = 0, kept = 0, capped = 0, fails = 0, stopped = false;
   const courses = fs.readdirSync(CDIR).filter((f) => f.endsWith(".json") && f !== "index.json");
   for (const f of courses) {
     const c = JSON.parse(fs.readFileSync(path.join(CDIR, f), "utf8"));
@@ -74,7 +74,7 @@ async function main() {
         const file = `${c.id}-${s.n}-${l}-${h}-${voices[l].name.split("-").pop().toLowerCase()}.mp3`;
         if (old && old.h === h && old.v === voices[l].name && fs.existsSync(path.join(VDIR, old.f))) { files[key] = old; kept++; continue; }
         if (ONLY.length && !ONLY.includes(c.id)) { if (old) files[key] = old; continue; }
-        if (chars + text.length > MAX_CHARS) { capped++; if (old) files[key] = old; continue; }
+        if (stopped || chars + text.length > MAX_CHARS) { capped++; if (old) files[key] = old; continue; }
         try {
           const bufs = [];
           for (const part of chunks(text)) {
@@ -83,9 +83,13 @@ async function main() {
           }
           fs.writeFileSync(path.join(VDIR, file), Buffer.concat(bufs));
           files[key] = { h, f: file, v: voices[l].name };
-          chars += text.length; made++;
+          chars += text.length; made++; fails = 0;
           if (made % 20 === 0) console.log(`  … ${made} recordings, ${chars} characters`);
-        } catch (e) { console.log(`  ! ${key}: ${e.message}`); if (old) files[key] = old; }
+        } catch (e) {
+          console.log(`  ! ${key}: ${e.message}`); if (old) files[key] = old;
+          // e.g. the free trial ended or billing was turned off: stop asking, keep every recording made so far
+          if (++fails >= 5 && !stopped) { stopped = true; console.log("  ! Text-to-Speech keeps failing — stopping; existing recordings are kept and the app reads the rest with the phone's voice"); }
+        }
         await sleep(120);
       }
     }
