@@ -1,0 +1,110 @@
+{
+ "id": "gojong",
+ "type": "story",
+ "areas": ["gyeongbok", "deoksu"],
+ "name": {"en": "King Gojong's Escape: Agwan Pacheon Walk", "ko": "고종의 길: 아관파천 스토리 코스", "ja": "高宗の道：俄館播遷ストーリーコース", "zhs": "高宗之路：俄馆播迁故事路线", "zht": "高宗之路：俄館播遷故事路線"},
+ "start": {"lat": 37.57905, "lng": 126.97395, "label": {"en": "Yeongchumun Gate (west gate of Gyeongbokgung)", "ko": "경복궁 영추문(서문)", "ja": "景福宮 迎秋門（西門）", "zhs": "景福宫 迎秋门（西门）", "zht": "景福宮 迎秋門（西門）"}},
+ "intro": {
+  "en": "Follow King Gojong through the most dramatic years of his reign: the palace he fled before dawn in 1896, the Russian legation where he took refuge, the empire he proclaimed, and the treaty that took it away. About 3 km and 2–2.5 hours. The line on the map is today's walking route; the exact way taken in 1896 is not recorded. Gyeongbokgung is closed on Tuesdays and Deoksugung on Mondays; King Gojong's Road is open 09:00–18:00 (to 17:30 from November to February).",
+  "ko": "고종의 가장 극적인 시기를 따라 걷습니다. 1896년 새벽에 빠져나온 궁궐, 피신했던 러시아공사관, 선포한 제국, 그리고 그 제국을 빼앗은 조약의 현장까지 이어집니다. 약 3km, 2~2.5시간. 지도의 선은 오늘날의 도보 경로이며, 1896년 당시 실제 이동 경로는 기록으로 남아 있지 않습니다. 경복궁은 화요일, 덕수궁은 월요일 휴궁이고, 고종의 길은 09:00~18:00(11~2월 17:30까지) 개방합니다.",
+  "ja": "高宗の治世で最も劇的な時代をたどります。1896年の夜明け前に抜け出した王宮、身を寄せたロシア公使館、宣布した帝国、そしてその帝国を奪った条約の現場まで。約3km、2〜2.5時間。地図の線は現在の徒歩ルートで、1896年当時の実際の経路は記録に残っていません。景福宮は火曜、徳寿宮は月曜休み。高宗の道は9:00〜18:00（11〜2月は17:30まで）。",
+  "zhs": "沿着高宗在位期间最具戏剧性的岁月漫步：1896年黎明前逃离的王宫、避难的俄罗斯公使馆、宣布成立的帝国，以及夺走这个帝国的条约现场。全程约3公里，2至2.5小时。地图上的线是今天的步行路线，1896年当时的实际路线并无记载。景福宫周二闭馆，德寿宫周一闭馆；高宗之路开放时间为9:00–18:00（11月至2月至17:30）。",
+  "zht": "沿著高宗在位期間最具戲劇性的歲月漫步：1896年黎明前逃離的王宮、避難的俄羅斯公使館、宣布成立的帝國，以及奪走這個帝國的條約現場。全程約3公里，2至2.5小時。地圖上的線是今天的步行路線，1896年當時的實際路線並無記載。景福宮週二休館，德壽宮週一休館；高宗之路開放時間為9:00–18:00（11月至2月至17:30）。"
+ },
+ "stops": [
+  {
+   "poi": "경복궁 영추문", "lat": 37.57905, "lng": 126.97395, "year": "1895–1896",
+   "name": {"en": "Yeongchumun Gate, Gyeongbokgung", "ko": "경복궁 영추문", "ja": "景福宮 迎秋門", "zhs": "景福宫 迎秋门", "zht": "景福宮 迎秋門"},
+   "text": {
+    "en": "In October 1895 Japanese agents broke into Gyeongbokgung and killed Queen Min (later honoured as Empress Myeongseong) in Geoncheonggung, the royal quarters at the back of the palace. For months the king lived here watched by a pro-Japanese cabinet. Before dawn on 11 February 1896, King Gojong and the crown prince slipped out through this west gate hidden in court ladies' palanquins and made for the Russian legation. Accounts say palanquins had been sent through this gate often in the days before, so the guards would not look twice.",
+    "ko": "1895년 10월, 일본 세력이 경복궁에 침입해 궁궐 깊숙한 건청궁에서 왕비(명성황후)를 시해했습니다(을미사변). 이후 고종은 친일 내각의 감시 속에 이곳에서 지냈습니다. 1896년 2월 11일 새벽, 고종과 왕세자는 궁녀의 가마를 타고 이 서문(영추문)을 몰래 빠져나와 러시아공사관으로 향했습니다. 그 전부터 궁녀의 가마를 이 문으로 자주 드나들게 해 경비병의 의심을 피했다고 전해집니다.",
+    "ja": "1895年10月、日本の勢力が景福宮に押し入り、宮殿の奥の乾清宮で王妃（明成皇后）を殺害しました（乙未事変）。その後、高宗は親日内閣の監視下でここに暮らしました。1896年2月11日の夜明け前、高宗と王世子は宮女の輿に乗ってこの西門（迎秋門）からひそかに抜け出し、ロシア公使館へ向かいました。事前に宮女の輿を何度もこの門に出入りさせ、門番の疑いをそらしたと伝えられます。",
+    "zhs": "1895年10月，日本势力闯入景福宫，在王宫深处的乾清宫杀害了王妃（明成皇后），史称乙未事变。此后高宗在亲日内阁的监视下生活于此。1896年2月11日黎明前，高宗与王世子乘坐宫女的轿子，从这座西门（迎秋门）悄悄离开，前往俄罗斯公使馆。据说此前已让宫女的轿子频繁进出此门，以免引起守卫怀疑。",
+    "zht": "1895年10月，日本勢力闖入景福宮，在王宮深處的乾清宮殺害了王妃（明成皇后），史稱乙未事變。此後高宗在親日內閣的監視下生活於此。1896年2月11日黎明前，高宗與王世子乘坐宮女的轎子，從這座西門（迎秋門）悄悄離開，前往俄羅斯公使館。據說此前已讓宮女的轎子頻繁進出此門，以免引起守衛懷疑。"
+   },
+   "sources": [
+    {"label": "한국민족문화대백과사전 — 아관파천", "url": "https://encykorea.aks.ac.kr/Article/E0034214"},
+    {"label": "한국경제 생글생글 — 아관파천", "url": "https://sgsg.hankyung.com/article/2016022680211"}
+   ]
+  },
+  {
+   "poi": "구 러시아공사관", "lat": 37.56853, "lng": 126.97139, "year": "1896–1897",
+   "name": {"en": "Former Russian Legation", "ko": "구 러시아공사관", "ja": "旧ロシア公使館", "zhs": "旧俄罗斯公使馆", "zht": "舊俄羅斯公使館"},
+   "text": {
+    "en": "Only this white tower is left of the Russian legation, built in 1890 in Renaissance style and largely destroyed in the Korean War. Gojong ruled from here for about a year, from 11 February 1896 to 20 February 1897 — Koreans call it Agwan Pacheon, the king's refuge at the Russian legation. From here he replaced the pro-Japanese cabinet and sent envoys to Russia and Europe. Historians still weigh it two ways: a bold move that broke Japan's grip, or a step that let the powers take Korea's mines, railways and forests.",
+    "ko": "1890년 르네상스 양식으로 지은 러시아공사관은 한국전쟁을 거치며 대부분 파괴되어 지금은 하얀 탑만 남아 있습니다. 고종은 1896년 2월 11일부터 1897년 2월 20일까지 약 1년간 이곳에서 나랏일을 보았습니다. 이를 '아관파천'이라 부릅니다. 이곳에서 친일 내각을 교체하고 러시아와 유럽에 사절을 보냈습니다. 일본의 압박에서 벗어난 결단이었다는 평가와, 열강이 광산·철도·삼림 이권을 앞다투어 가져가는 계기가 됐다는 평가가 함께 있습니다.",
+    "ja": "1890年にルネサンス様式で建てられたロシア公使館は朝鮮戦争でほぼ破壊され、今はこの白い塔だけが残ります。高宗は1896年2月11日から1897年2月20日まで約1年間、ここで政務を執りました。これを「俄館播遷」と呼びます。ここで親日内閣を交代させ、ロシアや欧州へ使節を送りました。日本の圧力から逃れた決断とする評価と、列強が鉱山・鉄道・森林の利権を争って手にする契機になったとする評価があります。",
+    "zhs": "俄罗斯公使馆建于1890年，为文艺复兴风格，朝鲜战争中大部分被毁，如今只剩这座白色塔楼。1896年2月11日至1897年2月20日，高宗在此处理国政约一年，史称“俄馆播迁”。他在这里更换了亲日内阁，并向俄罗斯和欧洲派遣使节。对此有两种评价：一种认为这是摆脱日本控制的果断之举，另一种认为这让列强争相夺取了朝鲜的矿山、铁路和森林利权。",
+    "zht": "俄羅斯公使館建於1890年，為文藝復興風格，韓戰中大部分被毀，如今只剩這座白色塔樓。1896年2月11日至1897年2月20日，高宗在此處理國政約一年，史稱「俄館播遷」。他在這裡更換了親日內閣，並向俄羅斯和歐洲派遣使節。對此有兩種評價：一種認為這是擺脫日本控制的果斷之舉，另一種認為這讓列強爭相奪取了朝鮮的礦山、鐵路和森林利權。"
+   },
+   "sources": [
+    {"label": "한국민족문화대백과사전 — 아관파천", "url": "https://encykorea.aks.ac.kr/Article/E0034214"},
+    {"label": "시대일보 — 고종의 길·러시아공사관 복원", "url": "https://www.sidae.com/article/2016072010458032011"},
+    {"label": "서울신문 — 아관파천 120주년", "url": "https://m.go.seoul.co.kr/news/2016/07/20/20160720500117"}
+   ]
+  },
+  {
+   "poi": "고종의 길", "lat": 37.5677, "lng": 126.97265, "year": "1896",
+   "name": {"en": "King Gojong's Road", "ko": "고종의 길", "ja": "高宗の道", "zhs": "高宗之路", "zht": "高宗之路"},
+   "text": {
+    "en": "This narrow 120-metre lane runs between the old Seonwonjeon site of Deoksugung and the residence of the US ambassador. A sketch map of Jeong-dong drawn at the American legation in the Korean Empire period marks a small path here as the \"King's Road\", and Gojong is believed to have used it to go between the Russian legation and the palace. Jeong-dong was the diplomatic quarter: the Russian, American and British legations all stood within a few hundred metres. The lane was rebuilt and opened in 2018.",
+    "ko": "덕수궁 선원전 터와 미국대사관저 사이로 난 120m의 좁은 길입니다. 대한제국 시기 미국공사관에서 그린 정동 지도에 이 작은 길이 '왕의 길(King's Road)'로 표시되어 있고, 고종이 러시아공사관과 궁궐을 오갈 때 쓴 길로 추정됩니다. 당시 정동은 러시아·미국·영국 공사관이 수백 미터 안에 모인 외교 구역이었습니다. 2018년 복원되어 개방했습니다.",
+    "ja": "徳寿宮の璿源殿跡とアメリカ大使公邸の間を通る、長さ120mの細い道です。大韓帝国期にアメリカ公使館で描かれた貞洞の地図にこの小道が「王の道（King's Road）」と記され、高宗がロシア公使館と王宮を行き来する際に使った道と推定されています。当時の貞洞は、ロシア・アメリカ・イギリスの公使館が数百メートル以内に集まる外交街でした。2018年に復元・開放されました。",
+    "zhs": "这条长120米的窄巷位于德寿宫璿源殿遗址与美国大使官邸之间。大韩帝国时期美国公使馆绘制的贞洞地图上，将这条小路标为“王之路（King's Road）”，据推测是高宗往返俄罗斯公使馆与王宫时所走的路。当时的贞洞是外交区，俄罗斯、美国、英国公使馆都在几百米范围内。此路于2018年修复开放。",
+    "zht": "這條長120公尺的窄巷位於德壽宮璿源殿遺址與美國大使官邸之間。大韓帝國時期美國公使館繪製的貞洞地圖上，將這條小路標為「王之路（King's Road）」，據推測是高宗往返俄羅斯公使館與王宮時所走的路。當時的貞洞是外交區，俄羅斯、美國、英國公使館都在幾百公尺範圍內。此路於2018年修復開放。"
+   },
+   "sources": [
+    {"label": "내 손안에 서울 — 아관파천 '고종의 길'", "url": "https://mediahub.seoul.go.kr/archives/1175449"},
+    {"label": "내 손안에 서울 — 120m 역사산책로 '고종의 길'", "url": "https://mediahub.seoul.go.kr/archives/2013481"},
+    {"label": "시대일보 — 고종의 길 복원", "url": "https://www.sidae.com/article/2016072010458032011"}
+   ]
+  },
+  {
+   "poi": "덕수궁 대한문", "lat": 37.56577, "lng": 126.97693, "year": "1897",
+   "name": {"en": "Deoksugung Palace (Daehanmun Gate)", "ko": "덕수궁 대한문", "ja": "徳寿宮 大漢門", "zhs": "德寿宫 大汉门", "zht": "德壽宮 大漢門"},
+   "text": {
+    "en": "On 20 February 1897 Gojong left the legation — not for Gyeongbokgung, but for Gyeongungung, today's Deoksugung, right beside the foreign legations. He rebuilt it as the palace of a new empire; inside stands Seokjojeon, the first modern stone building in Korea. The name Deoksugung, 'palace of virtuous longevity', came only in 1907, after Gojong had been forced to give up the throne and stayed on here.",
+    "ko": "1897년 2월 20일, 고종은 러시아공사관을 나와 경복궁이 아닌 경운궁, 지금의 덕수궁으로 들어갔습니다. 외국 공사관들이 바로 곁에 있는 곳이었습니다. 고종은 이곳을 새 제국의 궁궐로 다시 세웠고, 안에는 한국 최초의 근대식 석조건물인 석조전이 있습니다. '덕수궁'이라는 이름은 1907년, 강제로 왕위에서 물러난 고종이 이곳에 머물게 되면서 붙었습니다.",
+    "ja": "1897年2月20日、高宗はロシア公使館を出て、景福宮ではなく慶運宮、今の徳寿宮に入りました。各国公使館がすぐそばにある場所でした。高宗はここを新しい帝国の宮殿として建て直し、中には韓国初の近代的な石造建築・石造殿があります。「徳寿宮」の名は1907年、退位を強いられた高宗がここにとどまることになって付けられました。",
+    "zhs": "1897年2月20日，高宗离开俄罗斯公使馆，没有回景福宫，而是进入庆运宫，即今天的德寿宫——紧邻各国公使馆。高宗将这里重建为新帝国的宫殿，宫内的石造殿是韩国第一座近代石造建筑。“德寿宫”这个名字是1907年高宗被迫退位、留居于此后才有的。",
+    "zht": "1897年2月20日，高宗離開俄羅斯公使館，沒有回景福宮，而是進入慶運宮，即今天的德壽宮——緊鄰各國公使館。高宗將這裡重建為新帝國的宮殿，宮內的石造殿是韓國第一座近代石造建築。「德壽宮」這個名字是1907年高宗被迫退位、留居於此後才有的。"
+   },
+   "sources": [
+    {"label": "국가기록원 — 덕수궁", "url": "https://theme.archives.go.kr/next/koreaOfRecord/DeoksuPal.do"},
+    {"label": "내 손안에 서울 — 덕수궁 돌담길 따라 고종의 길까지", "url": "https://mediahub.seoul.go.kr/archives/2002078"}
+   ]
+  },
+  {
+   "poi": "환구단", "lat": 37.56503, "lng": 126.97990, "year": "1897",
+   "name": {"en": "Hwangudan (Altar of Heaven)", "ko": "환구단", "ja": "圜丘壇", "zhs": "圜丘坛", "zht": "圜丘壇"},
+   "text": {
+    "en": "On 12 October 1897 Gojong offered a rite to Heaven here and was crowned emperor, proclaiming the Korean Empire (Daehan Jeguk) — a fully independent state. A newspaper of the day described the procession from Gyeongungung: the national flag going first, the emperor in a gold-painted palanquin, soldiers lining the road. The altar itself was later removed; the three-storey octagonal shrine, Hwanggungu, still stands beside the hotel.",
+    "ko": "1897년 10월 12일, 고종은 이곳 환구단에서 하늘에 제사를 올리고 황제로 즉위해 '대한제국'을 선포했습니다. 자주독립국임을 세계에 알린 것입니다. 당시 독립신문은 경운궁에서 이곳까지 이어진 행렬을, 태극기가 앞서고 황제가 금색 연을 탔으며 길 양쪽을 군사들이 호위했다고 전합니다. 제단은 이후 헐렸고, 지금은 팔각 3층의 황궁우가 호텔 옆에 남아 있습니다.",
+    "ja": "1897年10月12日、高宗はここ圜丘壇で天に祭祀をささげて皇帝に即位し、「大韓帝国」を宣布しました。自主独立国であることを世界に示したのです。当時の独立新聞は、慶運宮からここまでの行列を、太極旗が先頭に立ち、皇帝は金色の輦に乗り、道の両側を兵士が警護したと伝えています。祭壇はその後取り壊され、今は八角三層の皇穹宇がホテルの隣に残っています。",
+    "zhs": "1897年10月12日，高宗在圜丘坛祭天并即位为皇帝，宣布成立“大韩帝国”，向世界表明这是一个自主独立的国家。当时的《独立新闻》记载了从庆运宫到此的仪仗：太极旗在前，皇帝乘坐金色的辇，道路两旁士兵护卫。祭坛后来被拆除，如今酒店旁仍保留着八角三层的皇穹宇。",
+    "zht": "1897年10月12日，高宗在圜丘壇祭天並即位為皇帝，宣布成立「大韓帝國」，向世界表明這是一個自主獨立的國家。當時的《獨立新聞》記載了從慶運宮到此的儀仗：太極旗在前，皇帝乘坐金色的輦，道路兩旁士兵護衛。祭壇後來被拆除，如今飯店旁仍保留著八角三層的皇穹宇。"
+   },
+   "sources": [
+    {"label": "내 손안에 서울 — 정동 '대한제국의 길'", "url": "https://mediahub.seoul.go.kr/archives/1050525"},
+    {"label": "내 손안에 서울 — 정동에서 '대한제국의 길'을 걷다", "url": "https://mediahub.seoul.go.kr/archives/1121275"}
+   ]
+  },
+  {
+   "poi": "덕수궁 중명전", "lat": 37.56607, "lng": 126.97142, "year": "1905–1907",
+   "name": {"en": "Jungmyeongjeon Hall", "ko": "덕수궁 중명전", "ja": "徳寿宮 重明殿", "zhs": "德寿宫 重明殿", "zht": "德壽宮 重明殿"},
+   "text": {
+    "en": "Built as a royal library, this brick hall became Gojong's office after a fire in 1904. On the night of 17 November 1905, with Japanese troops surrounding it, Itō Hirobumi forced the cabinet into the Eulsa Treaty, which took away Korea's right to its own foreign policy; Gojong refused to give his consent. In April 1907 he secretly sent three envoys from here to the Hague peace conference to protest. That July he was forced to abdicate, and in 1910 Korea was annexed. The exhibition inside recreates the night of the treaty.",
+    "ko": "황실 도서관으로 지은 이 벽돌 건물은 1904년 화재 뒤 고종의 집무실이 되었습니다. 1905년 11월 17일 밤, 일본군이 건물을 에워싼 가운데 이토 히로부미가 대신들을 압박해 외교권을 빼앗는 을사늑약을 강제로 맺었습니다. 고종은 끝까지 재가하지 않았습니다. 1907년 4월 고종은 이곳에서 헤이그 만국평화회의에 특사 3명을 비밀리에 보냈고, 그해 7월 강제로 퇴위당했습니다. 1910년 나라를 빼앗겼습니다. 내부 전시실에서 그날 밤의 모습을 재현해 보여줍니다.",
+    "ja": "皇室図書館として建てられたこのれんが造りの建物は、1904年の火災の後、高宗の執務室になりました。1905年11月17日の夜、日本軍が建物を取り囲む中、伊藤博文が大臣たちに迫り、外交権を奪う乙巳条約（第二次日韓協約）を強制的に結ばせました。高宗は最後まで裁可しませんでした。1907年4月、高宗はここからハーグ万国平和会議へ密使3人を送り、同年7月に退位を強いられました。1910年、韓国は併合されます。内部の展示室ではその夜の様子が再現されています。",
+    "zhs": "这座砖造建筑原为皇室图书馆，1904年火灾后成为高宗的办公处。1905年11月17日夜，在日军包围下，伊藤博文逼迫大臣们签订了剥夺韩国外交权的《乙巳条约》，高宗始终没有批准。1907年4月，高宗从这里秘密派遣三名特使前往海牙万国和平会议，同年7月被迫退位。1910年韩国被吞并。馆内展厅重现了签约当晚的情景。",
+    "zht": "這座磚造建築原為皇室圖書館，1904年火災後成為高宗的辦公處。1905年11月17日夜，在日軍包圍下，伊藤博文逼迫大臣們簽訂了剝奪韓國外交權的《乙巳條約》，高宗始終沒有批准。1907年4月，高宗從這裡祕密派遣三名特使前往海牙萬國和平會議，同年7月被迫退位。1910年韓國被併吞。館內展廳重現了簽約當晚的情景。"
+   },
+   "sources": [
+    {"label": "국가기록원 — 덕수궁·중명전", "url": "https://theme.archives.go.kr/next/koreaOfRecord/DeoksuPal.do"},
+    {"label": "내 손안에 서울 — 정동에서 '대한제국의 길'을 걷다", "url": "https://mediahub.seoul.go.kr/archives/1121275"},
+    {"label": "내 손안에 서울 — 중명전 사적지정 추진", "url": "https://mediahub.seoul.go.kr/archives/163478"},
+    {"label": "문화체육관광부 — 망국의 역사와 함께한 중명전", "url": "https://www.mcst.go.kr/kor/s_policy/comm/studentNews/studentNewsView.jsp?pSeq=4528"}
+   ]
+  }
+ ]
+}
