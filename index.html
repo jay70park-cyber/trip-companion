@@ -1202,14 +1202,23 @@ function bestVoice(code){
     if(/compact|espeak|legacy/i.test(n))k-=6; if(x.localService===false)k+=1; return k;};
   return vs.sort((a,b)=>score(b)-score(a))[0];
 }
+/* recorded narration (Google Chirp 3: HD), made by pipeline/build-voice.mjs; played only if made from the text shown */
+const VOICE_BASE="https://raw.githubusercontent.com/jay70park-cyber/trip-companion/data/voice/";
+let voiceIx=null;
+function loadVoiceIndex(){if(!voiceIx)voiceIx=fetch(VOICE_BASE+"index.json?d="+new Date().toISOString().slice(0,10),{cache:"no-cache"}).then(r=>r.ok?r.json():{files:{}}).catch(()=>({files:{}}));return voiceIx;}
+let voiceFiles={};loadVoiceIndex().then(x=>{voiceFiles=(x&&x.files)||{};});
+function fnv(str){let h=0x811c9dc5;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,0x01000193)>>>0;}return h.toString(36);}
+function recordedFor(s){const c=current&&current.course;if(!c)return null;
+  const name=(s.name&&(s.name[lang]||s.name.en))||"",text=(s.text&&s.text[lang])||"";if(!text)return null;
+  const e=voiceFiles[c.id+"/"+s.n+"/"+lang];return e&&e.h===fnv(name+". "+text)?VOICE_BASE+e.f:null;}
 function sentences(txt){return (txt.match(/[^.!?。！？]+[.!?。！？]+["'”’)]*|[^.!?。！？]+$/g)||[txt]).map(x=>x.trim()).filter(Boolean);}
 function toggleSpeak(s,btn){
   if(speakingBtn===btn){stopSpeaking();return;}
   stopSpeaking();document.querySelectorAll("audio").forEach(x=>x.pause());
   const done=()=>{if(speakingBtn===btn){btn.textContent=t("listen");speakingBtn=null;}narr=null;};
   speakingBtn=btn;btn.textContent=t("stopListen");
-  const rec=s.voice&&s.voice[lang];
-  if(rec&&rec.url){narr=new Audio(rec.url);narr.onended=narr.onerror=done;narr.play().catch(done);return;}
+  const rec=recordedFor(s);
+  if(rec){narr=new Audio(rec);narr.onended=narr.onerror=done;narr.play().catch(done);return;}
   const code={en:"en-US",ko:"ko-KR",ja:"ja-JP",zhs:"zh-CN",zht:"zh-TW"}[lang];
   const v=bestVoice(code);
   // one sentence at a time, so the phone pauses naturally between sentences instead of reading one long block
