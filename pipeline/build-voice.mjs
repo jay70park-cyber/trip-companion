@@ -48,12 +48,12 @@ async function pickVoices() {
 function chunks(text) {
   const out = [""];
   for (const sent of text.match(/[^.!?。！？]+[.!?。！？]*\s*/g) || [text]) {
-    if (Buffer.byteLength(sent) <= 200) {
+    if (Buffer.byteLength(sent) <= 120) {
       if (Buffer.byteLength(out.at(-1) + sent) > 4200) out.push("");
       out[out.length - 1] += sent;
     } else {
       // Chirp refuses a single very long sentence: send its comma-separated parts as separate requests
-      for (const part of sent.match(/[^,，、;；]+[,，、;；]?\s*/g) || [sent]) out.push(part);
+      for (const part of sent.match(/[^,，、;；:：]+[,，、;；:：]?\s*/g) || [sent]) out.push(part);
       out.push("");
     }
   }
