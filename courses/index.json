@@ -1,6 +1,37 @@
 {
- "updated": "2026-11-17",
+ "updated": "2026-11-19",
  "zones": [
+  {
+   "id": "gojong",
+   "type": "story",
+   "areas": [
+    "gyeongbok",
+    "deoksu"
+   ],
+   "name": {
+    "en": "King Gojong's Escape: Agwan Pacheon Walk",
+    "ko": "고종의 길: 아관파천 스토리 코스",
+    "ja": "高宗の道：俄館播遷ストーリーコース",
+    "zhs": "高宗之路：俄馆播迁故事路线",
+    "zht": "高宗之路：俄館播遷故事路線"
+   },
+   "start": {
+    "lat": 37.57905,
+    "lng": 126.97395,
+    "label": {
+     "en": "Yeongchumun Gate (west gate of Gyeongbokgung)",
+     "ko": "경복궁 영추문(서문)",
+     "ja": "景福宮 迎秋門（西門）",
+     "zhs": "景福宫 迎秋门（西门）",
+     "zht": "景福宮 迎秋門（西門）"
+    }
+   },
+   "stops": 6,
+   "distanceM": 3857,
+   "durationMin": 125,
+   "updated": "2026-11-19",
+   "ai": false
+  },
   {
    "id": "hongdae",
    "type": "hot",
@@ -118,7 +149,7 @@
    "stops": 9,
    "distanceM": 4812,
    "durationMin": 138,
-   "updated": "2026-11-05",
+   "updated": "2026-11-19",
    "ai": true
   },
   {
@@ -480,37 +511,7 @@
    "durationMin": 80,
    "updated": "2026-11-17",
    "ai": true
-  },
-  {
-   "id": "gojong",
-   "type": "story",
-   "areas": [
-    "gyeongbok",
-    "deoksu"
-   ],
-   "name": {
-    "en": "King Gojong's Escape: Agwan Pacheon Walk",
-    "ko": "고종의 길: 아관파천 스토리 코스",
-    "ja": "高宗の道：俄館播遷ストーリーコース",
-    "zhs": "高宗之路：俄馆播迁故事路线",
-    "zht": "高宗之路：俄館播遷故事路線"
-   },
-   "start": {
-    "lat": 37.57905,
-    "lng": 126.97395,
-    "label": {
-     "en": "Yeongchumun Gate (west gate of Gyeongbokgung)",
-     "ko": "경복궁 영추문(서문)",
-     "ja": "景福宮 迎秋門（西門）",
-     "zhs": "景福宫 迎秋门（西门）",
-     "zht": "景福宮 迎秋門（西門）"
-    }
-   },
-   "stops": 6,
-   "distanceM": 3857,
-   "durationMin": 125,
-   "updated": "2026-11-19",
-   "ai": false
   }
- ]
+ ],
+ "failed": {}
 }
