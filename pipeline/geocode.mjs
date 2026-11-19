@@ -5,8 +5,10 @@ const TMAP = process.env.TMAP_KEY;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const meters = (a, b) => { const R = 6371000, r = Math.PI / 180, x = Math.sin((b.lat - a.lat) * r / 2) ** 2 + Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin((b.lng - a.lng) * r / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(x)); };
 const dir = new URL("./themes/", import.meta.url);
-for (const f of fs.readdirSync(dir).filter((x) => x.endsWith(".json"))) {
-  const t = JSON.parse(fs.readFileSync(new URL(f, dir), "utf8"));
+const list = JSON.parse(fs.readFileSync(new URL("./geocode-list.json", import.meta.url), "utf8"));
+const tasks = list.map(([q, lat, lng]) => ({ poi: q, lat, lng, name: { ko: q } }));
+
+for (const t of [{ courses: [{ id: "list", stops: tasks }] }]) {
   for (const c of t.courses) {
     console.log(`## ${c.id}`);
     for (const s of c.stops) {
