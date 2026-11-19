@@ -12,7 +12,7 @@ const OUT = path.resolve(process.argv[2] || "out");
 const CDIR = path.join(OUT, "courses");
 const VDIR = path.join(OUT, "voice");
 const KEY = process.env.GOOGLE_TTS_KEY || "";
-const VOICE = process.env.VOICE_NAME || "Charon";
+const VOICE = process.env.VOICE_NAME || "Aoede";
 const MAX_CHARS = +(process.env.MAX_CHARS || 600000);
 const ONLY = (process.env.COURSES || "").split(",").map((x) => x.trim()).filter(Boolean);
 const LANGS = { en: ["en-US"], ko: ["ko-KR"], ja: ["ja-JP"], zhs: ["cmn-CN"], zht: ["cmn-TW", "cmn-CN"] };

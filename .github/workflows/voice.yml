@@ -47,7 +47,7 @@ jobs:
           GOOGLE_TTS_KEY: ${{ secrets.GOOGLE_TTS_KEY }}
           COURSES: ${{ github.event.inputs.courses }}
           SAMPLE: ${{ github.event.inputs.sample }}
-          VOICE_NAME: ${{ github.event.inputs.voice || vars.VOICE_NAME || 'Charon' }}
+          VOICE_NAME: ${{ github.event.inputs.voice || vars.VOICE_NAME || 'Aoede' }}
         run: node pipeline/build-voice.mjs out
       - name: Publish to the data branch
         run: |
