@@ -46,9 +46,15 @@ async function pickVoices() {
 
 // Chirp 3: HD takes up to 5,000 bytes per request; longer text is split at sentence ends and the mp3s joined
 function chunks(text) {
-  const parts = text.match(/[^.!?。！？]+[.!?。！？]*\s*/g) || [text];
+  // Chirp also refuses a single very long sentence, so long ones are split at commas into separate requests
+  const parts = (text.match(/[^.!?。！？]+[.!?。！？]*\s*/g) || [text])
+    .flatMap((p) => (p.length > 180 ? p.match(/[^,，、;；]+[,，、;；]?\s*/g) || [p] : [p]));
   const out = [""];
-  for (const p of parts) { if (Buffer.byteLength(out.at(-1) + p) > 4200) out.push(""); out[out.length - 1] += p; }
+  for (const p of parts) {
+    // a comma-split piece goes into its own request so Chirp sees it as a whole sentence
+    if (/[,，、;；]\s*$/.test(p) || Buffer.byteLength(out.at(-1) + p) > 4200) out.push("");
+    out[out.length - 1] += p;
+  }
   return out.filter((x) => x.trim());
 }
 
