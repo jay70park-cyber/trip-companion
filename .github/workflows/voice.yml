@@ -52,7 +52,7 @@ jobs:
       - name: Publish to the data branch
         run: |
           cd out
-          git add -A voice
+          mkdir -p voice && git add -A voice
           if git diff --cached --quiet; then echo "No changes"; exit 0; fi
           git -c user.name="K-Trip course bot" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
             commit -q -m "Update course narration $(date -u +%Y-%m-%d)"
