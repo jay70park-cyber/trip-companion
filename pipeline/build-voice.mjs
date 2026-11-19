@@ -46,14 +46,16 @@ async function pickVoices() {
 
 // Chirp 3: HD takes up to 5,000 bytes per request; longer text is split at sentence ends and the mp3s joined
 function chunks(text) {
-  // Chirp also refuses a single very long sentence, so long ones are split at commas into separate requests
-  const parts = (text.match(/[^.!?。！？]+[.!?。！？]*\s*/g) || [text])
-    .flatMap((p) => (p.length > 180 ? p.match(/[^,，、;；]+[,，、;；]?\s*/g) || [p] : [p]));
   const out = [""];
-  for (const p of parts) {
-    // a comma-split piece goes into its own request so Chirp sees it as a whole sentence
-    if (/[,，、;；]\s*$/.test(p) || Buffer.byteLength(out.at(-1) + p) > 4200) out.push("");
-    out[out.length - 1] += p;
+  for (const sent of text.match(/[^.!?。！？]+[.!?。！？]*\s*/g) || [text]) {
+    if (Buffer.byteLength(sent) <= 200) {
+      if (Buffer.byteLength(out.at(-1) + sent) > 4200) out.push("");
+      out[out.length - 1] += sent;
+    } else {
+      // Chirp refuses a single very long sentence: send its comma-separated parts as separate requests
+      for (const part of sent.match(/[^,，、;；]+[,，、;；]?\s*/g) || [sent]) out.push(part);
+      out.push("");
+    }
   }
   return out.filter((x) => x.trim());
 }
@@ -106,7 +108,7 @@ async function main() {
       } catch (e) {
         chars -= j.text.length;
         console.log(`  ! ${j.key}: ${e.message}`);
-        if (++fails >= 5 && !stopped) { stopped = true; console.log("  ! Text-to-Speech keeps failing — stopping; existing recordings are kept and the app reads the rest with the phone's voice"); }
+        if (!/HTTP 400/.test(e.message) && ++fails >= 5 && !stopped) { stopped = true; console.log("  ! Text-to-Speech keeps failing — stopping; existing recordings are kept and the app reads the rest with the phone's voice"); }
       }
     }
   }
