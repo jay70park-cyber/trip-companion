@@ -176,7 +176,7 @@ ol.places>li:first-child{border-top:1.5px solid var(--line)}
 .coursecard h2{font-family:var(--serif);font-weight:900;font-size:20px;color:#fffaf0;padding-right:70px}
 .coursecard .note{color:#cfc4ad}
 .coursecard .cpart+.cpart{margin-top:16px;padding-top:16px;border-top:1px solid rgba(233,169,43,.45)}
-.kind.year{display:inline-block;background:var(--red);color:var(--red-ink);font-weight:800;border-radius:6px;padding:1px 8px;letter-spacing:.02em}
+.kind.year,ol.stops .kind.year{display:inline-block;background:var(--red);color:var(--red-ink)!important;font-weight:800;border-radius:6px;padding:1px 8px;letter-spacing:.02em}
 .coursecard button{background:#c8442c;border-color:#c8442c;color:#fff}
 #guide{border:2px solid var(--accent)}
 .step .num,.num{color:var(--red);font-weight:700}
@@ -1107,7 +1107,9 @@ const fmtKm=m=>(m/1000).toFixed(1)+" km";
 async function renderCourseCard(){
   const box=$("coursecard");
   await loadCourseIndex();
-  const list=[courseForArea(),...storiesForArea()].filter(Boolean);
+  const zc=courseForArea(),st=storiesForArea();
+  // the area's own course first; a nearby area's course goes after the area's history walks
+  const list=(zc&&zc.id===areaId?[zc,...st]:[...st,zc]).filter(Boolean);
   if(!list.length){box.hidden=true;return;}
   box.innerHTML="";box.hidden=false;
   list.forEach((z,i)=>{
