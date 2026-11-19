@@ -1190,19 +1190,36 @@ function drawCourse(c){
   setFollow(false);fitAll();
 }
 
-/* read aloud with the phone's own voice */
-let speakingBtn=null;
-function stopSpeaking(){try{speechSynthesis.cancel();}catch(e){}if(speakingBtn){speakingBtn.textContent=t("listen");speakingBtn=null;}}
+/* read aloud: a recorded narration if the course has one, otherwise the phone's best voice */
+let speakingBtn=null,narr=null,speakQ=[];
+function stopSpeaking(){speakQ=[];try{speechSynthesis.cancel();}catch(e){}if(narr){narr.pause();narr=null;}if(speakingBtn){speakingBtn.textContent=t("listen");speakingBtn=null;}}
+function bestVoice(code){
+  const vs=speechSynthesis.getVoices().filter(x=>x.lang&&x.lang.replace("_","-").toLowerCase().startsWith(code.slice(0,2)));
+  const score=x=>{const n=(x.name||"")+" "+(x.voiceURI||"");let k=0;
+    if(x.lang.replace("_","-").toLowerCase()===code.toLowerCase())k+=4;
+    if(/natural|neural|online|enhanced|premium|wavenet|studio/i.test(n))k+=8;   // the newer, human-sounding voices
+    if(/google/i.test(n))k+=3; if(/siri|yuna|samantha|ava|kyoko|tingting|meijia/i.test(n))k+=2;
+    if(/compact|espeak|legacy/i.test(n))k-=6; if(x.localService===false)k+=1; return k;};
+  return vs.sort((a,b)=>score(b)-score(a))[0];
+}
+function sentences(txt){return (txt.match(/[^.!?。！？]+[.!?。！？]+["'”’)]*|[^.!?。！？]+$/g)||[txt]).map(x=>x.trim()).filter(Boolean);}
 function toggleSpeak(s,btn){
   if(speakingBtn===btn){stopSpeaking();return;}
   stopSpeaking();document.querySelectorAll("audio").forEach(x=>x.pause());
-  const u=new SpeechSynthesisUtterance(L10(s.name)+". "+L10(s.text));
-  const code={en:"en-US",ko:"ko-KR",ja:"ja-JP",zhs:"zh-CN",zht:"zh-TW"}[lang];u.lang=code;
-  const v=speechSynthesis.getVoices().find(x=>x.lang&&x.lang.replace("_","-").toLowerCase().startsWith(code.toLowerCase()))||speechSynthesis.getVoices().find(x=>x.lang&&x.lang.toLowerCase().startsWith(code.slice(0,2)));
-  if(v)u.voice=v;u.rate=.95;
-  u.onend=u.onerror=()=>{if(speakingBtn===btn){btn.textContent=t("listen");speakingBtn=null;}};
-  speakingBtn=btn;btn.textContent=t("stopListen");speechSynthesis.speak(u);
+  const done=()=>{if(speakingBtn===btn){btn.textContent=t("listen");speakingBtn=null;}narr=null;};
+  speakingBtn=btn;btn.textContent=t("stopListen");
+  const rec=s.voice&&s.voice[lang];
+  if(rec&&rec.url){narr=new Audio(rec.url);narr.onended=narr.onerror=done;narr.play().catch(done);return;}
+  const code={en:"en-US",ko:"ko-KR",ja:"ja-JP",zhs:"zh-CN",zht:"zh-TW"}[lang];
+  const v=bestVoice(code);
+  // one sentence at a time, so the phone pauses naturally between sentences instead of reading one long block
+  speakQ=[L10(s.name)+"."].concat(sentences(L10(s.text)));
+  const next=()=>{if(speakingBtn!==btn)return;const line=speakQ.shift();if(!line){done();return;}
+    const u=new SpeechSynthesisUtterance(line);u.lang=code;if(v)u.voice=v;u.rate=lang==="en"?.97:1;u.pitch=1;
+    u.onend=()=>setTimeout(next,lang==="en"?260:200);u.onerror=done;speechSynthesis.speak(u);};
+  next();
 }
+if("speechSynthesis" in window){try{speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();}catch(e){}}
 
 /* arrival at each stop */
 function checkStops(pos){
