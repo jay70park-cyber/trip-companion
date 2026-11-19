@@ -1,0 +1,1126 @@
+{
+ "theme": "hikes",
+ "mountains": [
+  {
+   "id": "namsan",
+   "name": {
+    "ko": "남산",
+    "en": "Namsan"
+   },
+   "heightM": 270,
+   "difficulty": "easy",
+   "upMin": 60,
+   "shoes": "sneakers",
+   "time": {
+    "ko": "편도 약 1시간",
+    "en": "About 1 hour up"
+   },
+   "season": {
+    "ko": "가을 단풍(북측순환로), 봄 벚꽃",
+    "en": "Autumn leaves on the North Circular Road; spring blossoms"
+   },
+   "station": {
+    "lat": 37.560927,
+    "lng": 126.992881,
+    "label": {
+     "ko": "충무로역 4번 출구 (3·4호선)",
+     "en": "Chungmuro Station Exit 4 (Lines 3, 4)"
+    }
+   },
+   "trailhead": {
+    "lat": 37.559205,
+    "lng": 126.994464,
+    "label": {
+     "ko": "남산골한옥마을",
+     "en": "Namsangol Hanok Village"
+    }
+   },
+   "intro": {
+    "ko": "조선의 도읍 한양을 둘러싼 네 산 가운데 남쪽 산입니다. 태조 이성계가 궁궐 남쪽의 산이라 하여 남산이라 불렀고, 나라의 평안을 비는 제사를 지내며 목멱산이라고도 했습니다. 서울 한복판에서 한 시간이면 정상에 닿는, 가장 손쉬운 산행입니다.",
+    "en": "Namsan is the southern of the four hills that ringed Hanyang, the Joseon capital. King Taejo called it the 'south mountain' because it lay south of the palace, and it was also known as Mongmyeoksan after the state shrine where rites for the nation's peace were held. From the middle of Seoul it is an hour's walk to the top — the easiest hike in the city."
+   },
+   "points": [
+    {
+     "lat": 37.555206,
+     "lng": 126.988104,
+     "kind": "sight",
+     "name": {
+      "ko": "남산 북측순환로",
+      "en": "Namsan North Circular Road"
+     },
+     "text": {
+      "ko": "한옥마을 뒤편에서 이정표를 따라 오르면 차가 다니지 않는 포장 산책로, 북측순환로를 만납니다. 가을이면 '단풍길'이라 불릴 만큼 붉고 노란 잎이 길을 덮습니다. 경사가 완만해 운동화로도 충분하고, 중간의 전망대에서는 북한산까지 서울 북쪽이 한눈에 들어옵니다. 길이 끝나는 곳에서 계단을 따라 정상으로 오릅니다.",
+      "en": "Behind the hanok village, signs lead up to the North Circular Road, a paved path closed to cars. In autumn it is nicknamed the 'Foliage Road', when red and yellow leaves arch over it. The slope is gentle enough for sneakers, and viewpoints along the way look north across the city to Bukhansan. Where the road ends, stairs climb to the summit."
+     },
+     "sources": [
+      {
+       "label": "Korea JoongAng Daily · K-campus (2025)",
+       "url": "https://kcampus.kr/ko/news/autumn-is-upon-us-experience-seoul-s-fall-foliage-at-these-hiking-spots-accessible-by-subways-7928"
+      },
+      {
+       "label": "서울시 내 손안에 서울 · 남산둘레길",
+       "url": "https://mediahub.seoul.go.kr/archives/2006210"
+      }
+     ]
+    },
+    {
+     "lat": 37.552039,
+     "lng": 126.987465,
+     "kind": "peak",
+     "name": {
+      "ko": "목멱산 봉수대",
+      "en": "Mongmyeoksan Beacon Mound"
+     },
+     "text": {
+      "ko": "정상의 다섯 굴뚝 같은 돌 구조물이 봉수대입니다. 세종 5년(1423)에 설치되어 1895년까지 500여 년 동안, 전국 팔도에서 산에서 산으로 이어 올린 불과 연기가 마지막으로 닿던 곳이었습니다. 평상시엔 하나, 적이 나타나면 둘, 국경에 다가오면 셋, 넘어오면 넷, 전투가 벌어지면 다섯 개의 불을 올렸습니다. 지금의 봉수대는 1993년에 복원한 것이고, 바로 앞 팔각정 자리는 태조가 국가 제사를 지내던 국사당 터입니다.",
+      "en": "The stone mound at the summit is a beacon station. Set up in 1423 under King Sejong and used until 1895, it was the final stop for smoke and fire signals relayed from hilltop to hilltop across all eight provinces. One fire meant all was calm; two, an enemy sighted; three, the enemy nearing the border; four, the border crossed; five, fighting under way. The beacon you see was rebuilt in 1993, and the octagonal pavilion in front stands on the site of Guksadang, where King Taejo held state rites."
+     },
+     "sources": [
+      {
+       "label": "서울시 내 손안에 서울 · 한양도성 남산구간",
+       "url": "https://mediahub.seoul.go.kr/archives/1189205"
+      },
+      {
+       "label": "한국관광공사 · 목멱산봉수대터",
+       "url": "https://www.ktriptips.com/kor/tourspot/250350"
+      }
+     ]
+    }
+   ],
+   "sources": [
+    {
+     "label": "Korea JoongAng Daily · K-campus (2025)",
+     "url": "https://kcampus.kr/ko/news/autumn-is-upon-us-experience-seoul-s-fall-foliage-at-these-hiking-spots-accessible-by-subways-7928"
+    }
+   ]
+  },
+  {
+   "id": "gwanak",
+   "name": {
+    "ko": "관악산",
+    "en": "Gwanaksan"
+   },
+   "heightM": 629,
+   "difficulty": "moderate",
+   "upMin": 120,
+   "shoes": "boots",
+   "time": {
+    "ko": "편도 1~2시간 (출발 지점에 따라)",
+    "en": "1–2 hours up, depending on the start"
+   },
+   "season": {
+    "ko": "가을 단풍, 정상부 바위 경관",
+    "en": "Autumn leaves; granite crags at the top"
+   },
+   "station": {
+    "lat": 37.468659,
+    "lng": 126.945693,
+    "label": {
+     "ko": "관악산역 1번 출구 (신림선)",
+     "en": "Gwanaksan Station Exit 1 (Sillim Line)"
+    }
+   },
+   "trailhead": {
+    "lat": 37.466271,
+    "lng": 126.945527,
+    "label": {
+     "ko": "관악산 공원 입구",
+     "en": "Gwanaksan Park entrance"
+    }
+   },
+   "intro": {
+    "ko": "서울 남쪽을 가로막은 바위산으로, 정상의 바위들이 갓을 쓴 모습 같다 하여 '갓 관(冠)' 자를 씁니다. 역에서 나오면 바로 단풍길이 공원 입구로 이어지고, 모든 길은 결국 정상의 연주대로 모입니다. 마지막 구간은 바윗길이라 손을 써야 하는 곳도 있습니다.",
+    "en": "Gwanaksan is the rocky wall along Seoul's southern edge; its name uses the character for a scholar's hat because the summit rocks look like one. From the station a foliage-lined road leads straight into the park, and every trail ends up at Yeonjudae on the summit. The last stretch is over rock, and in places you will use your hands."
+   },
+   "points": [
+    {
+     "lat": 37.441774,
+     "lng": 126.965609,
+     "kind": "sight",
+     "name": {
+      "ko": "연주암",
+      "en": "Yeonjuam Hermitage"
+     },
+     "text": {
+      "ko": "정상 바로 아래 자리한 절입니다. 신라의 의상대사가 이 산에 의상대를 세우고 수행할 때 그 아래에 관악사를 지었다고 전합니다. 대웅전 앞 삼층석탑이 고려 후기 양식이라, 적어도 고려 때부터 이어져 온 절로 봅니다. 경내에 효령대군의 영정을 모신 효령각이 있는데, 그 사연은 정상의 연주대에서 이어집니다.",
+      "en": "This temple sits just below the summit. Tradition says the Silla monk Uisang built a lookout here, Uisangdae, and founded Gwanaksa temple beneath it. The three-story stone pagoda in front of the main hall is in late-Goryeo style, so the temple is thought to date back at least that far. A small hall holds a portrait of Prince Hyoryeong — the reason why is waiting at the top."
+     },
+     "sources": [
+      {
+       "label": "프레시안 · 서울학교",
+       "url": "https://pressian.com/pages/articles/117826"
+      },
+      {
+       "label": "디지털데일리 · 연주암",
+       "url": "https://www.ddaily.co.kr/page/view/2026051001022955225"
+      }
+     ]
+    },
+    {
+     "lat": 37.444829,
+     "lng": 126.96422,
+     "kind": "peak",
+     "name": {
+      "ko": "연주대",
+      "en": "Yeonjudae"
+     },
+     "text": {
+      "ko": "절벽 바위틈에 축대를 쌓고 작은 전각을 올린 곳이 연주대, '임금을 그리워하는 대'입니다. 이름에는 두 이야기가 전합니다. 하나는 고려가 망하자 새 왕조를 섬기지 않겠다던 강득룡·서견·남을진이 이곳에 올라 개경을 바라보며 통곡했다는 이야기입니다. 다른 하나는 세종에게 왕위를 양보한 양녕·효령 두 대군이 이 산에 들어와 수행했고, 그 사연을 기려 관악사와 의상대를 연주암·연주대로 부르게 됐다는 이야기입니다. 어느 쪽이든, 오늘 이 바위에 선 사람들은 같은 서울을 내려다봅니다.",
+      "en": "Yeonjudae — 'the terrace of longing for the king' — is a tiny shrine built on a stone platform wedged into the cliff. Two stories explain the name. In one, after Goryeo fell, the loyalists Kang Deuk-ryong, Seo Gyeon and Nam Eul-jin, who refused to serve the new dynasty, climbed here and wept as they looked toward the old capital, Gaegyeong. In the other, the princes Yangnyeong and Hyoryeong, who stepped aside so their brother could become King Sejong, retreated to this mountain, and the temple and terrace were renamed in their memory. Either way, everyone who stands here now looks down on the same city."
+     },
+     "sources": [
+      {
+       "label": "프레시안 · 서울학교",
+       "url": "https://pressian.com/pages/articles/117826"
+      },
+      {
+       "label": "서울신문 · 서울미래유산 관악산",
+       "url": "https://m.seoul.co.kr/news/2019/10/31/20191031021003"
+      },
+      {
+       "label": "디지털데일리 · 연주암",
+       "url": "https://www.ddaily.co.kr/page/view/2026051001022955225"
+      }
+     ]
+    }
+   ],
+   "sources": [
+    {
+     "label": "Korea JoongAng Daily · K-campus (2025)",
+     "url": "https://kcampus.kr/ko/news/autumn-is-upon-us-experience-seoul-s-fall-foliage-at-these-hiking-spots-accessible-by-subways-7928"
+    },
+    {
+     "label": "GQ Korea · 관악산",
+     "url": "https://www.gqkorea.co.kr/?p=365917"
+    }
+   ]
+  },
+  {
+   "id": "dobong",
+   "name": {
+    "ko": "도봉산",
+    "en": "Dobongsan"
+   },
+   "heightM": 740,
+   "difficulty": "hard",
+   "upMin": 150,
+   "shoes": "boots",
+   "time": {
+    "ko": "왕복 반나절 (신선대까지)",
+    "en": "Half a day there and back (to Sinseondae)"
+   },
+   "season": {
+    "ko": "가을 단풍(만월암·포대능선)",
+    "en": "Autumn leaves around Manwolam and the Podae ridge"
+   },
+   "notice": {
+    "ko": "최고봉 자운봉(739.5m)은 위험해 출입이 금지되어 있습니다. 오를 수 있는 가장 높은 곳은 바로 옆 신선대(726m)입니다. 위로 갈수록 바윗길이 험해집니다.",
+    "en": "The highest peak, Jaunbong (739.5 m), is closed as too dangerous; the highest point you may climb is Sinseondae (726 m) right beside it. The rock gets steeper and rougher the higher you go."
+   },
+   "station": {
+    "lat": 37.689025,
+    "lng": 127.045845,
+    "label": {
+     "ko": "도봉산역 1번 출구 (1·7호선)",
+     "en": "Dobongsan Station Exit 1 (Lines 1, 7)"
+    }
+   },
+   "trailhead": {
+    "lat": 37.686108,
+    "lng": 127.035957,
+    "label": {
+     "ko": "도봉탐방지원센터",
+     "en": "Dobong Visitor Center"
+    },
+    "text": {
+     "ko": "탐방지원센터를 지나 계곡을 따라 오르면 도봉서원 터를 지납니다. 양주목사 남언경이 1573년, 개혁 정치를 펼치다 기묘사화(1519)로 서른여덟에 사약을 받은 조광조를 기려 그가 경치를 즐기러 자주 찾던 이곳에 세운 서원입니다. 1696년부터는 송시열도 함께 모셨고, 영조가 현판 글씨를 직접 써 내렸습니다. 계곡 바위에 새겨진 글씨들도 이 서원과 함께 서울시 문화재가 되었습니다.",
+     "en": "Past the visitor center the trail follows the valley past the site of Dobong Seowon. The academy was founded in 1573 by the local magistrate Nam Eon-gyeong in honor of Jo Gwang-jo, the reformer who was forced to drink poison at 38 in the purge of 1519 — and who had loved coming to this valley for the view. From 1696 the scholar Song Si-yeol was honored here too, and King Yeongjo wrote its name board himself. The inscriptions carved into the valley rocks are protected along with the site."
+    },
+    "sources": [
+     {
+      "label": "서울시 내 손안에 서울 · 도봉서원",
+      "url": "https://mediahub.seoul.go.kr/archives/2003055"
+     },
+     {
+      "label": "서울시 · 도봉산 계곡 문화재 지정",
+      "url": "https://mediahub.seoul.go.kr/archives/175016"
+     }
+    ]
+   },
+   "intro": {
+    "ko": "서울 북쪽 끝을 지키는 화강암 봉우리들의 산으로, 북한산국립공원에 속합니다. 조선을 세울 무렵 뜻있는 이들이 이곳에서 학문을 닦고 도를 구했다 하여 도봉이라 불렸다는 이야기가 전합니다. 가을 단풍이 빼어나지만, 오를수록 바위가 험해지는 도전적인 산입니다.",
+    "en": "Dobongsan is the cluster of granite peaks at Seoul's northern edge, part of Bukhansan National Park. One story says the name — 'peak of the Way' — comes from scholars who studied and sought the Way here as Joseon was being founded. Its autumn colors are superb, but the higher you climb the rougher the rock: this is a hike for those who want a challenge."
+   },
+   "points": [
+    {
+     "lat": 37.699551,
+     "lng": 127.018875,
+     "kind": "sight",
+     "name": {
+      "ko": "만월암",
+      "en": "Manwolam Hermitage"
+     },
+     "text": {
+      "ko": "가파른 길 끝, 바위 아래 기대어 선 작은 암자입니다. 운이 좋으면 스님이 차 한 잔을 내어 주기도 합니다. 암자 주변부터 포대능선까지 단풍에 둘러싸인 사진 명소가 이어지고, 능선에 서면 온 산이 물든 모습이 내려다보입니다.",
+      "en": "A small hermitage tucked under the rock at the top of a steep climb. If you are lucky, a monk may offer you a cup of tea. From here up to the Podae ridge there are photo spots framed in autumn leaves, and from the ridge you look down on the whole mountain in color."
+     },
+     "sources": [
+      {
+       "label": "Korea JoongAng Daily · K-campus (2025)",
+       "url": "https://kcampus.kr/ko/news/autumn-is-upon-us-experience-seoul-s-fall-foliage-at-these-hiking-spots-accessible-by-subways-7928"
+      }
+     ]
+    },
+    {
+     "lat": 37.698912,
+     "lng": 127.016014,
+     "kind": "peak",
+     "name": {
+      "ko": "신선대 · 자운봉",
+      "en": "Sinseondae & Jaunbong"
+     },
+     "text": {
+      "ko": "도봉산의 세 봉우리 자운봉·만장봉·선인봉이 모인 정상부입니다. 가장 높은 자운봉(739.5m)은 위험해 오를 수 없고, 바로 옆 신선대(726m)가 오를 수 있는 가장 높은 곳입니다. 신선대에서는 깎아지른 세 봉우리와 북한산, 서울 북부가 한눈에 펼쳐집니다. 하산은 올라온 길을 되짚는 것이 가장 안전합니다.",
+      "en": "This is the summit cluster where Dobong's three great peaks — Jaunbong, Manjangbong and Seoninbong — meet. The highest, Jaunbong (739.5 m), is closed as too dangerous; Sinseondae (726 m) right next to it is the highest point you may climb. From Sinseondae the sheer peaks, Bukhansan and northern Seoul spread out before you. Going back down the way you came is the safest choice."
+     },
+     "sources": [
+      {
+       "label": "서울시 내 손안에 서울 · 도봉산 겨울산행",
+       "url": "https://mediahub.seoul.go.kr/archives/1501978"
+      },
+      {
+       "label": "국립공원공단 · 마당바위 해설",
+       "url": "https://www.knps.or.kr/archive/files/original/faaba65833ef2fe4a1bb4a8bb456c73094e30d1c.pdf"
+      }
+     ]
+    }
+   ],
+   "sources": [
+    {
+     "label": "Korea JoongAng Daily · K-campus (2025)",
+     "url": "https://kcampus.kr/ko/news/autumn-is-upon-us-experience-seoul-s-fall-foliage-at-these-hiking-spots-accessible-by-subways-7928"
+    }
+   ]
+  },
+  {
+   "id": "soyo",
+   "name": {
+    "ko": "소요산",
+    "en": "Soyosan"
+   },
+   "heightM": 587,
+   "difficulty": "moderate",
+   "upMin": 90,
+   "shoes": "boots",
+   "time": {
+    "ko": "초급 코스 1시간 30분~2시간, 공주봉·의상대 종주 3시간 30분~4시간",
+    "en": "Beginner loop 1.5–2 hours; full ridge to Gongjubong and Uisangdae 3.5–4 hours"
+   },
+   "season": {
+    "ko": "가을 단풍(1968년부터 단풍축제), 봄 진달래·철쭉",
+    "en": "Autumn leaves (a foliage festival since 1968); spring azaleas"
+   },
+   "station": {
+    "lat": 37.947911,
+    "lng": 127.061253,
+    "label": {
+     "ko": "소요산역 1번 출구 (1호선)",
+     "en": "Soyosan Station Exit 1 (Line 1)"
+    }
+   },
+   "trailhead": {
+    "lat": 37.94605,
+    "lng": 127.065502,
+    "label": {
+     "ko": "소요산 입구",
+     "en": "Soyosan entrance"
+    },
+    "text": {
+     "ko": "역에서 5분이면 산 입구입니다. 이 골짜기에는 조선을 세운 태조 이성계가 왕위에서 물러난 뒤 별궁을 짓고 지냈다는 행궁 터도 전합니다. 1968년부터 열려 온 단풍축제가 말해 주듯, 입구부터 단풍나무 터널이 이어집니다.",
+     "en": "The mountain gate is five minutes from the station. This valley is also said to hold the site of a detached palace where King Taejo, Joseon's founder, lived after giving up the throne. As the foliage festival held here since 1968 suggests, a tunnel of maples begins right at the entrance."
+    },
+    "sources": [
+     {
+      "label": "한국관광공사 · 소요산국민관광지",
+      "url": "https://www.ktriptips.com/kor/tourspot/127513"
+     },
+     {
+      "label": "Korea JoongAng Daily · K-campus (2025)",
+      "url": "https://kcampus.kr/ko/news/autumn-is-upon-us-experience-seoul-s-fall-foliage-at-these-hiking-spots-accessible-by-subways-7928"
+     }
+    ]
+   },
+   "intro": {
+    "ko": "경기 북부 동두천의 바위산으로 '경기의 소금강'이라 불립니다. 산 곳곳에 신라의 고승 원효대사와 요석공주의 이야기가 스며 있습니다. 1호선 종점 소요산역에서 내려 5분이면 산 입구에 닿습니다.",
+    "en": "A craggy mountain in Dongducheon, northern Gyeonggi, nicknamed 'the little Geumgangsan of Gyeonggi'. The story of the Silla monk Wonhyo and Princess Yoseok runs through the whole mountain. From Soyosan Station, near the end of Line 1, the gate is a five-minute walk."
+   },
+   "points": [
+    {
+     "lat": 37.944495,
+     "lng": 127.086278,
+     "kind": "sight",
+     "name": {
+      "ko": "원효폭포",
+      "en": "Wonhyo Falls"
+     },
+     "text": {
+      "ko": "원효대사가 이 산에서 고행하며 수도했다는 이야기를 따라 폭포에도, 바위에도 그의 이름이 붙었습니다. 원효는 신라 공주 요석과의 사이에서 아들 설총을 얻었지만 다시 수행의 길로 떠났습니다. 요석공주가 어린 설총과 함께 이 골짜기 절 입구에서 원효를 기다렸지만 끝내 만나지 못했다는 이야기가 전합니다.",
+      "en": "Following the story that Wonhyo practiced hard austerities on this mountain, the falls and rocks here carry his name. Wonhyo had a son, Seol Chong, with Princess Yoseok of Silla, but he left again to follow his practice. The story goes that the princess came with the boy and waited for him at the temple gate in this valley, but they never met."
+     },
+     "sources": [
+      {
+       "label": "경향신문",
+       "url": "https://www.khan.co.kr/article/200108211645351"
+      },
+      {
+       "label": "한국관광공사 · 소요산 등반코스",
+       "url": "https://www.ktriptips.com/kor/course/1874922"
+      }
+     ]
+    },
+    {
+     "lat": 37.94569,
+     "lng": 127.086473,
+     "kind": "sight",
+     "name": {
+      "ko": "자재암",
+      "en": "Jajaeam Temple"
+     },
+     "text": {
+      "ko": "645년 원효대사가 세웠다고 전하는 절입니다. 고려 때 왕명으로 다시 짓고 화재를 겪은 뒤 다시 세웠으며, 1907년에는 의병의 근거지였다는 이유로 일본군이 불태웠습니다. 복원한 절은 한국전쟁으로 다시 폐허가 되었고, 1961년 대웅전부터 하나씩 다시 지어 오늘에 이르렀습니다. 여기서 능선에 오르면, 원효가 요석공주를 생각하며 이름 붙였다는 공주봉이 정상 의상대 옆에 솟아 있습니다.",
+      "en": "Tradition says Wonhyo founded this temple in 645. It was rebuilt by royal order in Goryeo and again after a fire; in 1907 Japanese troops burned it because it had sheltered the Righteous Army. Restored, it was ruined once more in the Korean War, and has been rebuilt hall by hall since 1961. Climb to the ridge from here and you reach Gongjubong — 'Princess Peak', named, it is said, by Wonhyo for Princess Yoseok — beside the summit, Uisangdae."
+     },
+     "sources": [
+      {
+       "label": "한국관광공사 · 소요산 등반코스",
+       "url": "https://www.ktriptips.com/kor/course/1874922"
+      }
+     ]
+    }
+   ],
+   "sources": [
+    {
+     "label": "Korea JoongAng Daily · K-campus (2025)",
+     "url": "https://kcampus.kr/ko/news/autumn-is-upon-us-experience-seoul-s-fall-foliage-at-these-hiking-spots-accessible-by-subways-7928"
+    }
+   ]
+  },
+  {
+   "id": "yongmun",
+   "name": {
+    "ko": "용문산 (용문사)",
+    "en": "Yongmunsan (Yongmunsa)"
+   },
+   "heightM": null,
+   "difficulty": "easy",
+   "upMin": 30,
+   "shoes": "sneakers",
+   "time": {
+    "ko": "은행나무까지 관광단지에서 도보 15분 · 정상은 편도 3~4시간",
+    "en": "15-minute walk to the ginkgo · 3–4 hours up to the peak"
+   },
+   "season": {
+    "ko": "가을 은행잎(10월 말~11월 초)",
+    "en": "Golden ginkgo in late October–early November"
+   },
+   "transfer": {
+    "ko": "용문역에서 용문사(용문산관광지)행 버스로 약 15분",
+    "en": "From Yongmun Station take a bus to Yongmunsa (Yongmunsan Tourist Area), about 15 minutes"
+   },
+   "station": {
+    "lat": 37.482059,
+    "lng": 127.594273,
+    "label": {
+     "ko": "용문역 (경의중앙선)",
+     "en": "Yongmun Station (Gyeongui–Jungang Line)"
+    }
+   },
+   "trailhead": {
+    "lat": 37.546634,
+    "lng": 127.582189,
+    "label": {
+     "ko": "용문산관광지",
+     "en": "Yongmunsan Tourist Area"
+    }
+   },
+   "intro": {
+    "ko": "경기도 양평의 용문산은 1100살 넘은 은행나무 한 그루를 보러 가는 산입니다. 정상까지는 만만치 않지만, 은행나무가 있는 용문사까지는 산책처럼 걸을 수 있습니다.",
+    "en": "People come to Yongmunsan in Yangpyeong, Gyeonggi, to see one tree: a ginkgo more than a thousand years old. The summit is a serious climb, but the walk to Yongmunsa temple and its ginkgo is an easy stroll."
+   },
+   "points": [
+    {
+     "lat": 37.549856,
+     "lng": 127.571051,
+     "kind": "peak",
+     "name": {
+      "ko": "용문사 은행나무",
+      "en": "The Ginkgo of Yongmunsa"
+     },
+     "text": {
+      "ko": "높이 42m, 나이는 약 1100살로 추정되는 우리나라에서 가장 큰 나무입니다. 신라의 마지막 왕 경순왕의 아들 마의태자가 나라를 잃은 슬픔을 안고 금강산으로 가다 심었다는 이야기와, 의상대사가 짚던 지팡이를 꽂아 두었더니 자랐다는 이야기가 함께 전합니다. 조선 세종 때는 나무에 정3품 당상관 벼슬까지 내렸고, 1907년 일본군이 절에 불을 질렀을 때도 이 나무만은 타지 않았다고 합니다. 1962년 천연기념물로 지정되었습니다.",
+      "en": "At 42 meters tall and an estimated 1,100 years old, this is the largest tree in Korea. One story says it was planted by Crown Prince Maui, son of Silla's last king, as he walked to the Diamond Mountains grieving his lost kingdom; another, that the monk Uisang stuck his walking staff in the ground here and it took root. Under King Sejong the tree was even given a senior court rank, and when Japanese troops set fire to the temple in 1907, it is said this tree alone did not burn. It was made a natural monument in 1962."
+     },
+     "sources": [
+      {
+       "label": "한국민족문화대백과 · 양평 용문사 은행나무",
+       "url": "https://encykorea.aks.ac.kr/Article/E0039483"
+      },
+      {
+       "label": "한국관광공사 · 양평 용문사 은행나무",
+       "url": "https://www.ktriptips.com/kor/tourspot/3537762"
+      }
+     ]
+    }
+   ],
+   "sources": [
+    {
+     "label": "Korea JoongAng Daily · K-campus (2025)",
+     "url": "https://kcampus.kr/ko/news/autumn-is-upon-us-experience-seoul-s-fall-foliage-at-these-hiking-spots-accessible-by-subways-7928"
+    },
+    {
+     "label": "한국관광공사 · 용문사",
+     "url": "https://www.ktriptips.com/kor/tourspot/125537"
+    }
+   ]
+  },
+  {
+   "id": "geomdan",
+   "name": {
+    "ko": "검단산",
+    "en": "Geomdansan"
+   },
+   "heightM": 657,
+   "difficulty": "moderate",
+   "upMin": 120,
+   "shoes": "boots",
+   "time": {
+    "ko": "현충탑 코스 4.2km, 약 2시간",
+    "en": "Memorial Tower route 4.2 km, about 2 hours up"
+   },
+   "season": {
+    "ko": "가을 단풍, 정상의 한강·두물머리 조망",
+    "en": "Autumn leaves; views of the Han River and Dumulmeori from the top"
+   },
+   "station": {
+    "lat": 37.53924,
+    "lng": 127.225388,
+    "label": {
+     "ko": "하남검단산역 3번 출구 (5호선)",
+     "en": "Hanam Geomdansan Station Exit 3 (Line 5)"
+    }
+   },
+   "trailhead": {
+    "lat": 37.530046,
+    "lng": 127.236026,
+    "label": {
+     "ko": "현충탑 등산로 입구",
+     "en": "Memorial Tower trailhead"
+    }
+   },
+   "intro": {
+    "ko": "하남의 한강변에 솟은 산으로, 백제 때 검단선사가 이곳에 은거했다 하여 이름이 붙었습니다. 백제 한성 시대 왕이 하늘에 제사를 지내던 산이었다고도 전합니다. 등산로가 잘 정비되어 처음 산에 오르는 사람에게도 좋습니다.",
+    "en": "A mountain on the Han River in Hanam, named after the Baekje monk Geomdan, who is said to have lived here as a hermit. It is also said to have been the sacred mountain where Baekje kings made offerings to heaven when their capital stood nearby. The trails are well kept, good even for first-time hikers."
+   },
+   "points": [
+    {
+     "lat": 37.527741,
+     "lng": 127.238804,
+     "kind": "sight",
+     "name": {
+      "ko": "호국사",
+      "en": "Hoguksa Temple"
+     },
+     "text": {
+      "ko": "현충탑을 지나 오르면 만나는 아담한 절입니다. 화려한 단청의 범종각 뒤로 곧게 뻗은 낙엽송 숲길이 이어지는데, 이 길이 검단산에서 가장 아름다운 구간으로 꼽힙니다.",
+      "en": "A small temple you reach after the Memorial Tower. Behind its brightly painted bell pavilion, a path runs through tall, straight larches — often called the loveliest stretch on the mountain."
+     },
+     "sources": [
+      {
+       "label": "한국관광공사 · 호국사",
+       "url": "https://www.ktriptips.com/kor/tourspot/750850"
+      }
+     ]
+    },
+    {
+     "lat": 37.517631,
+     "lng": 127.248887,
+     "kind": "peak",
+     "name": {
+      "ko": "검단산 정상",
+      "en": "Geomdansan summit"
+     },
+     "text": {
+      "ko": "넓고 평평한 정상에 서면 팔당댐과 남한강·북한강이 만나는 두물머리가 발아래 펼쳐지고, 멀리 북한산과 도봉산 줄기까지 보입니다. 이 산은 원래 세종대왕의 능을 쓰려고 터를 닦았다가 여주로 옮겼다는 이야기가 전하며, 《서유견문》을 쓴 유길준의 묘도 이 산자락에 있습니다.",
+      "en": "The summit is broad and flat. Below you lie the Paldang Dam and Dumulmeori, where the North and South Han rivers meet, and on a clear day you can see Bukhansan and Dobongsan far off. Tradition says a royal tomb site was prepared here for King Sejong before it was moved to Yeoju, and Yu Gil-jun, author of the reform classic Seoyu Gyeonmun, is buried on the mountain's slope."
+     },
+     "sources": [
+      {
+       "label": "한국민족문화대백과 · 검단산",
+       "url": "https://encykorea.aks.ac.kr/Article/E0002061"
+      },
+      {
+       "label": "한국관광공사 · 검단산",
+       "url": "https://xn--ok0b236bp0a.com/place/12477"
+      }
+     ]
+    }
+   ],
+   "sources": [
+    {
+     "label": "Korea JoongAng Daily · K-campus (2025)",
+     "url": "https://kcampus.kr/ko/news/autumn-is-upon-us-experience-seoul-s-fall-foliage-at-these-hiking-spots-accessible-by-subways-7928"
+    },
+    {
+     "label": "한국민족문화대백과 · 검단산",
+     "url": "https://encykorea.aks.ac.kr/Article/E0002061"
+    }
+   ]
+  },
+  {
+   "id": "cheonggye",
+   "name": {
+    "ko": "청계산",
+    "en": "Cheonggyesan"
+   },
+   "heightM": 618,
+   "difficulty": "moderate",
+   "upMin": 90,
+   "shoes": "boots",
+   "time": {
+    "ko": "코스별 1시간~2시간 20분",
+    "en": "1 hour to 2 hours 20 minutes, by route"
+   },
+   "season": {
+    "ko": "가을 단풍(매바위·깔딱고개)",
+    "en": "Autumn leaves at Maebawi Rock and Kkaldak Pass"
+   },
+   "notice": {
+    "ko": "계단 구간이 길게 이어집니다. 덜 힘든 길을 원하면 원터골 → 길마재 → 매봉 코스를 고르세요.",
+    "en": "Expect long staircases. For an easier climb, take Wonteogol → Gilmajae → Maebong."
+   },
+   "station": {
+    "lat": 37.447719,
+    "lng": 127.055017,
+    "label": {
+     "ko": "청계산입구역 2번 출구 (신분당선)",
+     "en": "Cheonggyesan Station Exit 2 (Sinbundang Line)"
+    }
+   },
+   "trailhead": {
+    "lat": 37.44372,
+    "lng": 127.055156,
+    "label": {
+     "ko": "원터골 입구",
+     "en": "Wonteogol trailhead"
+    }
+   },
+   "intro": {
+    "ko": "서울 서초구와 과천·성남·의왕에 걸친 산입니다. 신분당선 청계산입구역에서 굴다리를 지나 10분이면 등산로 입구에 닿아, 주말이면 서울 사람들이 가장 많이 찾는 산 가운데 하나입니다.",
+    "en": "A mountain spanning Seoul's Seocho District and the cities of Gwacheon, Seongnam and Uiwang. From Cheonggyesan Station it is ten minutes through an underpass to the trailhead, making it one of Seoul's busiest weekend hikes."
+   },
+   "points": [
+    {
+     "lat": 37.427916,
+     "lng": 127.043547,
+     "kind": "peak",
+     "name": {
+      "ko": "매봉 · 매바위",
+      "en": "Maebong & Maebawi Rock"
+     },
+     "text": {
+      "ko": "정상 바로 아래 매바위는 단풍을 배경으로 멀리 롯데월드타워까지 담기는 사진 명소입니다. 매봉(582.5m)에서는 청계산의 주봉 망경대가 보입니다. 망경대라는 이름은 고려가 망한 뒤 유신 조견이 올라 개경을 바라보며 통곡했다는 데서 왔다고 전하지만, 정작 조견은 조선의 개국공신이 되어 벼슬을 한 기록이 남아 있어 이 이야기는 믿기 어렵다는 지적도 있습니다.",
+      "en": "Just below the top, Maebawi Rock is a favorite photo spot: autumn leaves in front, Lotte World Tower far behind. From Maebong (582.5 m) you can see the main peak, Mangyeongdae. Its name — 'terrace for gazing at the capital' — is said to come from Jo Gyeon, a Goryeo official who climbed it to weep toward the fallen capital, Gaegyeong. But records show Jo Gyeon actually became a founding official of Joseon and served at its court, so some doubt the story."
+     },
+     "sources": [
+      {
+       "label": "Korea JoongAng Daily · K-campus (2025)",
+       "url": "https://kcampus.kr/ko/news/autumn-is-upon-us-experience-seoul-s-fall-foliage-at-these-hiking-spots-accessible-by-subways-7928"
+      },
+      {
+       "label": "Daum 카페 · 청계산 망경대 유래",
+       "url": "https://m.cafe.daum.net/rnqdmsekfl/VqUt/33"
+      }
+     ]
+    }
+   ],
+   "sources": [
+    {
+     "label": "Korea JoongAng Daily · K-campus (2025)",
+     "url": "https://kcampus.kr/ko/news/autumn-is-upon-us-experience-seoul-s-fall-foliage-at-these-hiking-spots-accessible-by-subways-7928"
+    },
+    {
+     "label": "서울시 · 원터골 마당",
+     "url": "https://mediahub.seoul.go.kr/archives/2008652"
+    }
+   ]
+  },
+  {
+   "id": "namhan",
+   "name": {
+    "ko": "남한산성",
+    "en": "Namhansanseong"
+   },
+   "heightM": null,
+   "difficulty": "easy",
+   "upMin": 60,
+   "shoes": "sneakers",
+   "time": {
+    "ko": "성곽길 1·2코스 각 약 1시간",
+    "en": "Fortress wall courses 1 and 2, about 1 hour each"
+   },
+   "season": {
+    "ko": "가을 단풍(성곽길), 유네스코 세계유산",
+    "en": "Autumn leaves along the walls; a UNESCO World Heritage Site"
+   },
+   "transfer": {
+    "ko": "산성역 2번 출구에서 남한산성행 버스로 로터리까지",
+    "en": "From Sanseong Station Exit 2 take a bus up to Namhansanseong Rotary"
+   },
+   "station": {
+    "lat": 37.455609,
+    "lng": 127.150036,
+    "label": {
+     "ko": "산성역 2번 출구 (8호선)",
+     "en": "Sanseong Station Exit 2 (Line 8)"
+    }
+   },
+   "trailhead": {
+    "lat": 37.478079,
+    "lng": 127.184033,
+    "label": {
+     "ko": "남한산성 로터리",
+     "en": "Namhansanseong Rotary"
+    },
+    "text": {
+     "ko": "로터리에서 400m쯤 오르면 북문입니다. 병자호란 때 300여 명의 군사가 이 문을 열고 나가 청군을 기습했다가 적의 계략에 빠져 전멸했습니다. 그 문의 또 다른 이름이 '모두 승리한다'는 뜻의 전승문이라는 사실이 더 아프게 다가옵니다. 성곽길 1코스가 이 북문에서 시작합니다.",
+     "en": "About 400 m up from the rotary is the North Gate. During the Qing invasion some 300 soldiers marched out of it in a surprise attack, fell into a trap, and were wiped out. Its other name, Jeonseungmun, means 'gate of total victory' — which makes the story harder still. Wall course 1 starts here."
+    },
+    "sources": [
+     {
+      "label": "레이디경향 · 남한산성",
+      "url": "https://lady.khan.co.kr/travel/article/201407311735301"
+     }
+    ]
+   },
+   "intro": {
+    "ko": "신라가 쌓은 주장성 터에 조선 인조가 1624~1626년 다시 쌓은 산성으로, 유사시 임시 수도로 삼은 곳입니다. 1636년 12월 청 태종이 쳐들어오자 강화도로 가는 길이 막힌 인조는 이 성으로 들어가 47일을 버텼습니다. 구원군은 오지 않았고 강화도마저 함락되자, 인조는 이듬해 1월 서문으로 나가 삼전도에서 항복했습니다.",
+    "en": "Built on the site of a Silla fortress and rebuilt by King Injo in 1624–26, Namhansanseong was meant to be Joseon's emergency capital. When the Qing emperor invaded in December 1636 and the road to Ganghwa Island was cut, Injo took refuge here and held out for 47 days. No relief army broke through, Ganghwa fell, and in January he walked out of the West Gate to surrender at Samjeondo."
+   },
+   "points": [
+    {
+     "lat": 37.479857,
+     "lng": 127.176533,
+     "kind": "peak",
+     "name": {
+      "ko": "수어장대",
+      "en": "Sueojangdae Command Post"
+     },
+     "text": {
+      "ko": "성의 가장 높은 곳에 선 지휘소로, 원래 다섯 개 있던 장대 가운데 유일하게 남은 것입니다. 장수가 성 전체와 성 밖의 적진을 내려다보며 군사를 지휘하던 자리입니다. 주변의 큰 노란 단풍나무들이 가을이면 성벽을 물들입니다.",
+      "en": "The command post on the fortress's high point, and the only one left of the five that once stood. From here the general watched the whole fortress — and the enemy camp outside — while directing the defense. In autumn the big yellow-leaved trees around it light up the walls."
+     },
+     "sources": [
+      {
+       "label": "Korea JoongAng Daily · K-campus (2025)",
+       "url": "https://kcampus.kr/ko/news/autumn-is-upon-us-experience-seoul-s-fall-foliage-at-these-hiking-spots-accessible-by-subways-7928"
+      },
+      {
+       "label": "itwiki · 남한산성",
+       "url": "https://itwiki.kr/w/%EB%82%A8%ED%95%9C%EC%82%B0%EC%84%B1"
+      }
+     ]
+    },
+    {
+     "lat": 37.478551,
+     "lng": 127.180394,
+     "kind": "sight",
+     "name": {
+      "ko": "남한산성 행궁",
+      "en": "Namhansanseong Haenggung"
+     },
+     "text": {
+      "ko": "전쟁 때 왕이 머물 수 있도록 지은 임시 궁궐입니다. 인조는 이곳에 여섯 차례 행차했고, 47일의 농성을 포함해 50일 넘게 머물렀습니다. 대부분의 행궁은 왕이 실제 머문 날이 손에 꼽지만, 이 행궁은 조선 역사에서 가장 긴 겨울을 품은 곳입니다.",
+      "en": "A temporary palace built so the king could stay here in wartime. King Injo came six times and spent more than 50 days here, including the 47-day siege. Most temporary palaces saw a king for only a night or two; this one sheltered the longest winter in Joseon's history."
+     },
+     "sources": [
+      {
+       "label": "서울신문 · 노주석의 서울택리지",
+       "url": "https://m.seoul.co.kr/news/2014/09/29/20140929022009"
+      }
+     ]
+    }
+   ],
+   "sources": [
+    {
+     "label": "Korea JoongAng Daily · K-campus (2025)",
+     "url": "https://kcampus.kr/ko/news/autumn-is-upon-us-experience-seoul-s-fall-foliage-at-these-hiking-spots-accessible-by-subways-7928"
+    },
+    {
+     "label": "itwiki · 남한산성",
+     "url": "https://itwiki.kr/w/%EB%82%A8%ED%95%9C%EC%82%B0%EC%84%B1"
+    }
+   ]
+  },
+  {
+   "id": "bukhan",
+   "name": {
+    "ko": "북한산 (백운대)",
+    "en": "Bukhansan (Baegundae)"
+   },
+   "heightM": 836,
+   "difficulty": "hard",
+   "upMin": 150,
+   "shoes": "boots",
+   "time": {
+    "ko": "우이동 코스, 정상까지 2~3시간",
+    "en": "Ui-dong route, 2–3 hours to the top"
+   },
+   "season": {
+    "ko": "사계절, 겨울엔 정상부가 얼어 매우 미끄러움",
+    "en": "All year; in winter the summit rock is icy"
+   },
+   "notice": {
+    "ko": "정상 직전은 쇠난간을 잡고 오르는 바윗길입니다. 비·눈·얼음이 있으면 무리하지 마세요.",
+    "en": "The final pitch is bare rock with steel handrails. Do not push on in rain, snow or ice."
+   },
+   "station": {
+    "lat": 37.662971,
+    "lng": 127.01246,
+    "label": {
+     "ko": "북한산우이역 2번 출구 (우이신설선)",
+     "en": "Bukhansan Ui Station Exit 2 (Ui–Sinseol Line)"
+    }
+   },
+   "trailhead": {
+    "lat": 37.658194,
+    "lng": 126.991351,
+    "label": {
+     "ko": "백운대탐방지원센터",
+     "en": "Baegundae Visitor Center"
+    }
+   },
+   "intro": {
+    "ko": "서울에서 가장 높은 봉우리 백운대(836m)가 있는 서울의 진산입니다. 인수봉·백운대·만경대 세 봉우리가 뿔처럼 솟아 예로부터 삼각산이라 불렸습니다. 주말이면 등산객의 상당수가 외국인일 만큼 세계에 알려진 산입니다.",
+    "en": "The guardian mountain of Seoul, crowned by Baegundae (836 m), the highest point in the city. Its three peaks — Insubong, Baegundae and Mangyeongdae — rise like horns, so it was long called Samgaksan, 'three-horn mountain'. On weekends a good share of the hikers are visitors from abroad."
+   },
+   "points": [
+    {
+     "lat": 37.6587,
+     "lng": 126.9778,
+     "kind": "peak",
+     "name": {
+      "ko": "백운대",
+      "en": "Baegundae"
+     },
+     "text": {
+      "ko": "하루재와 인수봉 곁을 지나 북한산성의 백운대 암문을 통과하면 마지막 바윗길이 시작됩니다. 이 성벽은 임진왜란과 병자호란을 겪은 조선이 1711년 숙종 때 쌓은 북한산성입니다. 다시 그런 전쟁이 나면 백성과 함께 끝까지 지키겠다는 뜻을 담아, 봉우리와 봉우리를 이어 12.7km의 성을 둘렀습니다. 정상에 서면 그 성이 지키려던 서울 전체가 발아래 놓입니다.",
+      "en": "Past Harujae Pass and the foot of Insubong, you go through the small Baegundae gate in the Bukhansanseong wall, and the last stretch of bare rock begins. That wall was built in 1711 under King Sukjong, after the Japanese and Qing invasions; it strung 12.7 km of wall from peak to peak, in the resolve that in another war the king would hold out to the end together with his people. At the top, the whole city that fortress was built to protect lies at your feet."
+     },
+     "sources": [
+      {
+       "label": "서울시 내 손안에 서울 · 북한산",
+       "url": "https://mediahub.seoul.go.kr/archives/2009520"
+      },
+      {
+       "label": "브라보마이라이프 · 북한산성",
+       "url": "https://bravo.etoday.co.kr/view/atc_view/1981"
+      },
+      {
+       "label": "한국관광공사 · 북한산 백운대",
+       "url": "https://xn--ok0b236bp0a.com/place/29138"
+      }
+     ]
+    }
+   ],
+   "sources": [
+    {
+     "label": "한국관광공사 · 북한산 백운대",
+     "url": "https://xn--ok0b236bp0a.com/place/29138"
+    }
+   ]
+  },
+  {
+   "id": "inwang",
+   "name": {
+    "ko": "인왕산",
+    "en": "Inwangsan"
+   },
+   "heightM": 338,
+   "difficulty": "moderate",
+   "upMin": 60,
+   "shoes": "sneakers",
+   "time": {
+    "ko": "편도 약 1시간",
+    "en": "About 1 hour up"
+   },
+   "season": {
+    "ko": "봄 개나리·벚꽃, 정상에서 경복궁과 도심 조망",
+    "en": "Spring forsythia and blossoms; views over Gyeongbokgung and downtown"
+   },
+   "station": {
+    "lat": 37.576203,
+    "lng": 126.972188,
+    "label": {
+     "ko": "경복궁역 1번 출구 (3호선)",
+     "en": "Gyeongbokgung Station Exit 1 (Line 3)"
+    }
+   },
+   "trailhead": {
+    "lat": 37.57562,
+    "lng": 126.967688,
+    "label": {
+     "ko": "사직단",
+     "en": "Sajikdan Altar"
+    }
+   },
+   "intro": {
+    "ko": "한양도성이 지나는 서쪽 산입니다. 조선은 북악을 주산, 남산을 안산, 낙산과 인왕산을 좌우의 용과 호랑이로 삼아 궁궐을 세웠습니다. 1968년 이후 군사상 이유로 막혔다가 1993년 시민에게 다시 열렸습니다.",
+    "en": "The western mountain on the old city wall. When Joseon laid out its palace, Bugaksan was the main mountain, Namsan the 'table' in front, and Naksan and Inwangsan the dragon and tiger on either side. Closed for military reasons after 1968, it reopened to the public in 1993."
+   },
+   "points": [
+    {
+     "lat": 37.577897,
+     "lng": 126.963939,
+     "kind": "sight",
+     "name": {
+      "ko": "황학정",
+      "en": "Hwanghakjeong Pavilion"
+     },
+     "text": {
+      "ko": "사직단 뒷길로 오르면 만나는 활터 정자입니다. 대한제국 황제가 활을 쏘던 곳으로, 갑오개혁 뒤 궁술이 폐지되며 도성 서쪽의 이름난 활터 다섯 곳이 모두 헐렸는데 그중 유일하게 남은 것이 황학정입니다. 지금도 시민들이 국궁을 쏘는 소리가 들립니다.",
+      "en": "Climbing the lane behind Sajikdan you pass this archery pavilion, where the emperor of the Korean Empire shot arrows. After the Gabo Reforms abolished archery as a military skill, all five famous archery grounds west of the city were torn down — Hwanghakjeong is the only one left. You can still hear people practicing traditional archery here."
+     },
+     "sources": [
+      {
+       "label": "서울시 내 손안에 서울 · 인왕산",
+       "url": "https://mediahub.seoul.go.kr/archives/2010009"
+      }
+     ]
+    },
+    {
+     "lat": 37.584924,
+     "lng": 126.957772,
+     "kind": "peak",
+     "name": {
+      "ko": "인왕산 정상",
+      "en": "Inwangsan summit"
+     },
+     "text": {
+      "ko": "정상에서 동쪽을 보면 경복궁과 북악산이 손에 잡힐 듯합니다. 1751년 윤5월, 일흔여섯의 겸재 정선은 비가 갠 뒤 안개가 피어오르는 이 산을 그렸습니다. 국보 인왕제색도입니다. 평생의 벗 이병연이 병으로 누워 있을 때 그를 위해 그렸다는 해석이 널리 알려져 있지만, 족보를 보면 이병연은 그해 1월에 이미 세상을 떠났다며 이를 반박하는 연구도 있습니다. 1968년 1·21 사태로 닫혔던 이 산은 25년 뒤인 1993년에야 다시 열렸습니다.",
+      "en": "From the summit, Gyeongbokgung and Bugaksan look close enough to touch. In the summer of 1751 the painter Jeong Seon, then 76, painted this mountain as mist rose after rain: 'Clearing after Rain on Mount Inwang', now a National Treasure. A popular reading says he painted it for his lifelong friend, the poet Yi Byeong-yeon, who lay ill — but one scholar, citing the family genealogy, argues Yi had already died that January. Closed after the commando raid of January 1968, the mountain reopened only in 1993, 25 years later."
+     },
+     "sources": [
+      {
+       "label": "한국민족문화대백과 · 인왕제색도",
+       "url": "https://encykorea.aks.ac.kr/Article/E0046984"
+      },
+      {
+       "label": "경향신문 · 인왕제색도",
+       "url": "https://www.khan.co.kr/article/201506302127575"
+      },
+      {
+       "label": "서울신문 · 인왕산 개방",
+       "url": "https://seoul.co.kr/news/editOpinion/2011/08/30/20110830031006"
+      }
+     ]
+    }
+   ],
+   "sources": [
+    {
+     "label": "한국민족문화대백과 · 인왕산",
+     "url": "https://encykorea.aks.ac.kr/Article/E0046977"
+    }
+   ]
+  },
+  {
+   "id": "bugak",
+   "name": {
+    "ko": "북악산 (백악산)",
+    "en": "Bugaksan (Baegaksan)"
+   },
+   "heightM": 342,
+   "difficulty": "moderate",
+   "upMin": 60,
+   "shoes": "sneakers",
+   "time": {
+    "ko": "창의문에서 백악마루까지 약 1시간 (가파른 계단)",
+    "en": "About 1 hour from Changuimun to Baegak Maru (steep stairs)"
+   },
+   "season": {
+    "ko": "사계절, 청운대에서 경복궁·광화문 조망",
+    "en": "All year; views of Gyeongbokgung and Gwanghwamun from Cheongundae"
+   },
+   "transfer": {
+    "ko": "경복궁역 3번 출구에서 1020·7022·7212번 버스 → '자하문고개·윤동주문학관' 하차",
+    "en": "From Gyeongbokgung Station Exit 3 take bus 1020, 7022 or 7212 to 'Jahamun Pass · Yun Dong-ju Literary Museum'"
+   },
+   "station": {
+    "lat": 37.576286,
+    "lng": 126.972688,
+    "label": {
+     "ko": "경복궁역 3번 출구 (3호선)",
+     "en": "Gyeongbokgung Station Exit 3 (Line 3)"
+    }
+   },
+   "trailhead": {
+    "lat": 37.59259,
+    "lng": 126.966327,
+    "label": {
+     "ko": "창의문 안내소",
+     "en": "Changuimun Information Center"
+    }
+   },
+   "intro": {
+    "ko": "경복궁 뒤를 받치는 서울의 주산입니다. 1968년 1월 21일 북한 특수부대원 31명이 청와대를 습격하려 이 산을 넘어온 뒤 반세기 넘게 출입이 막혔습니다. 2007년 성곽길부터 조금씩 열리기 시작해, 2026년 10월 17일 마지막 구간까지 모두 개방되었습니다.",
+    "en": "The main mountain behind Gyeongbokgung. On January 21, 1968, 31 North Korean commandos came over it in an attempt to raid the presidential residence, and the mountain was closed for more than half a century. It began to reopen with the wall path in 2007, and the last section opened on October 17, 2026."
+   },
+   "points": [
+    {
+     "lat": 37.5928,
+     "lng": 126.9725,
+     "kind": "peak",
+     "name": {
+      "ko": "백악마루 · 1·21 사태 소나무",
+      "en": "Baegak Maru & the 1·21 Pine"
+     },
+     "text": {
+      "ko": "해발 342m 백악마루는 1396년 한양도성을 쌓을 때 기점으로 삼은 곳입니다. 조금 내려서면 수령 200년쯤 된 소나무 한 그루에 총탄 자국 15개가 남아 있습니다. 1968년 무장공비와 군경이 교전하며 생긴 흔적으로, 이 산이 왜 50년 넘게 닫혀 있었는지를 말없이 보여 줍니다.",
+      "en": "Baegak Maru (342 m) is where builders took their bearings in 1396 when the city wall was laid out. A little way down stands a pine, about 200 years old, with 15 bullet scars from the firefight between the 1968 commandos and soldiers and police — silent evidence of why this mountain stayed closed for over 50 years."
+     },
+     "sources": [
+      {
+       "label": "서울시 내 손안에 서울 · 백악구간",
+       "url": "https://mediahub.seoul.go.kr/archives/1503798"
+      },
+      {
+       "label": "서울신문 · 북악산 탐방로",
+       "url": "https://go.seoul.co.kr/news/newsView.php?id=20070614011025"
+      }
+     ]
+    },
+    {
+     "lat": 37.594673,
+     "lng": 126.975159,
+     "kind": "sight",
+     "name": {
+      "ko": "청운대 전망대",
+      "en": "Cheongundae Viewpoint"
+     },
+     "text": {
+      "ko": "한양도성 구간에서 전망이 가장 뛰어난 곳입니다. 남쪽으로는 경복궁과 광화문, 세종대로가 일직선으로, 북쪽으로는 북한산의 봉우리들이 펼쳐집니다. 조선의 설계자들이 왜 이 산을 궁궐의 등받이로 골랐는지 한눈에 이해되는 자리입니다.",
+      "en": "The best view anywhere on the city wall. To the south, Gyeongbokgung, Gwanghwamun and Sejong-daero line up in a straight axis; to the north rise the peaks of Bukhansan. Standing here, you can see at a glance why Joseon's planners chose this mountain as the palace's backrest."
+     },
+     "sources": [
+      {
+       "label": "서울시 내 손안에 서울 · 백악산 남서자락",
+       "url": "https://mediahub.seoul.go.kr/archives/2019763"
+      }
+     ]
+    }
+   ],
+   "sources": [
+    {
+     "label": "서울시 내 손안에 서울 · 새로 열린 북악산",
+     "url": "https://mediahub.seoul.go.kr/archives/2019759"
+    },
+    {
+     "label": "중앙일보 · 북악산 3단계 개방",
+     "url": "https://www.koreadaily.com/article/20261018080146962"
+    }
+   ]
+  },
+  {
+   "id": "acha",
+   "name": {
+    "ko": "아차산",
+    "en": "Achasan"
+   },
+   "heightM": null,
+   "difficulty": "easy",
+   "upMin": 60,
+   "shoes": "sneakers",
+   "time": {
+    "ko": "코스별 2~3시간 (왕복)",
+    "en": "2–3 hours round trip, by route"
+   },
+   "season": {
+    "ko": "새해 해맞이, 봄 벚꽃, 한강 조망",
+    "en": "New Year sunrise, spring blossoms, Han River views"
+   },
+   "station": {
+    "lat": 37.551652,
+    "lng": 127.090067,
+    "label": {
+     "ko": "아차산역 2번 출구 (5호선)",
+     "en": "Achasan Station Exit 2 (Line 5)"
+    }
+   },
+   "trailhead": {
+    "lat": 37.551875,
+    "lng": 127.101177,
+    "label": {
+     "ko": "아차산 생태공원 입구",
+     "en": "Achasan Eco Park entrance"
+    }
+   },
+   "intro": {
+    "ko": "서울 동쪽 한강변의 나지막한 산이지만, 남한에서 가장 많은 고구려 유적이 나온 곳입니다. 고구려·백제·신라가 한강을 두고 다투던 요충지였고, 조선 시대에는 왕실의 사냥터였습니다.",
+    "en": "A low hill on the Han River in eastern Seoul — yet the richest Goguryeo site in South Korea. It was a strategic point where Goguryeo, Baekje and Silla fought for control of the Han, and in Joseon it became a royal hunting ground."
+   },
+   "points": [
+    {
+     "lat": 37.559179,
+     "lng": 127.101954,
+     "kind": "sight",
+     "name": {
+      "ko": "해맞이광장",
+      "en": "Sunrise Plaza"
+     },
+     "text": {
+      "ko": "고구려정을 지나 오르면 한강과 강동·송파 일대가 탁 트이는 해맞이광장입니다. 1월 1일이면 새해 첫 해를 보려는 사람들로 가득 찹니다. 1500여 년 전 고구려 병사들도 이 강을 내려다보며 남쪽의 백제를 지켜봤을 것입니다.",
+      "en": "Past the Goguryeo Pavilion, the path opens onto Sunrise Plaza, with the Han River and southeastern Seoul spread below. On January 1 it fills with people waiting for the year's first sunrise. Some 1,500 years ago, Goguryeo soldiers watched this same river for any move from Baekje to the south."
+     },
+     "sources": [
+      {
+       "label": "서울시 내 손안에 서울 · 아차산 등산코스",
+       "url": "https://mediahub.seoul.go.kr/archives/186180"
+      }
+     ]
+    },
+    {
+     "lat": 37.570512,
+     "lng": 127.103954,
+     "kind": "peak",
+     "name": {
+      "ko": "아차산 4보루",
+      "en": "Achasan Fort No. 4"
+     },
+     "text": {
+      "ko": "능선을 따라 고구려가 쌓은 작은 요새, 보루들이 이어집니다. 1990년대 후반부터 발굴이 시작되어, 이 4보루에서는 둘레 210m쯤의 성벽과 온돌 건물터 7기, 물을 모아 두던 저수조, 그리고 무기를 고치던 간이 대장간까지 확인되었습니다. 고구려 유적 대부분이 북한과 중국에 있는 지금, 서울 한복판에서 고구려 병사들의 겨울나기를 그려볼 수 있는 드문 곳입니다.",
+      "en": "Small Goguryeo forts line the ridge. Excavations began in the late 1990s, and at Fort No. 4 archaeologists found a wall about 210 m around, seven buildings with ondol underfloor heating, water cisterns — and even a simple smithy for repairing weapons. With most Goguryeo sites now in North Korea or China, this is a rare place in the middle of Seoul to imagine how its soldiers got through the winter."
+     },
+     "sources": [
+      {
+       "label": "경인일보 · 아차산 4보루",
+       "url": "https://www.kyeongin.com/article/1742192"
+      },
+      {
+       "label": "서울시 내 손안에 서울 · 아차산 역사",
+       "url": "https://mediahub.seoul.go.kr/archives/2016652"
+      }
+     ]
+    }
+   ],
+   "sources": [
+    {
+     "label": "서울시 내 손안에 서울 · 아차산",
+     "url": "https://mediahub.seoul.go.kr/archives/2007818"
+    },
+    {
+     "label": "서울신문 · 광진구 아차산",
+     "url": "https://m.go.seoul.co.kr/news/2013/10/16/20131016014012"
+    }
+   ]
+  }
+ ]
+}

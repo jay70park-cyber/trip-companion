@@ -69,10 +69,16 @@ async function main() {
   const voices = await pickVoices();
   const files = {};
   let chars = 0, made = 0, kept = 0, capped = 0, fails = 0, stopped = false;
-  const courses = fs.readdirSync(CDIR).filter((f) => f.endsWith(".json") && f !== "index.json");
+  const courses = fs.readdirSync(CDIR).filter((f) => f.endsWith(".json") && f !== "index.json").map((f) => JSON.parse(fs.readFileSync(path.join(CDIR, f), "utf8")));
+  // the Hiking category: each mountain's trailhead story (stop 0) and its points, as "hike-<id>"
+  const hikesPath = path.join(OUT, "hikes", "index.json");
+  if (fs.existsSync(hikesPath)) for (const m of JSON.parse(fs.readFileSync(hikesPath, "utf8")).mountains || []) {
+    const stops = m.points.map((p) => ({ n: p.n, name: p.name, text: p.text }));
+    if (m.trailhead.text) stops.unshift({ n: 0, name: m.trailhead.label, text: m.trailhead.text });
+    courses.push({ id: `hike-${m.id}`, stops });
+  }
   const jobs = [];
-  for (const f of courses) {
-    const c = JSON.parse(fs.readFileSync(path.join(CDIR, f), "utf8"));
+  for (const c of courses) {
     for (const s of c.stops || []) {
       for (const l of Object.keys(LANGS)) {
         const text = spoken(s, l);

@@ -2,7 +2,7 @@ name: Record course narration
 
 on:
   workflow_run:
-    workflows: ["Build walking courses", "Publish story courses"]
+    workflows: ["Build walking courses", "Publish story courses", "Publish hiking guide"]
     types: [completed]
   push:
     branches: [dev, main]

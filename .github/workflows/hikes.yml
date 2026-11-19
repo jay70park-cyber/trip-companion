@@ -1,0 +1,41 @@
+name: Publish hiking guide
+
+on:
+  push:
+    branches: [dev, main]
+    paths: ["pipeline/hikes/**", pipeline/build-hikes.mjs]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: data-branch
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Open the data branch
+        run: |
+          git fetch --depth 1 origin data:data
+          git worktree add out data
+      - name: Route, translate and publish
+        env:
+          TMAP_KEY: ${{ secrets.TMAP_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node pipeline/build-hikes.mjs out
+      - name: Publish to the data branch
+        run: |
+          cd out
+          git add -A hikes
+          if git diff --cached --quiet; then echo "No changes"; exit 0; fi
+          git -c user.name="K-Trip course bot" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -q -m "Update hiking guide $(date -u +%Y-%m-%d)"
+          git push origin data
