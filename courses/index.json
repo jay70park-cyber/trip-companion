@@ -173,7 +173,7 @@
    "stops": 10,
    "distanceM": 4338,
    "durationMin": 140,
-   "updated": "2026-11-17",
+   "updated": "2026-11-19",
    "ai": true
   },
   {
@@ -341,7 +341,7 @@
    "stops": 8,
    "distanceM": 3711,
    "durationMin": 114,
-   "updated": "2026-11-17",
+   "updated": "2026-11-19",
    "ai": true
   },
   {
@@ -365,7 +365,7 @@
    "stops": 8,
    "distanceM": 3261,
    "durationMin": 106,
-   "updated": "2026-11-17",
+   "updated": "2026-11-19",
    "ai": true
   },
   {
@@ -389,7 +389,7 @@
    "stops": 9,
    "distanceM": 3507,
    "durationMin": 120,
-   "updated": "2026-11-17",
+   "updated": "2026-11-19",
    "ai": true
   },
   {
@@ -437,7 +437,7 @@
    "stops": 5,
    "distanceM": 2147,
    "durationMin": 69,
-   "updated": "2026-11-17",
+   "updated": "2026-11-19",
    "ai": true
   },
   {
@@ -461,7 +461,7 @@
    "stops": 8,
    "distanceM": 3802,
    "durationMin": 116,
-   "updated": "2026-11-17",
+   "updated": "2026-11-19",
    "ai": true
   },
   {
@@ -509,7 +509,7 @@
    "stops": 5,
    "distanceM": 2898,
    "durationMin": 80,
-   "updated": "2026-11-17",
+   "updated": "2026-11-19",
    "ai": true
   }
  ],
