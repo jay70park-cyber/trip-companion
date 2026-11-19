@@ -827,6 +827,14 @@ function sunsetAt(lat,lng,date=new Date()){
   const d=new Date(Date.UTC(date.getFullYear(),date.getMonth(),date.getDate())+utcMin*6e4);return d;
 }
 const hhmm=d=>d.toLocaleTimeString(lang==="ko"?"ko-KR":lang==="ja"?"ja-JP":lang==="en"?"en-US":"zh-CN",{hour:"2-digit",minute:"2-digit",timeZone:"Asia/Seoul"});
+/* current position for routes: wait briefly for a GPS fix when location is on, otherwise the browse area */
+async function freshOrigin(){
+  if(!gpsPos&&hasConsent()&&navigator.geolocation&&window.isSecureContext){
+    if(watchId===null)$("gps").click();
+    for(let i=0;i<16&&!gpsPos;i++)await new Promise(r=>setTimeout(r,500));
+  }
+  return origin();
+}
 async function searchHikes(pos){
   $("count").textContent=t("loading");$("list").innerHTML="";
   const ms=await loadHikes();
@@ -877,17 +885,20 @@ async function openHike(m){
   fb.onclick=()=>{if(!gpsPos&&watchId===null)$("gps").click();setFollow(!follow);if(follow&&gpsPos&&map){if(engine==="naver"){map.setCenter(N([gpsPos.lat,gpsPos.lng]));if(map.getZoom()<17)map.setZoom(17);}else map.setView([gpsPos.lat,gpsPos.lng],Math.max(map.getZoom(),17));}};
   const ab=el("button","ghost small",t("whole"));ab.type="button";ab.onclick=()=>{setFollow(false);fitAll();};
   const mn=el("span","meta");mn.id="mapnote";tools.append(fb,ab,mn);g.append(tools);
-  const o=origin();
-  // 1. to the station
+  // 1. to the station — the route starts from where you are now (GPS) whenever location is on; the start is shown and re-read at each tap
   const st={title:L10(m.station.label),mapy:m.station.lat,mapx:m.station.lng};
   const s1=step(1,hk("s1"));s1.body.append(el("div","t","🚇 "+L10(m.station.label)));
+  const fromLine=el("div","meta");s1.body.append(fromLine);
+  const setFrom=()=>{fromLine.textContent=t("from")+": "+(gpsPos?t("fromGps"):areaPos()?t("fromArea")(areaName()):"—");};setFrom();
   const r1=el("div");
-  if(o){const b1=el("button",null,t("s1btn"));b1.type="button";s1.body.append(b1);b1.onclick=()=>{b1.disabled=true;loadTransit(st,o,r1).finally(()=>b1.disabled=false);};}
+  const b1=el("button",null,t("s1btn"));b1.type="button";s1.body.append(b1);
+  b1.onclick=async()=>{b1.disabled=true;try{const o=await freshOrigin();setFrom();if(!o){show("gpsmsg",t("needPos"));return;}await loadTransit(st,o,r1);}finally{b1.disabled=false;}};
   s1.body.append(r1);
   const hand=el("div","row");hand.append(el("span","meta",t("handoff")+":"));
+  const nv=el("a","btn ghost small",t("naver"));nv.href="#";
+  nv.onclick=async e=>{e.preventDefault();const o=await freshOrigin();setFrom();const q=o?"slat="+o.lat+"&slng="+o.lng+"&":"";location.href="nmap://route/public?"+q+"dlat="+st.mapy+"&dlng="+st.mapx+"&dname="+encodeURIComponent(st.title)+"&appname=netlify.tripcompanion";};
   const kk=el("a","btn ghost small",t("kakao"));kk.href="https://map.kakao.com/link/to/"+encodeURIComponent(st.title)+","+st.mapy+","+st.mapx;kk.target="_blank";kk.rel="noopener";
-  if(o){const nv=el("a","btn ghost small",t("naver"));nv.href="nmap://route/public?slat="+o.lat+"&slng="+o.lng+"&dlat="+st.mapy+"&dlng="+st.mapx+"&dname="+encodeURIComponent(st.title)+"&appname=netlify.tripcompanion";hand.append(nv);}
-  hand.append(kk);s1.body.append(hand);
+  hand.append(nv,kk);s1.body.append(hand);
   // 2. exit → trailhead
   const s2=step(2,hk("s2"));s2.body.append(el("div","t","🥾 "+L10(m.trailhead.label)));
   if(m.transfer)s2.body.append(el("p",null,"🚌 "+L10(m.transfer)));
@@ -902,6 +913,7 @@ async function openHike(m){
   if(m.sources&&m.sources.length)g.append(srcList(m.sources));
   g.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
   loadFood({mapy:m.trailhead.lat,mapx:m.trailhead.lng},r4);
+  if(watchId===null&&hasConsent()&&navigator.geolocation&&window.isSecureContext)$("gps").click();
   await initMap(it,{lat:m.station.lat,lng:m.station.lng},{noDest:true});
   if(current!==it||!map)return;
   clearRoute();for(const x of courseMarkers){try{engine==="naver"?x.setMap(null):x.remove();}catch(e){}}courseMarkers=[];
