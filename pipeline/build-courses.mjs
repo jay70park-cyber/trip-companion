@@ -323,6 +323,25 @@ async function enrichAudio(stop) {
 }
 
 /* ---------------- step 4: commentary (AI with fact check, or official text) ---------------- */
+/* ---------------- area history: background and before/after context for storytelling ---------------- */
+// One web search per area (max 3 searches), reused for six months. Returned as a sourced text block that the
+// commentary may draw on; every claim still goes through the fact-check against these pages.
+const STYLE = 2;   // commentary style: 2 = story with history and context (1 = short factual notes)
+async function areaContext(z, prev) {
+  const c = prev?.cache;
+  if (c?.context && c.contextAt && daysSince(c.contextAt) < 180) return { text: c.context, sources: c.contextSources || [], at: c.contextAt, reused: true };
+  if (!KEY.ai) return null;
+  try {
+    const r = await ai(
+`Search the web (Korean encyclopedias such as encykorea.aks.ac.kr, the Cultural Heritage Administration, city and national tourism sites, reputable news) for the history and story of ${z.name.ko} (${z.name.en}), Korea, around ${z.start.label.ko}.
+Write 8–15 short factual notes a tour guide would use to make a walk interesting: how the area began and changed over time, the key events and people, what came before and after, why places are where they are, and one or two vivid true anecdotes.
+Each note must state where it comes from. Skip anything you cannot find on a page.`, 5000, { webSearch: 3 });
+    const pages = [...new Map([...r.results, ...r.citations].map((x) => [x.url, x])).values()].slice(0, 8);
+    log(`  · area history: ${pages.length} pages`);
+    return { text: r.text.slice(0, 6000), sources: pages.map((x) => ({ label: x.title || x.url, url: x.url })), at: TODAY, reused: false };
+  } catch (e) { log(`  ! area history: ${e.message}`); return null; }
+}
+
 function sourcesFor(s) {
   const parts = [];
   if (s.nameKo) parts.push(`Korean name: ${s.nameKo}`);
@@ -331,24 +350,31 @@ function sourcesFor(s) {
   for (const l of ["en", "ko"]) if (s.official && s.official[l]) parts.push(`Official description (${l}): ${L.firstSentences(s.official[l], 6)}`);
   for (const l of ["en", "ko"]) if (s.scripts && s.scripts[l]) parts.push(`Audio guide script (${l}): ${s.scripts[l].slice(0, 700)}`);
   if (s.blog && s.blog.length) parts.push(`Recent web mentions: ${s.blog.map((b) => `"${b}"`).join(" | ")}`);
+  if (s.prevText) parts.push(`Earlier checked description: ${s.prevText}`);
   return parts.join("\n");
 }
 
-async function writeCommentary(z, stops, { minKeep = 4 } = {}) {
+async function writeCommentary(z, stops, { minKeep = 4, context = null } = {}) {
   const block = stops.map((s) => `### STOP ${s.n}\n${sourcesFor(s)}`).join("\n\n");
+  const ctx = context?.text ? `\n\nAREA HISTORY (sourced notes for the whole walk; use where they fit a stop):\n${context.text}` : "";
   const gen = await ai(
-`You write a self-guided walking tour of ${z.name.en} (${z.name.ko}), Korea, for foreign visitors.
-For each stop write 2–4 short sentences (max 70 words) in plain English.
-Use ONLY facts found in that stop's SOURCES. Do not invent history, dates, prices, opening hours, menus or rankings.
+`You write a self-guided walking tour of ${z.name.en} (${z.name.ko}), Korea, for foreign visitors. Write it like a good human guide telling a story, not a list of facts.
+For each stop write 4–6 sentences (max 120 words) in plain English:
+- open with what the visitor sees or a vivid moment;
+- give the background: what came before, why this place exists here, who was involved;
+- then what happened here and what came after;
+- where it fits, end with a short line that leads on to the next stop.
+Stops are in walking order; let the story build from stop to stop.
+Use ONLY facts found in that stop's SOURCES or in the AREA HISTORY. Do not invent history, dates, prices, opening hours, menus or rankings. Where historians disagree, say so in a few words.
 For places known only from visitor posts, say what kind of place it is and what visitors mention, e.g. "Visitors often mention…".
 Also give an English display name: the official English name if given, otherwise the Korean name romanized followed by the type, e.g. "Cafe Layered (café)".
 Set "is_sight" to false for anything a visitor would not walk to as a sight, café, restaurant, shop or photo spot (companies, medical or travel agencies, clinics, offices, hotels).
 Set "duplicate_of" to the number of an earlier stop when two stops are the same place under different names (for example "Hwaseong Haenggung" and "Temporary Palace at Hwaseong Fortress"); otherwise 0.
 Set "consistent" to false when a stop's sources describe two different places (for example the English name and the Korean name are different landmarks).
-Write a 2-sentence intro for the whole walk using only the sources.
+Write a 3–4 sentence intro for the whole walk that sets the scene and the story arc, using only the sources.
 Submit the intro and one entry per stop.
 
-${block}`, 6000, { schema: SCHEMA.draft });
+${block}${ctx}`, 9000, { schema: SCHEMA.draft });
 
   const bad = new Set(gen.stops.filter((g) => g.consistent === false || g.is_sight === false || (g.duplicate_of && g.duplicate_of !== g.n)).map((g) => g.n));
   if (bad.size) {
@@ -362,26 +388,26 @@ ${block}`, 6000, { schema: SCHEMA.draft });
   }
   const draft = gen.stops.map((g) => `### STOP ${g.n}\nTEXT: ${g.text_en}\nSOURCES:\n${sourcesFor(stops.find((s) => s.n === g.n) || {})}`).join("\n\n");
   const checked = await ai(
-`Fact-check this walking tour. For each stop, delete every sentence in TEXT that makes a claim not supported by that stop's SOURCES (paraphrase is fine; general wording like "a popular spot" is fine only if the sources say visitors recommend it).
-If nothing remains, write one sentence that only states what kind of place it is according to the sources.
+`Fact-check this walking tour. For each stop, delete or correct every claim in TEXT that is not supported by that stop's SOURCES or the AREA HISTORY (paraphrase is fine; general wording like "a popular spot" is fine only if the sources say visitors recommend it; linking lines to the next stop are fine).
+Keep the storytelling and the flow; change only what is unsupported. If nothing remains, write one sentence that only states what kind of place it is according to the sources.
 Also check the INTRO against all sources in the same way.
 Submit the corrected intro and one entry per stop.
 
 INTRO: ${gen.intro}
 
-${draft}`, 6000, { schema: SCHEMA.checked });
+${draft}${ctx}`, 9000, { schema: SCHEMA.checked });
 
   const en = new Map(checked.stops.map((x) => [x.n, x.text_en]));
   const names = new Map(gen.stops.map((x) => [x.n, x.name_en]));
   const tr = await ai(
 `Translate this walking tour into Korean (ko), Japanese (ja), Simplified Chinese (zhs) and Traditional Chinese (zht).
-Translate faithfully. Do not add or remove information.
+Translate faithfully and naturally, keeping the storytelling tone. Do not add or remove information.
 For the Korean place name, use KO_NAME exactly when it is given.
 Submit the intro and one entry per stop, each with name and text in ko, ja, zhs and zht.
 
 INTRO: ${checked.intro}
 
-${stops.map((s) => `### STOP ${s.n}\nNAME: ${names.get(s.n) || s.nameEn || s.nameKo}\nKO_NAME: ${s.nameKo || ""}\nTEXT: ${en.get(s.n) || ""}`).join("\n\n")}`, 12000, { schema: SCHEMA.translated });
+${stops.map((s) => `### STOP ${s.n}\nNAME: ${names.get(s.n) || s.nameEn || s.nameKo}\nKO_NAME: ${s.nameKo || ""}\nTEXT: ${en.get(s.n) || ""}`).join("\n\n")}`, 20000, { schema: SCHEMA.translated });
 
   const intro = { en: checked.intro, ...tr.intro };
   for (const s of stops) {
@@ -477,8 +503,9 @@ async function buildZone(z, prev) {
   }
 
   // reuse last time's checked text for stops that are still on the course; only new stops go to the AI
-  const reuse = (s) => (prev?.generator?.ai ? prev.stops : []).find((p) => L.meters(p, s) < 40 && p.text?.en && p.name?.en);
-  let intro = null;
+  // (only text written in the current style is reused)
+  const reuse = (s) => (prev?.generator?.ai && prev.generator.style === STYLE ? prev.stops : []).find((p) => L.meters(p, s) < 40 && p.text?.en && p.name?.en);
+  let intro = null, context = null;
   const fresh = stops.filter((s) => !reuse(s));
   for (const s of stops) {
     const p = reuse(s);
@@ -490,8 +517,9 @@ async function buildZone(z, prev) {
   } else if (KEY.ai) {
     try {
       if (fresh.length < stops.length) log(`  · ${stops.length - fresh.length} stops reused, writing ${fresh.length} new`);
+      context = await areaContext(z, prev);
       const batch = fresh.map((s, i) => ({ ...s, n: i + 1, origN: s.n }));
-      const newIntro = await writeCommentary(z, batch, { minKeep: fresh.length === stops.length ? 4 : 0 });
+      const newIntro = await writeCommentary(z, batch, { minKeep: fresh.length === stops.length ? 4 : 0, context });
       const done = new Map(batch.map((b) => [b.origN, b]));
       for (let i = stops.length - 1; i >= 0; i--) {
         const s = stops[i];
@@ -529,8 +557,9 @@ async function buildZone(z, prev) {
     id: z.id, type: z.type, updated: TODAY,
     name: z.name, start: z.start, intro,
     distanceM: Math.round(walkM), durationMin: Math.round(walkS / 60 + stops.length * 8),
-    generator: { ai: !!intro, model: intro ? KEY.model : null },
-    ...(landmarkCache ? { cache: landmarkCache } : {}),
+    generator: { ai: !!intro, model: intro ? KEY.model : null, style: intro ? STYLE : 1 },
+    ...cacheFor(prev, landmarkCache, context),
+    ...(context?.sources?.length ? { sources: context.sources } : prev?.sources ? { sources: prev.sources } : {}),
     stops: stops.map((s) => ({
       n: s.n, kind: s.kind, lat: +s.lat.toFixed(6), lng: +s.lng.toFixed(6),
       category: s.category || null, image: s.image || null,
@@ -539,6 +568,34 @@ async function buildZone(z, prev) {
       legM: legs[s.n - 1],
     })),
     path,
+  };
+  const problems = L.validateCourse(course, LANGS);
+  if (problems.length) throw new Error("validation: " + problems.slice(0, 5).join("; "));
+  return course;
+}
+
+function cacheFor(prev, landmarkCache, context) {
+  const c = { ...(prev?.cache || {}), ...(landmarkCache || {}) };
+  if (context) { c.context = context.text; c.contextAt = context.at; c.contextSources = context.sources; }
+  return Object.keys(c).length ? { cache: c } : {};
+}
+
+/* ---------------- rewrite: same stops, new storytelling commentary (no place search) ---------------- */
+// For courses written in an older style: keeps the stops, route and photos, gathers the area history once,
+// and rewrites the text from the earlier checked descriptions + the area history. Cost: one small web search per area.
+async function rewriteZone(z, prev) {
+  log(`\n▶ ${z.id}: rewriting the commentary as a story`);
+  const context = await areaContext(z, prev);
+  const stops = prev.stops.map((p) => ({ ...p, nameKo: p.name?.ko, nameEn: p.name?.en, prevText: p.text?.en || "" }));
+  const intro = await writeCommentary(z, stops, { minKeep: 4, context });
+  if (!intro) throw new Error("rewrite failed");
+  if (stops.length !== prev.stops.length) throw new Error("a stop lost its text while rewriting");
+  const course = {
+    ...prev, updated: TODAY, intro,
+    generator: { ai: true, model: KEY.model, style: STYLE },
+    ...cacheFor(prev, null, context),
+    ...(context?.sources?.length ? { sources: context.sources } : {}),
+    stops: prev.stops.map((p, i) => ({ ...p, name: stops[i].name, text: stops[i].text })),
   };
   const problems = L.validateCourse(course, LANGS);
   if (problems.length) throw new Error("validation: " + problems.slice(0, 5).join("; "));
@@ -582,6 +639,17 @@ async function main() {
   for (const z of zones) {
     const prevPath = path.join(DIR, `${z.id}.json`);
     const prevCourse = fs.existsSync(prevPath) ? JSON.parse(fs.readFileSync(prevPath, "utf8")) : null;
+    if (env("REWRITE") === "true") {
+      const old = prev.zones.find((p) => p.id === z.id);
+      if (!prevCourse || prevCourse.generator?.style === STYLE) { if (old) index.zones.push(old); continue; }
+      try {
+        const c = await rewriteZone(z, prevCourse);
+        fs.writeFileSync(prevPath, JSON.stringify(c) + "\n");
+        index.zones.push({ ...old, stops: c.stops.length, updated: c.updated, ai: true });
+        built++; log(`  ✓ ${c.stops.length} stops rewritten`);
+      } catch (e) { log(`  ✗ ${z.id}: ${e.message} — keeping the old text`); if (old) index.zones.push(old); }
+      continue;
+    }
     if (!force && prevCourse && !(await isDue(z, prevCourse))) {
       const old = prev.zones.find((p) => p.id === z.id);
       if (old) { index.zones.push(old); continue; }

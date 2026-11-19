@@ -9,6 +9,10 @@ on:
         description: "Only these zone ids (comma-separated, empty = all)"
         required: false
         default: ""
+      rewrite:
+        description: "Only rewrite the commentary of existing courses in the current story style (no place search)"
+        type: boolean
+        default: false
       rebuild:
         description: "Rebuild the named zones even if nothing is due (uncheck to run the monthly due-check)"
         type: boolean
@@ -53,6 +57,7 @@ jobs:
           AI_MODEL: ${{ vars.AI_MODEL }}
           ONLY_ZONES: ${{ github.event.inputs.zones }}
           REBUILD: ${{ github.event.inputs.rebuild }}
+          REWRITE: ${{ github.event.inputs.rewrite }}
         run: node pipeline/build-courses.mjs out
 
       - name: Publish to the data branch
