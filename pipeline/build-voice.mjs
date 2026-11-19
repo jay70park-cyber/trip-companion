@@ -62,6 +62,7 @@ async function main() {
   const files = {};
   let chars = 0, made = 0, kept = 0, capped = 0, fails = 0, stopped = false;
   const courses = fs.readdirSync(CDIR).filter((f) => f.endsWith(".json") && f !== "index.json");
+  const jobs = [];
   for (const f of courses) {
     const c = JSON.parse(fs.readFileSync(path.join(CDIR, f), "utf8"));
     for (const s of c.stops || []) {
@@ -71,34 +72,45 @@ async function main() {
         if (!text || !voices[l]) continue;
         const h = fnv(text);
         const old = prev.files[key];
-        const file = `${c.id}-${s.n}-${l}-${h}-${voices[l].name.split("-").pop().toLowerCase()}.mp3`;
         if (old && old.h === h && old.v === voices[l].name && fs.existsSync(path.join(VDIR, old.f))) { files[key] = old; kept++; continue; }
-        if (ONLY.length && !ONLY.includes(c.id)) { if (old) files[key] = old; continue; }
-        if (stopped || chars + text.length > MAX_CHARS) { capped++; if (old) files[key] = old; continue; }
-        try {
-          const bufs = [];
-          for (const part of chunks(text)) {
-            const r = await call(`${API}/text:synthesize`, { input: { text: part }, voice: voices[l], audioConfig: { audioEncoding: "MP3" } });
-            bufs.push(Buffer.from(r.audioContent, "base64"));
-          }
-          fs.writeFileSync(path.join(VDIR, file), Buffer.concat(bufs));
-          files[key] = { h, f: file, v: voices[l].name };
-          chars += text.length; made++; fails = 0;
-          if (made % 20 === 0) console.log(`  … ${made} recordings, ${chars} characters`);
-        } catch (e) {
-          console.log(`  ! ${key}: ${e.message}`); if (old) files[key] = old;
-          // e.g. the free trial ended or billing was turned off: stop asking, keep every recording made so far
-          if (++fails >= 5 && !stopped) { stopped = true; console.log("  ! Text-to-Speech keeps failing — stopping; existing recordings are kept and the app reads the rest with the phone's voice"); }
-        }
-        await sleep(120);
+        if (old) files[key] = old;   // replaced below once the new recording is made
+        if (ONLY.length && !ONLY.includes(c.id)) continue;
+        jobs.push({ key, text, h, l, file: `${c.id}-${s.n}-${l}-${h}-${voices[l].name.split("-").pop().toLowerCase()}.mp3` });
       }
     }
   }
+  console.log(`  ${jobs.length} recordings to make, ${kept} unchanged`);
+  // a run publishes what it has made before the job's time limit; the next run carries on from there
+  const deadline = Date.now() + (+(process.env.TIME_BUDGET_MIN || 40)) * 60000;
+  async function worker() {
+    while (jobs.length && !stopped && Date.now() < deadline) {
+      const j = jobs.shift();
+      if (chars + j.text.length > MAX_CHARS) { capped++; continue; }
+      chars += j.text.length;
+      try {
+        const bufs = [];
+        for (const part of chunks(j.text)) {
+          const r = await call(`${API}/text:synthesize`, { input: { text: part }, voice: voices[j.l], audioConfig: { audioEncoding: "MP3" } });
+          bufs.push(Buffer.from(r.audioContent, "base64"));
+        }
+        fs.writeFileSync(path.join(VDIR, j.file), Buffer.concat(bufs));
+        files[j.key] = { h: j.h, f: j.file, v: voices[j.l].name };
+        made++; fails = 0;
+        if (made % 25 === 0) console.log(`  … ${made} recordings, ${chars} characters`);
+      } catch (e) {
+        chars -= j.text.length;
+        console.log(`  ! ${j.key}: ${e.message}`);
+        if (++fails >= 5 && !stopped) { stopped = true; console.log("  ! Text-to-Speech keeps failing — stopping; existing recordings are kept and the app reads the rest with the phone's voice"); }
+      }
+    }
+  }
+  await Promise.all(Array.from({ length: 4 }, worker));
+  capped += jobs.length;
   // remove recordings that no stop uses any more
   const used = new Set(Object.values(files).map((x) => x.f));
   for (const f of fs.readdirSync(VDIR)) if (f.endsWith(".mp3") && !used.has(f)) fs.unlinkSync(path.join(VDIR, f));
   fs.writeFileSync(ixPath, JSON.stringify({ updated: new Date().toISOString().slice(0, 10), voice: VOICE, files }));
-  console.log(`Done: ${made} new recordings (${chars} characters sent), ${kept} unchanged${capped ? `, ${capped} left for the next run (MAX_CHARS)` : ""}.`);
+  console.log(`Done: ${made} new recordings (${chars} characters sent), ${kept} unchanged${capped ? `, ${capped} left for the next run` : ""}.`);
 }
 
 // Voice audition: the same stop read by several voices, saved as voice/samples/<voice>-<lang>.mp3
