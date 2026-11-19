@@ -13,6 +13,10 @@ on:
         description: "Only these course ids (comma separated); empty = all"
         required: false
         default: ""
+      sample:
+        description: "Audition only: voice names to try on one stop, e.g. Charon,Aoede,Kore"
+        required: false
+        default: ""
       voice:
         description: "Chirp 3: HD voice name, e.g. Charon, Aoede, Kore, Puck"
         required: false
@@ -42,6 +46,7 @@ jobs:
         env:
           GOOGLE_TTS_KEY: ${{ secrets.GOOGLE_TTS_KEY }}
           COURSES: ${{ github.event.inputs.courses }}
+          SAMPLE: ${{ github.event.inputs.sample }}
           VOICE_NAME: ${{ github.event.inputs.voice || vars.VOICE_NAME || 'Charon' }}
         run: node pipeline/build-voice.mjs out
       - name: Publish to the data branch

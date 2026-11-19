@@ -57,6 +57,7 @@ async function main() {
   fs.mkdirSync(VDIR, { recursive: true });
   const ixPath = path.join(VDIR, "index.json");
   const prev = fs.existsSync(ixPath) ? JSON.parse(fs.readFileSync(ixPath, "utf8")) : { files: {} };
+  if (process.env.SAMPLE) return samples();
   const voices = await pickVoices();
   const files = {};
   let chars = 0, made = 0, kept = 0, capped = 0;
@@ -94,6 +95,25 @@ async function main() {
   for (const f of fs.readdirSync(VDIR)) if (f.endsWith(".mp3") && !used.has(f)) fs.unlinkSync(path.join(VDIR, f));
   fs.writeFileSync(ixPath, JSON.stringify({ updated: new Date().toISOString().slice(0, 10), voice: VOICE, files }));
   console.log(`Done: ${made} new recordings (${chars} characters sent), ${kept} unchanged${capped ? `, ${capped} left for the next run (MAX_CHARS)` : ""}.`);
+}
+
+// Voice audition: the same stop read by several voices, saved as voice/samples/<voice>-<lang>.mp3
+async function samples() {
+  const all = (await call(`${API}/voices`)).voices || [];
+  const c = JSON.parse(fs.readFileSync(path.join(CDIR, "gojong.json"), "utf8"));
+  const s = c.stops[1];
+  const dir = path.join(VDIR, "samples");
+  fs.rmSync(dir, { recursive: true, force: true }); fs.mkdirSync(dir, { recursive: true });
+  for (const name of process.env.SAMPLE.split(",")) {
+    for (const [l, code] of [["ko", "ko-KR"], ["en", "en-US"]]) {
+      const v = all.find((x) => x.name === `${code}-Chirp3-HD-${name.trim()}`);
+      if (!v) { console.log(`  no ${code} ${name}`); continue; }
+      const text = spoken(s, l);
+      const r = await call(`${API}/text:synthesize`, { input: { text }, voice: { languageCode: code, name: v.name }, audioConfig: { audioEncoding: "MP3" } });
+      fs.writeFileSync(path.join(dir, `${name.trim()}-${l}.mp3`), Buffer.from(r.audioContent, "base64"));
+      console.log(`  ✓ ${v.name} (${v.ssmlGender})`);
+    }
+  }
 }
 
 main().catch((e) => { console.error(e); process.exitCode = 1; });
