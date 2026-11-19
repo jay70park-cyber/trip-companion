@@ -25,8 +25,9 @@ async function req(url, opts = {}) {
   }
 }
 
+// snap: false keeps the hand-given point (e.g. a gate whose name TMAP also uses for a bus stop)
 async function snap(s) {
-  if (!TMAP || !s.poi) return s;
+  if (!TMAP || !s.poi || s.snap === false) return s;
   try {
     const qs = new URLSearchParams({ version: "1", searchKeyword: s.poi, count: "5", reqCoordType: "WGS84GEO", resCoordType: "WGS84GEO", centerLat: String(s.lat), centerLon: String(s.lng), radius: "1" });
     const d = await req(`https://apis.openapi.sk.com/tmap/pois?${qs}`);
@@ -65,9 +66,10 @@ for (const f of fs.readdirSync(SRC).filter((x) => x.endsWith(".json"))) {
   const start = src.start;   // the start point is the first stop's gate, given by hand
   let path_ = [], walkM = 0, walkS = 0, prev = { lat: src.start.lat, lng: src.start.lng };
   for (const s of stops) {
-    const leg = await walk(prev, s);
+    // straight: true for a short path TMAP does not route (e.g. King Gojong's Road, open only in the daytime)
+    const leg = s.straight ? null : await walk(prev, s);
     if (leg && leg.coords.length) { path_.push(...leg.coords); walkM += leg.distance || 0; walkS += leg.time || 0; s.legM = leg.distance; }
-    else { const d = meters(prev, s); path_.push([prev.lat, prev.lng], [s.lat, s.lng]); walkM += d * 1.3; walkS += d * 1.3 / 1.2; s.legM = Math.round(d * 1.3); }
+    else { const k = s.straight ? 1.1 : 1.3, d = meters(prev, s) * k; path_.push([prev.lat, prev.lng], [s.lat, s.lng]); walkM += d; walkS += d / 1.2; s.legM = Math.round(d); }
     prev = s;
   }
   const course = {
