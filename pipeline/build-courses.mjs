@@ -354,7 +354,7 @@ function sourcesFor(s) {
   return parts.join("\n");
 }
 
-async function writeCommentary(z, stops, { minKeep = 4, context = null } = {}) {
+async function writeCommentary(z, stops, { minKeep = 4, context = null, vetted = false } = {}) {
   const block = stops.map((s) => `### STOP ${s.n}\n${sourcesFor(s)}`).join("\n\n");
   const ctx = context?.text ? `\n\nAREA HISTORY (sourced notes for the whole walk; use where they fit a stop):\n${context.text}` : "";
   const gen = await ai(
@@ -377,7 +377,8 @@ Submit the intro and one entry per stop.
 ${block}${ctx}`, 9000, { schema: SCHEMA.draft });
 
   const bad = new Set(gen.stops.filter((g) => g.consistent === false || g.is_sight === false || (g.duplicate_of && g.duplicate_of !== g.n)).map((g) => g.n));
-  if (bad.size) {
+  if (vetted && bad.size) log(`  · kept ${bad.size} stop(s) the model questioned — they were already checked when the course was built`);
+  if (!vetted && bad.size) {
     log(`  · dropped ${bad.size} stop(s): ${gen.stops.filter((g) => bad.has(g.n)).map((g) => `${g.name_en} (${g.consistent === false ? "conflicting" : g.is_sight === false ? "not a sight" : "duplicate"})`).join(", ")}`);
     const keep = stops.filter((s) => !bad.has(s.n));
     if (keep.length < minKeep) throw new Error("too few stops after dropping unsuitable ones");
@@ -587,7 +588,7 @@ async function rewriteZone(z, prev) {
   log(`\n▶ ${z.id}: rewriting the commentary as a story`);
   const context = await areaContext(z, prev);
   const stops = prev.stops.map((p) => ({ ...p, nameKo: p.name?.ko, nameEn: p.name?.en, prevText: p.text?.en || "" }));
-  const intro = await writeCommentary(z, stops, { minKeep: 4, context });
+  const intro = await writeCommentary(z, stops, { minKeep: 4, context, vetted: true });
   if (!intro) throw new Error("rewrite failed");
   if (stops.length !== prev.stops.length) throw new Error("a stop lost its text while rewriting");
   const course = {
