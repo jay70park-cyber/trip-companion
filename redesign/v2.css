@@ -97,3 +97,10 @@ body.player-on .sheet #guide{padding-bottom:96px}
 .tipwrap[hidden]{display:none!important}
 .tipbox{max-width:520px;width:100%;background:var(--surface);color:var(--ink);border-radius:18px;padding:18px;box-shadow:0 12px 36px rgba(0,0,0,.3)}
 .tipbox h3{font-size:16px;margin-bottom:8px}.tipbox p{font-size:14px;margin:0 0 10px}
+
+/* display-mode notices */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+.modebanner{display:flex;gap:10px;align-items:center;padding:12px 14px;border-radius:14px;background:var(--gold);color:var(--gold-ink);font-size:14px;font-weight:600;box-shadow:var(--shadow)}
+.modebanner span{flex:1}
+.modebanner button{flex:none;background:var(--gold-ink);color:var(--gold);border:0}
+.modediag{font:12px var(--mono);color:var(--muted);padding:6px 10px;border:1px dashed var(--line);border-radius:10px}

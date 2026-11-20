@@ -28,6 +28,7 @@
 | R7 | Sheet behaviour | 3 heights (peek / half / full). Drag the handle or the content (when scrolled to the top). Fling speed is recognised. Drag all the way down to close. Android **back button closes the sheet**. Close button ✕ at top right. | v2.js |
 | R7-1 | Route above the sheet | The route is fitted into the map area **above** the sheet. Your position is included only if it is within 15 km (prevents zooming out to the whole region). | v2.js |
 | R8 | Developer card | The API key card is shown only with `?dev=1`. | v2.js, v2.css |
+| M1 | Display mode check | Detects the Play app (TWA) / installed app (PWA) / mobile browser / **desktop-site mode** / in-app browser such as KakaoTalk. Desktop-site mode → a "turn off Desktop site" notice; in-app browser → an "open in Chrome" notice (once each). With `?dev=1` the mode, viewport and screen width are shown at the top. | v2.js, v2.css |
 | D1 | Cards | Corner radius 16px, soft shadow. | v2.css |
 | D2 | Multilingual fonts | `html[lang]` font stacks: ja → Noto Sans JP, zh-Hans → Noto Sans SC, zh-Hant → Noto Sans TC. | v2.css, build |
 | D3 | Outdoor readability | `--muted` light #6f6046 → #54472f, dark #b1a58d → #d0c5ae (more contrast). | v2.css |
@@ -43,6 +44,7 @@
 ## History
 - 2026-11-20 v2.0: first sample (single copied file).
 - 2026-11-20 v2.1: restructured as separate overlay files. Sheet drag area enlarged (content drag added), back button closes the sheet, route fitted above the sheet, close button moved to the top right (it overlapped the zoom buttons).
+- 2026-11-20 v2.4: display mode check (M1) — reported "text looks small, like a PC" → likely the browser's "Desktop site" setting is on; detect it and show a notice.
 - 2026-11-20: test page renamed `next.html` → `1120.html` (date naming rule).
 - 2026-11-20 v2.3: stage 2 — mini player + Media Session, sunset gauge + 119, map-app tip (P1, P2, H1, H2, T1). Checked in emulation: gauge, 119 button, player (recording plays, subtitles, back, stop), tip all OK; 0 errors.
 - 2026-11-20 v2.2: on a real phone the map did not show with NAVER Map. NAVER writes `position:relative` inline on the map container, so with `height:auto` the height became 0. Fixed with `!important` absolute positioning at 100% width and height, plus one more map resize after it loads.

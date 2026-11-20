@@ -347,6 +347,34 @@ document.addEventListener("click",e=>{
 $("tipGo").onclick=()=>{store.set("handoffTip","1");tip.hidden=true;if(tipTarget)tipTarget.click();tipTarget=null;};
 $("tipNo").onclick=()=>{store.set("handoffTip","1");tip.hidden=true;tipTarget=null;};
 
+/* ---------- M. display mode check (app / browser / desktop-site / in-app browser) ---------- */
+const UI4={
+ en:{desk:"Text looks small because “Desktop site” is on in your browser. Turn it off: menu ⋮ → untick “Desktop site”.",kakao:"You are in the KakaoTalk browser. For location and maps, open in Chrome: menu → “Open in other browser”.",ok:"OK"},
+ ko:{desk:"브라우저의 ‘PC 버전 사이트’가 켜져 있어 글자가 작게 보입니다. 메뉴 ⋮ → ‘PC 버전 사이트’ 체크를 해제하세요.",kakao:"카카오톡 안의 브라우저입니다. 위치와 지도를 제대로 쓰려면 메뉴 → ‘다른 브라우저로 열기’로 크롬에서 여세요.",ok:"확인"},
+ ja:{desk:"ブラウザの「PC版サイト」がオンのため文字が小さく表示されています。メニュー ⋮ →「PC版サイト」のチェックを外してください。",kakao:"カカオトーク内のブラウザです。位置情報と地図はChromeで開いてください：メニュー →「他のブラウザで開く」。",ok:"OK"},
+ zhs:{desk:"浏览器开启了“桌面版网站”，所以文字显得很小。请在菜单 ⋮ 中取消勾选“桌面版网站”。",kakao:"您正在使用KakaoTalk内置浏览器。为正常使用定位和地图，请通过菜单 →“用其他浏览器打开”在Chrome中打开。",ok:"确定"},
+ zht:{desk:"瀏覽器開啟了「電腦版網站」，所以文字顯得很小。請在選單 ⋮ 中取消勾選「電腦版網站」。",kakao:"您正在使用KakaoTalk內建瀏覽器。為正常使用定位和地圖，請透過選單 →「用其他瀏覽器開啟」在Chrome中開啟。",ok:"確定"}};
+const u4=k=>(UI4[lang]||UI4.en)[k];
+function displayMode(){
+  const ua=navigator.userAgent||"",touch=(navigator.maxTouchPoints||0)>0;
+  const standalone=matchMedia("(display-mode: standalone)").matches||matchMedia("(display-mode: fullscreen)").matches||navigator.standalone===true;
+  const twa=document.referrer.startsWith("android-app://");
+  const desktopSite=touch&&!/Mobile|iPhone|iPad/.test(ua)&&(innerWidth>screen.width*1.25||/X11; Linux x86_64|Macintosh/.test(ua));
+  const inApp=/KAKAOTALK|NAVER\(inapp|Instagram|FBAN|FBAV|Line\//i.test(ua);
+  const mode=twa?"Play app (TWA)":standalone?"installed app (PWA)":inApp?"in-app browser":desktopSite?"browser · desktop site ON":"browser (mobile)";
+  return {mode,twa,standalone,desktopSite,inApp,width:innerWidth,screen:screen.width,dpr:devicePixelRatio,ua};
+}
+const dm=displayMode();window.__v2mode=dm;
+function banner(msg,key){if(store.get(key)==="1")return;
+  const b=document.createElement("div");b.className="modebanner";b.append(el("span",null,msg));
+  const ok=el("button","small",u4("ok"));ok.type="button";ok.onclick=()=>{store.set(key,"1");b.remove();};b.append(ok);
+  document.querySelector("main").prepend(b);}
+if(dm.desktopSite)banner(u4("desk"),"tipDesk");
+else if(dm.inApp)banner(u4("kakao"),"tipInApp");
+if(new URLSearchParams(location.search).get("dev")==="1"){
+  const d=el("div","modediag","mode: "+dm.mode+" · viewport "+dm.width+"px / screen "+dm.screen+"px · dpr "+dm.dpr);
+  document.querySelector("main").prepend(d);}
+
 /* ---------- R8. developer card only with ?dev=1 ---------- */
 if(new URLSearchParams(location.search).get("dev")==="1")document.body.classList.add("dev");
 
