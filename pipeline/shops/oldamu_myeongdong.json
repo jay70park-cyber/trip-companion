@@ -4,7 +4,9 @@
  "preview": true,
  "checked": "2026-11-20",
  "minutesPerStop": 30,
- "areas": ["myeongdong"],
+ "areas": [
+  "myeongdong"
+ ],
  "name": {
   "en": "Olive Young · Daiso · Musinsa: Myeong-dong Shopping Walk",
   "ko": "올다무 쇼핑 코스: 명동",
@@ -37,9 +39,21 @@
    "poi": "다이소 명동역점",
    "lat": 37.5609,
    "lng": 126.9863,
-   "hours": "",
-   "tag": { "en": "Daiso · everyday goods", "ko": "다이소 · 생활용품", "ja": "ダイソー・生活雑貨", "zhs": "大创 · 生活用品", "zht": "大創 · 生活用品" },
-   "name": { "en": "Daiso Myeong-dong Station", "ko": "다이소 명동역점", "ja": "ダイソー 明洞駅店", "zhs": "大创 明洞站店", "zht": "大創 明洞站店" },
+   "hours": "~22:00",
+   "tag": {
+    "en": "Daiso · everyday goods",
+    "ko": "다이소 · 생활용품",
+    "ja": "ダイソー・生活雑貨",
+    "zhs": "大创 · 生活用品",
+    "zht": "大創 · 生活用品"
+   },
+   "name": {
+    "en": "Daiso Myeong-dong Station",
+    "ko": "다이소 명동역점",
+    "ja": "ダイソー 明洞駅店",
+    "zhs": "大创 明洞站店",
+    "zht": "大創 明洞站店"
+   },
    "text": {
     "en": "A whole 12-storey building of Daiso, one of the biggest Daiso stores in Seoul (about 1,650 m²). Each floor has its own category — beauty, stationery, snacks and food, kitchen, home and more — so check the floor guide by the lift first. It is a tax-refund shop. Good for cheap souvenirs, snacks to take home and travel bits you forgot to pack.",
     "ko": "건물 한 채 12개 층을 모두 쓰는 다이소로, 서울에서 손꼽히는 대형 매장입니다(약 500평). 뷰티, 문구, 과자·식품, 주방, 인테리어 등 층마다 품목이 나뉘어 있으니 엘리베이터 옆 층별 안내를 먼저 보세요. 택스리펀 매장입니다. 저렴한 기념품, 가져갈 과자, 깜빡한 여행용품을 사기 좋습니다.",
@@ -48,9 +62,18 @@
     "zht": "整棟 12 層樓都是大創，是首爾數一數二的大型門市（約 1,650 平方公尺）。美妝、文具、零食食品、廚房、居家等按樓層分區，先看電梯旁的樓層指南。這是一家退稅商店。適合買便宜的紀念品、帶回家的零食和忘帶的旅行用品。"
    },
    "sources": [
-    { "label": "Bizwatch — 12-storey Daiso Myeong-dong Station reopens", "url": "https://news.bizwatch.co.kr/article/consumer/2023/03/31/0051" },
-    { "label": "Korea Trip Tips — Daiso Myeong-dong Station [Tax Refund Shop]", "url": "https://www.ktriptips.com/eng/shopping/2959641" },
-    { "label": "Creatrip — Daiso store list (address)", "url": "https://creatrip.com/en/blog/13211" }
+    {
+     "label": "Bizwatch — 12-storey Daiso Myeong-dong Station reopens",
+     "url": "https://news.bizwatch.co.kr/article/consumer/2023/03/31/0051"
+    },
+    {
+     "label": "Korea Trip Tips — Daiso Myeong-dong Station [Tax Refund Shop]",
+     "url": "https://www.ktriptips.com/eng/shopping/2959641"
+    },
+    {
+     "label": "Creatrip — Daiso store list (address)",
+     "url": "https://creatrip.com/en/blog/13211"
+    }
    ]
   },
   {
@@ -59,8 +82,20 @@
    "lat": 37.5609,
    "lng": 126.9863,
    "hours": "10:00–22:30",
-   "tag": { "en": "Olive Young · beauty", "ko": "올리브영 · 뷰티", "ja": "オリーブヤング・コスメ", "zhs": "Olive Young · 美妆", "zht": "Olive Young · 美妝" },
-   "name": { "en": "Olive Young Central Myeong-dong Town", "ko": "올리브영 센트럴 명동 타운", "ja": "オリーブヤング セントラル明洞タウン", "zhs": "Olive Young 中央明洞 Town 店", "zht": "Olive Young 中央明洞 Town 店" },
+   "tag": {
+    "en": "Olive Young · beauty",
+    "ko": "올리브영 · 뷰티",
+    "ja": "オリーブヤング・コスメ",
+    "zhs": "Olive Young · 美妆",
+    "zht": "Olive Young · 美妝"
+   },
+   "name": {
+    "en": "Olive Young Central Myeong-dong Town",
+    "ko": "올리브영 센트럴 명동 타운",
+    "ja": "オリーブヤング セントラル明洞タウン",
+    "zhs": "Olive Young 中央明洞 Town 店",
+    "zht": "Olive Young 中央明洞 Town 店"
+   },
    "text": {
     "en": "Opened in March 2026 on three floors of M Plaza, this is Olive Young's second-largest store in Korea, with about 1,000 brands and 15,000 products — more than any other Olive Young. Head for the Mask Library, a whole section of sheet masks and other masks sorted by skin type. Staff who speak English, Chinese or Japanese wear a flag badge. Open 10:00–22:30.",
     "ko": "2026년 3월 엠플라자 3개 층에 문을 연 매장으로, 국내 올리브영 중 두 번째로 큽니다. 약 1,000개 브랜드, 1만 5천 개 상품으로 올리브영 매장 중 상품이 가장 많습니다. 피부 타입별로 마스크팩을 모아 둔 '마스크 라이브러리'를 꼭 들러 보세요. 영어·중국어·일본어가 가능한 직원은 국기 배지를 달고 있습니다. 영업 10:00~22:30.",
@@ -69,8 +104,14 @@
     "zht": "2026 年 3 月在 M Plaza 的三層樓開幕，是韓國第二大的 Olive Young，約有 1,000 個品牌、15,000 件商品，是商品最多的 Olive Young。一定要去按膚質分類的「面膜圖書館」看看。會說英語、中文或日語的店員佩戴國旗徽章。營業時間 10:00–22:30。"
    },
    "sources": [
-    { "label": "MTN — Olive Young opens Central Myeong-dong Town", "url": "https://news.mtn.co.kr/news-detail/2026032617152097290" },
-    { "label": "KoreaTodo — Olive Young stores in Myeong-dong (address, hours)", "url": "https://www.koreatodo.com/olive-young-myeongdong" }
+    {
+     "label": "MTN — Olive Young opens Central Myeong-dong Town",
+     "url": "https://news.mtn.co.kr/news-detail/2026032617152097290"
+    },
+    {
+     "label": "KoreaTodo — Olive Young stores in Myeong-dong (address, hours)",
+     "url": "https://www.koreatodo.com/olive-young-myeongdong"
+    }
    ]
   },
   {
@@ -78,9 +119,21 @@
    "poi": "무신사 스탠다드 명동중앙점",
    "lat": 37.5609,
    "lng": 126.9863,
-   "hours": "",
-   "tag": { "en": "Musinsa · fashion", "ko": "무신사 · 패션", "ja": "ムシンサ・ファッション", "zhs": "MUSINSA · 时装", "zht": "MUSINSA · 時裝" },
-   "name": { "en": "Musinsa Standard Myeong-dong Central", "ko": "무신사 스탠다드 명동중앙점", "ja": "ムシンサスタンダード 明洞中央店", "zhs": "MUSINSA STANDARD 明洞中央店", "zht": "MUSINSA STANDARD 明洞中央店" },
+   "hours": "~22:00",
+   "tag": {
+    "en": "Musinsa · fashion",
+    "ko": "무신사 · 패션",
+    "ja": "ムシンサ・ファッション",
+    "zhs": "MUSINSA · 时装",
+    "zht": "MUSINSA · 時裝"
+   },
+   "name": {
+    "en": "Musinsa Standard Myeong-dong Central",
+    "ko": "무신사 스탠다드 명동중앙점",
+    "ja": "ムシンサスタンダード 明洞中央店",
+    "zhs": "MUSINSA STANDARD 明洞中央店",
+    "zht": "MUSINSA STANDARD 明洞中央店"
+   },
    "text": {
     "en": "Musinsa Standard is Musinsa's own label of simple, well-priced basics. This four-floor store (about 1,650 m²) opened in September 2026 with men's and women's clothing plus home and beauty. Its custom T-shirt service is a fun souvenir: pick Seoul-themed graphics and stamps — the Han River, DDP, Myeong-dong and more — and make your own shirt.",
     "ko": "무신사 스탠다드는 무신사의 자체 브랜드로, 기본에 충실한 옷을 합리적인 가격에 팝니다. 2026년 9월에 문을 연 1~4층, 약 500평 매장으로 남녀 의류와 홈·뷰티 상품까지 있습니다. 한강, DDP, 명동 등 서울을 담은 그래픽과 스탬프를 골라 나만의 티셔츠를 만드는 커스텀 서비스는 기념품으로 좋습니다.",
@@ -89,9 +142,18 @@
     "zht": "MUSINSA STANDARD 是 MUSINSA 的自有品牌，主打簡約實惠的基本款。這家門市於 2026 年 9 月開幕，共 4 層、約 1,650 平方公尺，有男女服裝以及居家和美妝商品。可以挑選漢江、DDP、明洞等首爾主題圖案和印章，訂製屬於自己的 T 恤，很適合當紀念品。"
    },
    "sources": [
-    { "label": "Segye — Musinsa Standard Myeong-dong Central opens", "url": "https://www.segye.com/newsView/20260908504500" },
-    { "label": "Seoul Media Hub — custom Seoul T-shirt at Myeong-dong Central", "url": "https://mediahub.seoul.go.kr/archives/2019325" },
-    { "label": "Albamon — store address (명동8길 40)", "url": "https://www.albamon.com/jobs/detail/118149689" }
+    {
+     "label": "Segye — Musinsa Standard Myeong-dong Central opens",
+     "url": "https://www.segye.com/newsView/20260908504500"
+    },
+    {
+     "label": "Seoul Media Hub — custom Seoul T-shirt at Myeong-dong Central",
+     "url": "https://mediahub.seoul.go.kr/archives/2019325"
+    },
+    {
+     "label": "Albamon — store address (명동8길 40)",
+     "url": "https://www.albamon.com/jobs/detail/118149689"
+    }
    ]
   }
  ]
