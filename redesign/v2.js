@@ -199,6 +199,154 @@ addEventListener("keydown",e=>{if(e.key==="Escape"&&!sheet.hidden)closeSheet();}
   guideEl.addEventListener("touchend",end);guideEl.addEventListener("touchcancel",end);
 })();
 
+/* ---------- S. strings for stage 2 ---------- */
+const UI3={
+ en:{play:"Play",pause:"Pause",back15:"Back 15 seconds",cc:"Subtitles",close:"Stop",stop:n=>"Stop "+n,
+  safe:"Safe",caution:"Caution",danger:"Danger",now:"Now",back:"Back down",sunset:"Sunset",dark:"The sun has already set. Do not start a hike now.",
+  gaugeSafe:"You should be down well before sunset.",gaugeCaution:"Tight: less than an hour of daylight to spare. Keep a steady pace and set a turn-back time.",gaugeDanger:"You would still be on the mountain after sunset. Start earlier or choose a shorter route.",
+  sos:"119 Emergency (copies my location)",sosNote:"Copies your GPS coordinates, then calls 119 (fire & rescue). Read out the coordinates and the number on the nearest yellow trail signpost (National Point Number).",copied:"Location copied",noFix:"Location not available — describe where you are.",
+  tipTitle:"Before you open the map app",tipNaver:"NAVER Map: works best in the app. If it isn't installed, get “NAVER Map” from the Play Store / App Store first. To use it in English, Japanese or Chinese: open the app → Settings → Language.",tipKakao:"Kakao Map: opens in the app if installed, otherwise in the web browser. It shows mostly Korean — the place name from K-Trip helps you check you have the right place.",tipGo:"Open",tipCancel:"Cancel"},
+ ko:{play:"재생",pause:"일시정지",back15:"15초 뒤로",cc:"자막",close:"정지",stop:n=>n+"번 지점",
+  safe:"안전",caution:"주의",danger:"위험",now:"지금",back:"예상 하산",sunset:"일몰",dark:"이미 해가 졌습니다. 지금은 산행을 시작하지 마세요.",
+  gaugeSafe:"일몰 전에 여유 있게 하산할 수 있습니다.",gaugeCaution:"빠듯합니다: 일몰까지 여유가 1시간이 안 됩니다. 페이스를 유지하고 되돌아올 시각을 정하세요.",gaugeDanger:"일몰 뒤에도 산에 있게 됩니다. 일찍 출발하거나 짧은 코스를 고르세요.",
+  sos:"119 긴급 신고 (내 위치 복사)",sosNote:"현재 GPS 좌표를 복사한 뒤 119(소방·구조)로 전화를 겁니다. 좌표와 가장 가까운 노란색 등산로 표지판의 국가지점번호를 알려 주세요.",copied:"위치를 복사했습니다",noFix:"위치를 확인할 수 없습니다 — 주변 지형지물을 설명하세요.",
+  tipTitle:"지도 앱을 열기 전에",tipNaver:"네이버지도: 앱에서 가장 잘 동작합니다. 설치되어 있지 않으면 Play 스토어/App Store에서 ‘네이버지도’를 먼저 설치하세요. 영어·일본어·중국어로 보려면 앱 → 설정 → 언어에서 바꿀 수 있습니다.",tipKakao:"카카오맵: 앱이 있으면 앱으로, 없으면 웹 브라우저로 열립니다. 주로 한국어로 표시되니, K-Trip에 보이는 장소 이름으로 맞는 곳인지 확인하세요.",tipGo:"열기",tipCancel:"취소"},
+ ja:{play:"再生",pause:"一時停止",back15:"15秒戻る",cc:"字幕",close:"停止",stop:n=>"スポット"+n,
+  safe:"安全",caution:"注意",danger:"危険",now:"今",back:"下山予定",sunset:"日の入り",dark:"すでに日が沈みました。今から登山を始めないでください。",
+  gaugeSafe:"日の入り前に余裕を持って下山できます。",gaugeCaution:"ぎりぎりです。日の入りまでの余裕が1時間未満です。ペースを保ち、引き返す時刻を決めてください。",gaugeDanger:"日の入り後も山にいることになります。早めに出発するか、短いコースを選んでください。",
+  sos:"119 緊急通報（現在地をコピー）",sosNote:"現在のGPS座標をコピーしてから119（消防・救助）に電話します。座標と、近くの黄色い登山道標識の「国家地点番号」を伝えてください。",copied:"現在地をコピーしました",noFix:"位置を取得できません。周りの目印を伝えてください。",
+  tipTitle:"地図アプリを開く前に",tipNaver:"NAVER Map：アプリで使うのが一番です。未インストールなら Play ストア / App Store で「NAVER Map」を先に入れてください。日本語・英語・中国語にするには、アプリ → 設定 → 言語。",tipKakao:"Kakao Map：アプリがあればアプリで、なければブラウザで開きます。表示は主に韓国語なので、K-Trip の場所名で確認してください。",tipGo:"開く",tipCancel:"キャンセル"},
+ zhs:{play:"播放",pause:"暂停",back15:"后退15秒",cc:"字幕",close:"停止",stop:n=>"第"+n+"站",
+  safe:"安全",caution:"注意",danger:"危险",now:"现在",back:"预计下山",sunset:"日落",dark:"太阳已经落山，现在不要开始登山。",
+  gaugeSafe:"可以在日落前从容下山。",gaugeCaution:"时间紧张：距日落不到1小时余量。请保持节奏并定好折返时间。",gaugeDanger:"日落后您仍会在山上。请早点出发或选择较短路线。",
+  sos:"119 紧急求救（复制我的位置）",sosNote:"先复制当前GPS坐标，再拨打119（消防·救援）。请报出坐标和附近黄色登山路标上的“国家地点编号”。",copied:"已复制位置",noFix:"无法获取位置，请描述周围的地标。",
+  tipTitle:"打开地图应用前",tipNaver:"NAVER Map：在应用中使用效果最好。如未安装，请先在 Play 商店 / App Store 安装“NAVER Map”。切换为中文、英文或日文：应用 → 设置 → 语言。",tipKakao:"Kakao Map：已安装则在应用中打开，否则在浏览器中打开。界面以韩文为主，请用 K-Trip 中的地点名称核对。",tipGo:"打开",tipCancel:"取消"},
+ zht:{play:"播放",pause:"暫停",back15:"倒退15秒",cc:"字幕",close:"停止",stop:n=>"第"+n+"站",
+  safe:"安全",caution:"注意",danger:"危險",now:"現在",back:"預計下山",sunset:"日落",dark:"太陽已經下山，現在不要開始登山。",
+  gaugeSafe:"可以在日落前從容下山。",gaugeCaution:"時間緊湊：距日落不到1小時餘裕。請保持節奏並訂好折返時間。",gaugeDanger:"日落後您仍會在山上。請提早出發或選擇較短路線。",
+  sos:"119 緊急求救（複製我的位置）",sosNote:"先複製目前GPS座標，再撥打119（消防・救援）。請報出座標和附近黃色登山路標上的「國家地點編號」。",copied:"已複製位置",noFix:"無法取得位置，請描述周圍的地標。",
+  tipTitle:"開啟地圖App前",tipNaver:"NAVER Map：在App中使用效果最好。如未安裝，請先在 Play 商店 / App Store 安裝「NAVER Map」。切換為中文、英文或日文：App → 設定 → 語言。",tipKakao:"Kakao Map：已安裝則在App中開啟，否則在瀏覽器中開啟。介面以韓文為主，請用 K-Trip 中的地點名稱核對。",tipGo:"開啟",tipCancel:"取消"}};
+const u3=k=>(UI3[lang]||UI3.en)[k];
+const IC={play:'<path d="M8 5.5v13l10.5-6.5z"/>',pause:'<path d="M8 5.5v13M16 5.5v13"/>',
+  back15:'<path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3"/><path d="M4.5 4.5v3.5H8"/><text x="12" y="15.2" text-anchor="middle" font-size="7" font-weight="700" fill="currentColor" stroke="none">15</text>',
+  cc:'<rect x="3.5" y="6" width="17" height="12" rx="2.5"/><path d="M10.5 10.3a2 2 0 1 0 0 3.4M16.5 10.3a2 2 0 1 0 0 3.4"/>',
+  x:'<path d="M6 6l12 12M18 6L6 18"/>',sos:'<path d="M12 3.5l9 16H3z"/><path d="M12 10v4.5M12 17.2v.3"/>'};
+const ic=k=>'<svg viewBox="0 0 24 24" aria-hidden="true">'+IC[k]+'</svg>';
+
+/* ---------- P. floating audio mini player + lock-screen controls (Media Session) ---------- */
+const player=document.createElement("div");player.className="miniplayer";player.id="miniplayer";player.hidden=true;
+player.innerHTML='<div class="mp-n" id="mpN"></div><div class="mp-txt"><div class="mp-t" id="mpT"></div><div class="mp-sub" id="mpSub" hidden></div></div>'+
+  '<button type="button" class="mp-b" id="mpBack">'+ic("back15")+'</button><button type="button" class="mp-b mp-main" id="mpPlay">'+ic("pause")+'</button>'+
+  '<button type="button" class="mp-b" id="mpCC" aria-pressed="false">'+ic("cc")+'</button><button type="button" class="mp-b" id="mpX">'+ic("x")+'</button>';
+document.body.append(player);
+let mp={s:null,btn:null,lines:[],idx:0,ttsU:null,ccOn:store.get("cc")==="1"};
+// remember which sentence the phone's voice is reading (for subtitles and "back 15 s")
+if("speechSynthesis" in window){const _speak=speechSynthesis.speak.bind(speechSynthesis);
+  speechSynthesis.speak=function(u){mp.ttsU=u;const i=mp.lines.indexOf(u.text);if(i>=0)mp.idx=i;updateSub();return _speak(u);};}
+const isRec=()=>!!(narr&&mp.s);
+function playing(){if(narr)return !narr.paused;try{return speechSynthesis.speaking&&!speechSynthesis.paused;}catch(e){return false;}}
+function updateSub(){const sub=$("mpSub");sub.hidden=!mp.ccOn;if(!mp.ccOn||!mp.s)return;
+  let i=mp.idx;
+  if(narr&&narr.duration>0){ // recorded narration: estimate the sentence from the playback position
+    const tot=mp.lines.reduce((a,x)=>a+x.length,0),at=narr.currentTime/narr.duration*tot;let acc=0;i=0;
+    for(;i<mp.lines.length-1;i++){acc+=mp.lines[i].length;if(acc>at)break;}}
+  sub.textContent=mp.lines[i]||"";}
+function updatePlayer(){
+  if(!mp.s)return;
+  if(!speakingBtn&&!narr){hidePlayer();return;}
+  const on=playing();$("mpPlay").innerHTML=ic(on?"pause":"play");$("mpPlay").setAttribute("aria-label",u3(on?"pause":"play"));
+  $("mpCC").setAttribute("aria-pressed",String(mp.ccOn));updateSub();
+  if("mediaSession" in navigator)try{navigator.mediaSession.playbackState=on?"playing":"paused";}catch(e){}
+}
+function showPlayer(s,btn){
+  mp.s=s;mp.btn=btn;mp.idx=0;mp.lines=[L10(s.name)+"."].concat(sentences(L10(s.text)));
+  $("mpN").textContent=s.n?s.n:"♪";$("mpT").textContent=L10(s.name);
+  for(const [id,k] of [["mpBack","back15"],["mpCC","cc"],["mpX","close"]])$(id).setAttribute("aria-label",u3(k));
+  player.hidden=false;document.body.classList.add("player-on");updatePlayer();
+  if("mediaSession" in navigator){try{
+    navigator.mediaSession.metadata=new MediaMetadata({title:L10(s.name),artist:"K-Trip Companion",album:(current&&current.title)||"",
+      artwork:[{src:"icons/icon-192.png",sizes:"192x192",type:"image/png"},{src:"icons/icon-512.png",sizes:"512x512",type:"image/png"}]});
+    navigator.mediaSession.setActionHandler("play",()=>togglePlay(true));
+    navigator.mediaSession.setActionHandler("pause",()=>togglePlay(false));
+    navigator.mediaSession.setActionHandler("seekbackward",()=>back15());
+    navigator.mediaSession.setActionHandler("stop",()=>stopSpeaking());
+  }catch(e){}}
+}
+function hidePlayer(){mp.s=null;player.hidden=true;document.body.classList.remove("player-on");
+  if("mediaSession" in navigator)try{navigator.mediaSession.playbackState="none";navigator.mediaSession.metadata=null;}catch(e){}}
+function togglePlay(want){const on=playing();if(want===undefined)want=!on;
+  if(narr){want?narr.play().catch(()=>{}):narr.pause();}
+  else try{want?speechSynthesis.resume():speechSynthesis.pause();}catch(e){}
+  setTimeout(updatePlayer,60);}
+function back15(){
+  if(narr){narr.currentTime=Math.max(0,narr.currentTime-15);updatePlayer();return;}
+  // the phone's voice cannot seek: restart about two sentences (≈15 s) earlier
+  if(!mp.s||!speakingBtn)return;const btn=speakingBtn,from=Math.max(0,mp.idx-2),rest=mp.lines.slice(from);
+  if(mp.ttsU){mp.ttsU.onend=null;mp.ttsU.onerror=null;}speakQ=[];try{speechSynthesis.cancel();}catch(e){}
+  const first=rest.shift()||"";const s2={name:{[lang]:first.replace(/[.。．]$/,"")},text:{[lang]:rest.join(" ")}};
+  const done=()=>{if(speakingBtn===btn){btn.textContent=t("listen");speakingBtn=null;}narr=null;};
+  setTimeout(()=>{speakingBtn=btn;deviceSpeak(s2,btn,done);mp.idx=from;updatePlayer();},120);
+}
+$("mpPlay").onclick=()=>togglePlay();$("mpBack").onclick=back15;$("mpX").onclick=()=>{stopSpeaking();hidePlayer();};
+$("mpCC").onclick=()=>{mp.ccOn=!mp.ccOn;store.set("cc",mp.ccOn?"1":"0");updatePlayer();};
+const _toggleSpeak=toggleSpeak;
+toggleSpeak=function(s,btn){_toggleSpeak.apply(this,arguments);if(speakingBtn===btn)showPlayer(s,btn);else hidePlayer();};
+setInterval(()=>{if(mp.s)updatePlayer();},400);
+
+/* ---------- H. hiking safety: sunset gauge + one-touch 119 ---------- */
+function gauge(m){
+  const now=new Date(),ss=sunsetAt(m.trailhead.lat,m.trailhead.lng),need=(m.upMin*1.8+30)*6e4,ret=new Date(now.getTime()+need);
+  const box=el("div","gauge");
+  if(now>=ss&&now.getHours()>=12){box.classList.add("danger");box.append(el("div","g-head",u3("danger")+" · "+u3("dark")));return box;}
+  const level=ret>ss?"danger":ret>new Date(ss.getTime()-36e5)?"caution":"safe";
+  box.classList.add(level);
+  const end=new Date(Math.max(ss.getTime(),ret.getTime())+30*6e4),span=end-now,pct=d=>Math.max(0,Math.min(100,(d-now)/span*100));
+  const head=el("div","g-head");head.append(el("span","g-chip",u3(level)),document.createTextNode(" "+u3(level==="safe"?"gaugeSafe":level==="caution"?"gaugeCaution":"gaugeDanger")));
+  const bar=el("div","g-bar");
+  const cut1=pct(new Date(ss.getTime()-36e5)),cut2=pct(ss);
+  bar.style.setProperty("--c1",cut1+"%");bar.style.setProperty("--c2",cut2+"%");
+  const mk=(cls,p,label)=>{const x=el("div","g-mk "+cls);x.style.left=p+"%";x.append(el("span",null,label));return x;};
+  bar.append(mk("g-ret",pct(ret),u3("back")+" "+hhmm(ret)),mk("g-ss",cut2,u3("sunset")+" "+hhmm(ss)));
+  const axis=el("div","g-axis");axis.append(el("span",null,u3("now")+" "+hhmm(now)),el("span",null,hhmm(end)));
+  box.append(head,bar,axis);return box;
+}
+function sosBlock(m){
+  const wrap=el("div","sos");
+  const b=el("a","sosbtn");b.href="tel:119";b.innerHTML=ic("sos");b.append(document.createTextNode(u3("sos")));
+  const out=el("div","meta sos-out");
+  b.addEventListener("click",()=>{ // copy first (inside the tap), then the phone dialer opens
+    const p=gpsPos;
+    if(p){const txt=p.lat.toFixed(5)+", "+p.lng.toFixed(5)+" ("+L10(m.name)+")";out.textContent="📍 "+txt;
+      try{navigator.clipboard&&navigator.clipboard.writeText(txt).then(()=>{out.textContent="✓ "+u3("copied")+": "+txt;});}catch(e){}}
+    else{out.textContent=u3("noFix");if(watchId===null&&hasConsent())$("gps").click();}
+  });
+  wrap.append(b,el("div","meta",u3("sosNote")),out);return wrap;
+}
+const _openHike=openHike;
+openHike=async function(m){
+  const p=_openHike.apply(this,arguments);
+  // replace the plain sunset line with the gauge, and add the 119 button under it
+  const line=[...guideEl.children].find(x=>/^🌇/.test(x.textContent||""));
+  if(line){const g=gauge(m);line.replaceWith(g);g.after(sosBlock(m));}
+  return p;
+};
+
+/* ---------- T. first-time tip before handing off to NAVER Map / Kakao Map ---------- */
+const tip=document.createElement("div");tip.className="tipwrap";tip.hidden=true;
+tip.innerHTML='<div class="tipbox" role="dialog" aria-modal="true"><h3 id="tipT"></h3><p id="tipN"></p><p id="tipK"></p><div class="row"><button type="button" id="tipGo"></button><button type="button" class="ghost" id="tipNo"></button></div></div>';
+document.body.append(tip);
+let tipTarget=null;
+document.addEventListener("click",e=>{
+  const a=e.target.closest&&e.target.closest("a,button");if(!a||!guideEl.contains(a))return;
+  const txt=(a.textContent||"").trim();if(txt!==t("naver")&&txt!==t("kakao"))return;
+  if(store.get("handoffTip")==="1")return;
+  e.preventDefault();e.stopImmediatePropagation();tipTarget=a;
+  $("tipT").textContent=u3("tipTitle");$("tipN").textContent=u3("tipNaver");$("tipK").textContent=u3("tipKakao");
+  $("tipGo").textContent=u3("tipGo");$("tipNo").textContent=u3("tipCancel");tip.hidden=false;$("tipGo").focus();
+},true);
+$("tipGo").onclick=()=>{store.set("handoffTip","1");tip.hidden=true;if(tipTarget)tipTarget.click();tipTarget=null;};
+$("tipNo").onclick=()=>{store.set("handoffTip","1");tip.hidden=true;tipTarget=null;};
+
 /* ---------- R8. developer card only with ?dev=1 ---------- */
 if(new URLSearchParams(location.search).get("dev")==="1")document.body.classList.add("dev");
 
