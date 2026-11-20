@@ -37,7 +37,9 @@ body[data-tab="hike"] #list li .thumb{border-radius:12px}
 .tabbar button:focus-visible{outline:2px solid var(--accent);outline-offset:-4px;border-radius:12px}
 /* full-screen map behind the sheet */
 #mapLayer{position:fixed;inset:0 0 calc(var(--tabbar) + env(safe-area-inset-bottom,0px)) 0;z-index:40;background:var(--bg)}
-#mapLayer #map{position:absolute;inset:0;height:auto!important;border-radius:0!important;margin:0!important;border:0!important}
+/* NAVER Map writes position:relative inline on its container, so these must win with !important */
+#mapLayer #map{position:absolute!important;top:0!important;left:0!important;right:0!important;bottom:0!important;
+  width:100%!important;height:100%!important;min-height:0!important;aspect-ratio:auto!important;border-radius:0!important;margin:0!important;border:0!important}
 #mapLayer .mapclose{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));right:12px;z-index:5;width:44px;height:44px;border-radius:50%;
   display:grid;place-items:center;background:var(--surface);color:var(--ink);border:1px solid var(--line);box-shadow:var(--shadow);padding:0}
 /* bottom sheet */

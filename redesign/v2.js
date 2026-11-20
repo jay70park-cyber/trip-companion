@@ -146,7 +146,7 @@ fitAll=function(){
     else map.fitBounds([[s,w],[n,e]],{paddingTopLeft:[30,70],paddingBottomRight:[30,covered+30],maxZoom:17});
   }catch(err){_fitAll.apply(this,arguments);}
 };
-function openSheet(){sheet.hidden=false;mapLayer.hidden=false;document.body.classList.add("sheet-open");setSheet("half");refreshMap(true);
+function openSheet(){sheet.hidden=false;mapLayer.hidden=false;document.body.classList.add("sheet-open");setSheet("half");refreshMap(true);setTimeout(()=>refreshMap(true),1200);
   if(!pushed){history.pushState({sheet:1},"");pushed=true;}}
 function closeSheet(){if(sheet.hidden)return;stopSpeaking();guideEl.hidden=true;}
 new MutationObserver(()=>{

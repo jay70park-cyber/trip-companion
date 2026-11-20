@@ -42,3 +42,4 @@
 ## History
 - 2026-11-20 v2.0: first sample (single copied file).
 - 2026-11-20 v2.1: restructured as separate overlay files. Sheet drag area enlarged (content drag added), back button closes the sheet, route fitted above the sheet, close button moved to the top right (it overlapped the zoom buttons).
+- 2026-11-20 v2.2: on a real phone the map did not show with NAVER Map. NAVER writes `position:relative` inline on the map container, so with `height:auto` the height became 0. Fixed with `!important` absolute positioning at 100% width and height, plus one more map resize after it loads.
