@@ -3,7 +3,7 @@ name: Publish story courses
 on:
   push:
     branches: [dev, main]
-    paths: ["pipeline/stories/**", pipeline/build-stories.mjs]
+    paths: ["pipeline/stories/**", "pipeline/shops/**", pipeline/build-stories.mjs]
   workflow_dispatch:
 
 permissions:

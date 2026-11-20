@@ -29,3 +29,14 @@ sources, and translates it into five languages. Courses are written to the `data
 
 Repository secrets used: `TOURAPI_KEY`, `TMAP_KEY`, `ANTHROPIC_API_KEY`.
 Optional repository variable: `AI_MODEL`. Without the AI key the courses use official places and official descriptions only.
+
+## Hand-written walks (history and shopping)
+
+`.github/workflows/stories.yml` publishes hand-written walks whenever their files change:
+history walks from `pipeline/stories/*.json` and shopping walks from `pipeline/shops/*.json`
+(the Olive Young · Daiso · Musinsa walks in Myeong-dong, Hongdae and Seongsu). They are listed under an area's own course.
+Shopping stops carry a street address, which TMAP's address search turns into a point; a course whose stores
+cannot all be placed, or that has a store more than 2 km from the start, is not published (the previous version stays).
+
+A walk with `"preview": true` is shown only on the dev site (`dev--…netlify.app`, or any page opened with `?preview=1`).
+To release it to everyone, set `"preview": false` in its file and push; the workflow republishes it, and no Netlify deploy is needed.

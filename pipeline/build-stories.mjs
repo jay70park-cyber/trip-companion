@@ -3,12 +3,20 @@
 // This script only (1) snaps each stop to TMAP's point for it, if one is within 400 m of the given point,
 // (2) routes the walk between stops on foot, and (3) writes <outDir>/courses/<id>.json and the index entry.
 // Story courses are not touched by the monthly course builder (build-courses.mjs keeps zones it does not build).
+//
+// It also publishes hand-written "shop" courses (pipeline/shops/*.json, e.g. the Olive Young · Daiso · Musinsa
+// walks). Their stops carry a street address: each one is placed by TMAP's address search (fullAddrGeo) first,
+// then by a POI name search near the given point. A course with "preview": true is shown only on the dev
+// site (dev--*.netlify.app); set it to false to release it — no app deploy is needed for that.
 import fs from "node:fs";
 import path from "node:path";
 
 const OUT = path.resolve(process.argv[2] || "out");
 const DIR = path.join(OUT, "courses");
-const SRC = new URL("./stories/", import.meta.url);
+const SOURCES = [
+  { dir: new URL("./stories/", import.meta.url), type: "story" },
+  { dir: new URL("./shops/", import.meta.url), type: "shop" },
+];
 const TMAP = process.env.TMAP_KEY || "";
 const TODAY = new Date().toISOString().slice(0, 10);
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -29,15 +37,35 @@ async function req(url, opts = {}) {
 async function snap(s) {
   if (!TMAP || !s.poi || s.snap === false) return s;
   try {
-    const qs = new URLSearchParams({ version: "1", searchKeyword: s.poi, count: "5", reqCoordType: "WGS84GEO", resCoordType: "WGS84GEO", centerLat: String(s.lat), centerLon: String(s.lng), radius: "1" });
+    const qs = new URLSearchParams({ version: "1", searchKeyword: s.poi, count: "5", reqCoordType: "WGS84GEO", resCoordType: "WGS84GEO", centerLat: String(s.lat), centerLon: String(s.lng), radius: String(Math.max(1, Math.ceil((s.snapM || 400) / 1000))) });
     const d = await req(`https://apis.openapi.sk.com/tmap/pois?${qs}`);
     const pois = (d?.searchPoiInfo?.pois?.poi || []).map((p) => ({ name: p.name, lat: +(p.noorLat || p.frontLat), lng: +(p.noorLon || p.frontLon) }));
-    const best = pois.filter((p) => meters(s, p) < 400).sort((a, b) => meters(s, a) - meters(s, b))[0];
+    const best = pois.filter((p) => meters(s, p) < (s.snapM || 400)).sort((a, b) => meters(s, a) - meters(s, b))[0];
     if (best) { console.log(`  · ${s.poi} → TMAP "${best.name}" (${Math.round(meters(s, best))} m from the given point)`); return { ...s, lat: +best.lat.toFixed(6), lng: +best.lng.toFixed(6) }; }
     console.log(`  · ${s.poi}: no TMAP point within 400 m — keeping the given point`);
   } catch (e) { console.log(`  ! ${s.poi}: ${e.message}`); }
   await sleep(250);
   return s;
+}
+
+// shop stops: place by street address (TMAP fullAddrGeo), then fall back to a POI name search near the given point
+async function geocode(s) {
+  if (!TMAP || !s.address) return snap(s);
+  try {
+    const qs = new URLSearchParams({ version: "1", format: "json", coordType: "WGS84GEO", addressFlag: "F00", fullAddr: s.address });
+    const d = await req(`https://apis.openapi.sk.com/tmap/geo/fullAddrGeo?${qs}`);
+    const c = (d?.coordinateInfo?.coordinate || [])[0] || {};
+    const lat = +(c.newLatEntr || c.newLat || c.lat), lng = +(c.newLonEntr || c.newLon || c.lon);
+    await sleep(250);
+    if (isFinite(lat) && isFinite(lng) && lat && lng) {
+      const off = Math.round(meters(s, { lat, lng }));
+      console.log(`  · ${s.address} → ${lat.toFixed(6)}, ${lng.toFixed(6)} (${off} m from the given point)`);
+      if (off > 2500) console.log(`  ! ${s.address}: far from the given point — check the address`);
+      return { ...s, lat: +lat.toFixed(6), lng: +lng.toFixed(6), placed: "address" };
+    }
+    console.log(`  ! ${s.address}: no address match — trying the POI name`);
+  } catch (e) { console.log(`  ! ${s.address}: ${e.message} — trying the POI name`); }
+  return { ...(await snap(s)), placed: "poi-or-given" };
 }
 
 async function walk(a, b) {
@@ -58,13 +86,22 @@ fs.mkdirSync(DIR, { recursive: true });
 const indexPath = path.join(DIR, "index.json");
 const index = fs.existsSync(indexPath) ? JSON.parse(fs.readFileSync(indexPath, "utf8")) : { updated: TODAY, zones: [] };
 
-for (const f of fs.readdirSync(SRC).filter((x) => x.endsWith(".json"))) {
-  const src = JSON.parse(fs.readFileSync(new URL(f, SRC), "utf8"));
-  console.log(`▶ story ${src.id}`);
+const LANGS = ["en", "ko", "ja", "zhs", "zht"];
+const files = SOURCES.flatMap(({ dir, type }) => fs.existsSync(dir) ? fs.readdirSync(dir).filter((x) => x.endsWith(".json")).map((f) => ({ url: new URL(f, dir), type })) : []);
+for (const { url, type } of files) {
+  const src = JSON.parse(fs.readFileSync(url, "utf8"));
+  const shop = type === "shop";
+  console.log(`▶ ${type} ${src.id}`);
   const stops = [];
-  for (const s of src.stops) stops.push(await snap(s));
-  const start = src.start;   // the start point is the first stop's gate, given by hand
-  let path_ = [], walkM = 0, walkS = 0, prev = { lat: src.start.lat, lng: src.start.lng };
+  for (const s of src.stops) stops.push(shop ? await geocode({ snapM: 1200, ...s }) : await snap(s));
+  // a shop walk starts at a station exit: snap it to TMAP's point for that exit if one is close
+  const start = shop && src.start.poi ? { ...(await snap({ ...src.start, snapM: 300 })), label: src.start.label } : src.start;
+  // a shop stop that neither the address nor the POI search could place still sits on its rough given point: never publish that
+  const unplaced = shop ? stops.find((s, i) => s.lat === src.stops[i].lat && s.lng === src.stops[i].lng) : null;
+  if (unplaced) { console.log(`  ! ${src.id}: could not place ${unplaced.name.ko} (${unplaced.address}) — skipped, the previous version is kept`); continue; }
+  const far = shop ? stops.find((s) => meters(start, s) > 2000) : null;
+  if (far) { console.log(`  ! ${src.id}: ${far.name.ko} is ${Math.round(meters(start, far))} m from the start — skipped, the previous version is kept`); continue; }
+  let path_ = [], walkM = 0, walkS = 0, prev = { lat: start.lat, lng: start.lng };
   for (const s of stops) {
     // straight: true for a short path TMAP does not route (e.g. King Gojong's Road, open only in the daytime)
     const leg = s.straight ? null : await walk(prev, s);
@@ -73,17 +110,21 @@ for (const f of fs.readdirSync(SRC).filter((x) => x.endsWith(".json"))) {
     prev = s;
   }
   const course = {
-    id: src.id, type: "story", areas: src.areas || [], updated: TODAY,
+    id: src.id, type, areas: src.areas || [], updated: TODAY, ...(src.preview ? { preview: true } : {}),
     name: src.name, start: { lat: start.lat, lng: start.lng, label: src.start.label }, intro: src.intro,
-    distanceM: Math.round(walkM), durationMin: Math.round(walkS / 60 + stops.length * 12),
-    generator: { ai: false, model: null, editor: "hand-written, sources checked" },
-    stops: stops.map((s, i) => ({ n: i + 1, kind: "story", year: s.year, lat: s.lat, lng: s.lng, name: s.name, text: s.text, sources: s.sources || [], image: s.image || "", legM: s.legM })),
+    // shopping takes longer per stop than reading a story
+    distanceM: Math.round(walkM), durationMin: Math.round(walkS / 60 + stops.length * (shop ? (src.minutesPerStop || 30) : 12)),
+    generator: { ai: false, model: null, editor: shop ? "hand-written, store facts checked " + (src.checked || TODAY) : "hand-written, sources checked" },
+    stops: stops.map((s, i) => shop
+      ? { n: i + 1, kind: "shop", tag: s.tag, address: s.address, hours: s.hours || "", lat: s.lat, lng: s.lng, name: s.name, text: s.text, sources: s.sources || [], image: s.image || "", legM: s.legM }
+      : { n: i + 1, kind: "story", year: s.year, lat: s.lat, lng: s.lng, name: s.name, text: s.text, sources: s.sources || [], image: s.image || "", legM: s.legM }),
     path: path_,
   };
-  for (const s of course.stops) for (const l of ["en", "ko", "ja", "zhs", "zht"]) if (!s.name[l] || !s.text[l]) throw new Error(`${src.id} stop ${s.n}: missing ${l}`);
+  for (const l of LANGS) if (!course.name[l] || !course.intro[l] || !course.start.label[l]) throw new Error(`${src.id}: missing ${l} in name, intro or start label`);
+  for (const s of course.stops) for (const l of LANGS) if (!s.name[l] || !s.text[l] || (shop && !s.tag?.[l])) throw new Error(`${src.id} stop ${s.n}: missing ${l}`);
   fs.writeFileSync(path.join(DIR, `${src.id}.json`), JSON.stringify(course) + "\n");
   index.zones = index.zones.filter((z) => z.id !== src.id);
-  index.zones.push({ id: course.id, type: "story", areas: course.areas, name: course.name, start: course.start, stops: course.stops.length, distanceM: course.distanceM, durationMin: course.durationMin, updated: TODAY, ai: false });
+  index.zones.push({ id: course.id, type, areas: course.areas, ...(src.preview ? { preview: true } : {}), name: course.name, start: course.start, stops: course.stops.length, distanceM: course.distanceM, durationMin: course.durationMin, updated: TODAY, ai: false });
   console.log(`  ✓ ${course.stops.length} stops, ${course.distanceM} m, ~${course.durationMin} min`);
 }
 fs.writeFileSync(indexPath, JSON.stringify(index, null, 1) + "\n");
