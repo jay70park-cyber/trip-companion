@@ -6,11 +6,12 @@
 > - `redesign/build-next.py` — builds `next.html` from index.html plus the two files above
 > - `next.html` — the test page (**generated file, do not edit by hand**)
 >
-> Test URL: https://dev--classy-puffpuff-3becd9.netlify.app/next.html  (with the developer card: `?dev=1`)
+> Test URL: https://dev--classy-puffpuff-3becd9.netlify.app/1120.html  (with the developer card: `?dev=1`)
+> Naming rule: test pages are named by date, `MMDD.html`. A new day's changes get a new file; earlier date files are kept, so versions can be compared.
 
 ## How it is managed
-- **When index.html changes:** run `python3 redesign/build-next.py` to rebuild next.html. Features added to the app carry over to the redesign as they are.
-- **To roll back (discard the redesign):** delete the `redesign/` folder and `next.html`. index.html is unaffected.
+- **When index.html changes:** run `python3 redesign/build.py` to rebuild today's date page (`MMDD.html`). Features added to the app carry over to the redesign as they are.
+- **To roll back (discard the redesign):** delete the `redesign/` folder and the date pages (`MMDD.html`). index.html is unaffected.
 - **To adopt:** after approval, add 3 lines to index.html (the fonts link, v2.css, v2.js). Keep the pre-adoption state in the `backup-pre-redesign` branch.
 - **Pre-adoption backup:** GitHub branch `backup-pre-redesign` (commit ca6dcea, 2026-11-20).
 
@@ -42,5 +43,6 @@
 ## History
 - 2026-11-20 v2.0: first sample (single copied file).
 - 2026-11-20 v2.1: restructured as separate overlay files. Sheet drag area enlarged (content drag added), back button closes the sheet, route fitted above the sheet, close button moved to the top right (it overlapped the zoom buttons).
+- 2026-11-20: test page renamed `next.html` → `1120.html` (date naming rule).
 - 2026-11-20 v2.3: stage 2 — mini player + Media Session, sunset gauge + 119, map-app tip (P1, P2, H1, H2, T1). Checked in emulation: gauge, 119 button, player (recording plays, subtitles, back, stop), tip all OK; 0 errors.
 - 2026-11-20 v2.2: on a real phone the map did not show with NAVER Map. NAVER writes `position:relative` inline on the map container, so with `height:auto` the height became 0. Fixed with `!important` absolute positioning at 100% width and height, plus one more map resize after it loads.
