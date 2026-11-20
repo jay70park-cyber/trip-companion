@@ -1,5 +1,5 @@
 /* K-Trip Companion — Redesign v2 overlay (behaviour).
-   Runs after the app's own script in next.html and only rearranges the screen:
+   Runs after the app's own script in the dated test page (MMDD.html) and only rearranges the screen:
    bottom tabs, full-screen map with a draggable bottom sheet, line icons on chips, saved places,
    developer card only with ?dev=1. All app logic (KTO, TMAP, NAVER Map, audio, 5 languages,
    distance order) stays in index.html and is reused as is. Change list: redesign/CHANGES.md */

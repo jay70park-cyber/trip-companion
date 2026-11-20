@@ -3,8 +3,8 @@
 > The live app (`index.html`) is **left untouched**. The redesign is kept only in these files:
 > - `redesign/v2.css` — styles
 > - `redesign/v2.js` — screen layout and behaviour (it reuses the app's existing functions)
-> - `redesign/build-next.py` — builds `next.html` from index.html plus the two files above
-> - `next.html` — the test page (**generated file, do not edit by hand**)
+> - `redesign/build.py` — builds the **dated test page** (e.g. `1120.html`) from index.html plus the two files above
+> - `1120.html` — the 2026-11-20 test page (**generated file, do not edit by hand**)
 >
 > Test URL: https://dev--classy-puffpuff-3becd9.netlify.app/1120.html  (with the developer card: `?dev=1`)
 > Naming rule: test pages are named by date, `MMDD.html`. A new day's changes get a new file; earlier date files are kept, so versions can be compared.
