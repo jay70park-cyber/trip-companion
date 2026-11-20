@@ -1,0 +1,44 @@
+# Redesign v2: change log (managed separately)
+
+> The live app (`index.html`) is **left untouched**. The redesign is kept only in these files:
+> - `redesign/v2.css` — styles
+> - `redesign/v2.js` — screen layout and behaviour (it reuses the app's existing functions)
+> - `redesign/build-next.py` — builds `next.html` from index.html plus the two files above
+> - `next.html` — the test page (**generated file, do not edit by hand**)
+>
+> Test URL: https://dev--classy-puffpuff-3becd9.netlify.app/next.html  (with the developer card: `?dev=1`)
+
+## How it is managed
+- **When index.html changes:** run `python3 redesign/build-next.py` to rebuild next.html. Features added to the app carry over to the redesign as they are.
+- **To roll back (discard the redesign):** delete the `redesign/` folder and `next.html`. index.html is unaffected.
+- **To adopt:** after approval, add 3 lines to index.html (the fonts link, v2.css, v2.js). Keep the pre-adoption state in the `backup-pre-redesign` branch.
+- **Pre-adoption backup:** GitHub branch `backup-pre-redesign` (commit ca6dcea, 2026-11-20).
+
+## Changes
+
+| ID | Item | Description | Files |
+|---|---|---|---|
+| R1 | Tab layout | Sections are assigned to tabs (Explore = location + search + list; Walks = location + course card; Hiking = location + list; Saved = saved list). | v2.js, v2.css |
+| R2 | Map + bottom sheet | The guide view goes into a bottom sheet, and the app's map element moves to a full-screen layer behind it. | v2.js, v2.css |
+| R3 | Bottom tab bar | 4 fixed tabs (Explore / Walks / Hiking / Saved), line SVG icons, labels in 5 languages. | v2.js, v2.css |
+| R4 | Chip icons | Chip emoji replaced with 1.5px-stroke SVG icons (9 kinds); pill-shaped chips. | v2.js, v2.css |
+| R5 | Saved | ☆ Save button on place and mountain rows; Saved tab (stored in localStorage on this device, up to 100). | v2.js |
+| R6 | Tab switching | Explore ↔ Hiking switches the hike category automatically; Walks tab shows a notice when the area has no course. | v2.js |
+| R7 | Sheet behaviour | 3 heights (peek / half / full). Drag the handle or the content (when scrolled to the top). Fling speed is recognised. Drag all the way down to close. Android **back button closes the sheet**. Close button ✕ at top right. | v2.js |
+| R7-1 | Route above the sheet | The route is fitted into the map area **above** the sheet. Your position is included only if it is within 15 km (prevents zooming out to the whole region). | v2.js |
+| R8 | Developer card | The API key card is shown only with `?dev=1`. | v2.js, v2.css |
+| D1 | Cards | Corner radius 16px, soft shadow. | v2.css |
+| D2 | Multilingual fonts | `html[lang]` font stacks: ja → Noto Sans JP, zh-Hans → Noto Sans SC, zh-Hant → Noto Sans TC. | v2.css, build |
+| D3 | Outdoor readability | `--muted` light #6f6046 → #54472f, dark #b1a58d → #d0c5ae (more contrast). | v2.css |
+| D4 | Dancheong stripe | 8px → 3px. | v2.css |
+
+## Checks (headless browser, Pixel 7 emulation, Leaflet map)
+- Hiking tab → open a mountain: sheet at half height, map layer shown, markers drawn (4).
+- Swipe content up → full (4%); swipe down → peek (74%).
+- Browser back → sheet closes, still on the same page.
+- Script errors: 0.
+- **Not checked:** behaviour with NAVER Map on a real phone (needs a phone test).
+
+## History
+- 2026-11-20 v2.0: first sample (single copied file).
+- 2026-11-20 v2.1: restructured as separate overlay files. Sheet drag area enlarged (content drag added), back button closes the sheet, route fitted above the sheet, close button moved to the top right (it overlapped the zoom buttons).
