@@ -1,0 +1,17 @@
+name: Diagnose KTO overview coverage (helper)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - env:
+          TOURAPI_KEY: ${{ secrets.TOURAPI_KEY }}
+        run: node pipeline/diag-overview.mjs
