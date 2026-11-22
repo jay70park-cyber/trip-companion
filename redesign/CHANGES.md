@@ -3,12 +3,13 @@
 > The live app (`index.html`) is **left untouched**. The redesign is kept only in these files:
 > - `redesign/v2.css` — styles
 > - `redesign/v2.js` — screen layout and behaviour (it reuses the app's existing functions)
-> - `redesign/build.py` — builds the **dated test page** (e.g. `1120.html`) from index.html plus the two files above
+> - `redesign/build.py` — builds the rolling test page `test.html` (with no argument) or a snapshot `MMDD.html` (with a date argument) from index.html plus the two files above
 > - `1120.html` — the 2026-11-20 test page (**generated file, do not edit by hand**)
 >
 > Test URL: https://dev--classy-puffpuff-3becd9.netlify.app/1120.html  (with the developer card: `?dev=1`)
-> Date pages: `1120.html` (first redesign), `1123.html` (description moved up + visitor info). Each date page uses its own frozen copy, `redesign/snap/MMDD/`.
-> Naming rule: test pages are named by date, `MMDD.html`. A new day's changes get a new file; earlier date files are kept, so versions can be compared.
+> **Test page (always the latest): https://dev--classy-puffpuff-3becd9.netlify.app/test.html**
+> Version policy (Jay, 11/23): **don't make a version file for every change** — log changes in this CHANGES.md (and in memory), and make a dated snapshot (`MMDD.html`, frozen copy in `redesign/snap/MMDD/`) **only at major changes or on a set cycle** (e.g. before production release, when the design is approved, or weekly).
+> Snapshots so far: `1120.html` (first redesign), `1123.html` (description moved up).
 
 ## How it is managed
 - **When index.html changes:** run `python3 redesign/build.py` to rebuild today's date page (`MMDD.html`). Features added to the app carry over to the redesign as they are.
@@ -46,6 +47,7 @@
 ## History
 - 2026-11-20 v2.0: first sample (single copied file).
 - 2026-11-20 v2.1: restructured as separate overlay files. Sheet drag area enlarged (content drag added), back button closes the sheet, route fitted above the sheet, close button moved to the top right (it overlapped the zoom buttons).
+- 2026-11-23 v2.6 (test.html): missing descriptions scanned — 13 areas × 5 languages, nearest 10 places each (~610 places): ko 0, en 1, ja 2, zhs 1, zht 1 had no description (mostly festivals and performances, e.g. "Anthropolis 1", plus STAGE35 Seongsu). Fix (**app itself, index.html dev**): when a foreign-language description is empty, find the same place in Korean KTO (Korean name in the title's brackets → keyword search, else nearest within 40 m) and show the **Korean original + a "Translate" button (Google Translate)**, then the visitor info (dates, times, fees…). Version policy changed to the rolling test.html.
 - 2026-11-23 v2.5 (`1123.html`): reported "some places have no description" → KTO check: descriptions exist for nearly all places in each language's list (0 empty in 25 sampled each around Yongin, Suwon and Gyeongbokgung). In the redesign the description was at the very bottom, so it looked missing. → A1 description first. Also added to the **app itself (index.html, dev)**: a **visitor info** box (KTO detailIntro2: hours, closed days, fees, contact, parking, dates, signature dish, check-in, website), also shown when there is no description. Each date page now uses a frozen overlay copy (`redesign/snap/`).
 - 2026-11-20 v2.4: display mode check (M1) — reported "text looks small, like a PC" → likely the browser's "Desktop site" setting is on; detect it and show a notice.
 - 2026-11-20: test page renamed `next.html` → `1120.html` (date naming rule).

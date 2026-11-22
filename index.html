@@ -137,6 +137,7 @@ ul.odii details p{font-size:14px;line-height:1.7;max-width:65ch}
 .mode.other{background:var(--muted)}
 .legs .sub{color:var(--muted)}
 .overview{font-size:14px;line-height:1.7;max-width:65ch}
+.kotwin p{font-size:13.5px;color:var(--muted)}
 .placeinfo{margin-top:12px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--chip)}
 .placeinfo h4{margin:0 0 6px;font-size:13px}
 .placeinfo dl{display:grid;grid-template-columns:max-content 1fr;gap:4px 12px;margin:0;font-size:13.5px;line-height:1.5}
@@ -989,10 +990,34 @@ async function loadOverview(it,box){
     if(ov){const txt=ov.replace(/<br\s*\/?>/gi,"\n").replace(/<[^>]+>/g,"").replace(/&nbsp;/g," ").replace(/&amp;/g,"&").trim();
       for(const para of txt.split(/\n+/)){if(para.trim())box.append(el("p",null,para.trim()));}}
     // practical details (hours, closed days, fees, contact, parking) from KTO detailIntro2 — also shown when there is no description
+    // no description in this language: show the Korean original (KTO keeps languages separately) with a one-tap translation
+    if(!ov&&lang!=="ko"){const ko=await koreanOverview(it);if(ko)box.append(ko);}
     const info=await placeInfo(it,items[0]);
     if(info)box.append(info);
     if(!box.childNodes.length){box.className="meta";box.textContent=t("s4none");}
   }catch(e){box.className="msg";box.textContent=e&&e.api?t("apiErr")(e.api):t("netErr");}
+}
+/* Korean twin of a foreign-language KTO item: by the Korean name KTO puts in brackets, else the nearest Korean item within 40 m */
+const KO_NOTE={en:"A description is only available in Korean.",ja:"紹介文は韓国語のみです。",zhs:"仅有韩文介绍。",zht:"僅有韓文介紹。"};
+const KO_TR={en:"Translate",ja:"翻訳する",zhs:"翻译",zht:"翻譯"};
+async function koreanOverview(it){
+  try{
+    const lat=+it.mapy,lng=+it.mapx,ko=(String(it.title||"").match(/\(([^()]*[가-힣][^()]*)\)\s*$/)||[])[1];
+    let cands=[];
+    if(ko)cands=await dataGo("KorService2","searchKeyword2",{keyword:ko,numOfRows:"10",pageNo:"1"});
+    if(!cands.length&&lat)cands=await dataGo("KorService2","locationBasedList2",{mapX:String(lng),mapY:String(lat),radius:"40",numOfRows:"5",pageNo:"1",arrange:"E"});
+    const near=cands.filter(c=>!lat||meters(lat,lng,+c.mapy,+c.mapx)<300).sort((a,b)=>meters(lat,lng,+a.mapy,+a.mapx)-meters(lat,lng,+b.mapy,+b.mapx))[0];
+    if(!near)return null;
+    const d=await dataGo("KorService2","detailCommon2",{contentId:String(near.contentid)});
+    const txt=String(d[0]&&d[0].overview||"").replace(/<br\s*\/?>/gi,"\n").replace(/<[^>]+>/g,"").replace(/&nbsp;/g," ").replace(/&amp;/g,"&").trim();
+    if(!txt)return null;
+    const box=el("div","kotwin");
+    box.append(el("div","meta",KO_NOTE[lang]||KO_NOTE.en));
+    const p=el("p",null,txt);p.lang="ko";box.append(p);
+    const tl={en:"en",ja:"ja",zhs:"zh-CN",zht:"zh-TW"}[lang]||"en";
+    const a=el("a","btn ghost small",KO_TR[lang]||KO_TR.en);a.href="https://translate.google.com/?sl=ko&tl="+tl+"&op=translate&text="+encodeURIComponent(txt.slice(0,1800));a.target="_blank";a.rel="noopener";
+    box.append(a);return box;
+  }catch(e){return null;}
 }
 /* KTO detailIntro2: the useful fields differ by content type, so they are picked by name */
 const INFO_LABELS={
