@@ -104,3 +104,10 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 .modebanner span{flex:1}
 .modebanner button{flex:none;background:var(--gold-ink);color:var(--gold);border:0}
 .modediag{font:12px var(--mono);color:var(--muted);padding:6px 10px;border:1px dashed var(--line);border-radius:10px}
+
+/* place description first (A1) */
+.about-top{margin-top:8px}
+.about-top .step-head .num{display:none}
+.about-top .overview.folded{max-height:7.4em;overflow:hidden;-webkit-mask-image:linear-gradient(#000 60%,transparent);mask-image:linear-gradient(#000 60%,transparent)}
+.morebtn{margin-top:6px}
+.about-top .placeinfo{margin-bottom:14px}

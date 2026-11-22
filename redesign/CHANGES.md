@@ -7,6 +7,7 @@
 > - `1120.html` — the 2026-11-20 test page (**generated file, do not edit by hand**)
 >
 > Test URL: https://dev--classy-puffpuff-3becd9.netlify.app/1120.html  (with the developer card: `?dev=1`)
+> Date pages: `1120.html` (first redesign), `1123.html` (description moved up + visitor info). Each date page uses its own frozen copy, `redesign/snap/MMDD/`.
 > Naming rule: test pages are named by date, `MMDD.html`. A new day's changes get a new file; earlier date files are kept, so versions can be compared.
 
 ## How it is managed
@@ -29,6 +30,7 @@
 | R7-1 | Route above the sheet | The route is fitted into the map area **above** the sheet. Your position is included only if it is within 15 km (prevents zooming out to the whole region). | v2.js |
 | R8 | Developer card | The API key card is shown only with `?dev=1`. | v2.js, v2.css |
 | M1 | Display mode check | Detects the Play app (TWA) / installed app (PWA) / mobile browser / **desktop-site mode** / in-app browser such as KakaoTalk. Desktop-site mode → a "turn off Desktop site" notice; in-app browser → an "open in Chrome" notice (once each). With `?dev=1` the mode, viewport and screen width are shown at the top. | v2.js, v2.css |
+| A1 | Description first | "About this place" moves right under the title and address (previously it was the last step, 04). Long text is folded to about 5 lines with a "Read more" button. The repeated "Official description" heading is hidden. | v2.js, v2.css |
 | D1 | Cards | Corner radius 16px, soft shadow. | v2.css |
 | D2 | Multilingual fonts | `html[lang]` font stacks: ja → Noto Sans JP, zh-Hans → Noto Sans SC, zh-Hant → Noto Sans TC. | v2.css, build |
 | D3 | Outdoor readability | `--muted` light #6f6046 → #54472f, dark #b1a58d → #d0c5ae (more contrast). | v2.css |
@@ -44,6 +46,7 @@
 ## History
 - 2026-11-20 v2.0: first sample (single copied file).
 - 2026-11-20 v2.1: restructured as separate overlay files. Sheet drag area enlarged (content drag added), back button closes the sheet, route fitted above the sheet, close button moved to the top right (it overlapped the zoom buttons).
+- 2026-11-23 v2.5 (`1123.html`): reported "some places have no description" → KTO check: descriptions exist for nearly all places in each language's list (0 empty in 25 sampled each around Yongin, Suwon and Gyeongbokgung). In the redesign the description was at the very bottom, so it looked missing. → A1 description first. Also added to the **app itself (index.html, dev)**: a **visitor info** box (KTO detailIntro2: hours, closed days, fees, contact, parking, dates, signature dish, check-in, website), also shown when there is no description. Each date page now uses a frozen overlay copy (`redesign/snap/`).
 - 2026-11-20 v2.4: display mode check (M1) — reported "text looks small, like a PC" → likely the browser's "Desktop site" setting is on; detect it and show a notice.
 - 2026-11-20: test page renamed `next.html` → `1120.html` (date naming rule).
 - 2026-11-20 v2.3: stage 2 — mini player + Media Session, sunset gauge + 119, map-app tip (P1, P2, H1, H2, T1). Checked in emulation: gauge, 119 button, player (recording plays, subtitles, back, stop), tip all OK; 0 errors.

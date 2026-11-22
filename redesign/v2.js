@@ -375,6 +375,35 @@ if(new URLSearchParams(location.search).get("dev")==="1"){
   const d=el("div","modediag","mode: "+dm.mode+" · viewport "+dm.width+"px / screen "+dm.screen+"px · dpr "+dm.dpr);
   document.querySelector("main").prepend(d);}
 
+/* ---------- A. place description first: "About this place" moves up under the title, folded to a few lines ---------- */
+const UI5={en:["Read more","Show less"],ko:["더 보기","접기"],ja:["もっと見る","閉じる"],zhs:["展开","收起"],zht:["展開","收起"]};
+const _openGuide=openGuide;
+openGuide=function(it){
+  const r=_openGuide.apply(this,arguments);
+  try{
+    const about=[...guideEl.querySelectorAll(".step")].find(x=>x.querySelector(".step-head h3")?.textContent===t("s4"));
+    const head=guideEl.querySelector("h2");
+    if(about&&head){
+      let anchor=head.nextElementSibling;while(anchor&&anchor.classList.contains("meta"))anchor=anchor.nextElementSibling;
+      about.classList.add("about-top");
+      // official description first, the audio guide below it
+      const body=about.children[1],off=body&&[...body.children].find(x=>x.tagName==="H3"&&x.textContent===t("officialTitle"));
+      if(off){const box=off.nextElementSibling;body.prepend(off,box);off.hidden=true;   // the section title already says "About this place"
+        let more=null;
+        const fold=()=>{if(!box.isConnected)return;
+          // visitor info (hours, closed days…) stays visible below the folded text
+          const info=box.querySelector(".placeinfo");if(info)(more||box).after(info);
+          if(box.dataset.fold||box.className!=="overview"||box.scrollHeight<180)return;
+          box.dataset.fold="1";box.classList.add("folded");more=el("button","ghost small morebtn",(UI5[lang]||UI5.en)[0]);more.type="button";
+          more.onclick=()=>{const f=box.classList.toggle("folded");more.textContent=(UI5[lang]||UI5.en)[f?0:1];};box.after(more);
+          const i2=body.querySelector(".placeinfo");if(i2)more.after(i2);};
+        new MutationObserver(fold).observe(box,{childList:true,attributes:true,attributeFilter:["class"]});setTimeout(fold,1500);}
+      (anchor?anchor.before(about):head.after(about));
+    }
+  }catch(e){}
+  return r;
+};
+
 /* ---------- R8. developer card only with ?dev=1 ---------- */
 if(new URLSearchParams(location.search).get("dev")==="1")document.body.classList.add("dev");
 

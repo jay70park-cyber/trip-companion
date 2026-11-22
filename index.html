@@ -137,6 +137,10 @@ ul.odii details p{font-size:14px;line-height:1.7;max-width:65ch}
 .mode.other{background:var(--muted)}
 .legs .sub{color:var(--muted)}
 .overview{font-size:14px;line-height:1.7;max-width:65ch}
+.placeinfo{margin-top:12px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--chip)}
+.placeinfo h4{margin:0 0 6px;font-size:13px}
+.placeinfo dl{display:grid;grid-template-columns:max-content 1fr;gap:4px 12px;margin:0;font-size:13.5px;line-height:1.5}
+.placeinfo dt{color:var(--muted);font-weight:600}.placeinfo dd{margin:0;overflow-wrap:anywhere}
 ol.turns{margin:8px 0 0;padding-left:20px;font-size:13px}
 ol.turns li{margin:3px 0}
 ul.food{list-style:none;margin:8px 0 0;padding:0}
@@ -982,10 +986,42 @@ async function loadOverview(it,box){
     const items=await tour("detailCommon2",{contentId:String(it.contentid)});
     const ov=items[0]&&items[0].overview;
     box.className="overview";box.innerHTML="";
-    if(!ov){box.className="meta";box.textContent=t("s4none");return;}
-    const txt=ov.replace(/<br\s*\/?>/gi,"\n").replace(/<[^>]+>/g,"").replace(/&nbsp;/g," ").replace(/&amp;/g,"&").trim();
-    for(const para of txt.split(/\n+/)){if(para.trim())box.append(el("p",null,para.trim()));}
+    if(ov){const txt=ov.replace(/<br\s*\/?>/gi,"\n").replace(/<[^>]+>/g,"").replace(/&nbsp;/g," ").replace(/&amp;/g,"&").trim();
+      for(const para of txt.split(/\n+/)){if(para.trim())box.append(el("p",null,para.trim()));}}
+    // practical details (hours, closed days, fees, contact, parking) from KTO detailIntro2 — also shown when there is no description
+    const info=await placeInfo(it,items[0]);
+    if(info)box.append(info);
+    if(!box.childNodes.length){box.className="meta";box.textContent=t("s4none");}
   }catch(e){box.className="msg";box.textContent=e&&e.api?t("apiErr")(e.api):t("netErr");}
+}
+/* KTO detailIntro2: the useful fields differ by content type, so they are picked by name */
+const INFO_LABELS={
+ en:{hours:"Hours",closed:"Closed",fee:"Admission",contact:"Contact",parking:"Parking",period:"Dates",menu:"Signature dish",checkin:"Check-in / out",web:"Website",title:"Visitor info"},
+ ko:{hours:"이용 시간",closed:"쉬는 날",fee:"이용 요금",contact:"문의",parking:"주차",period:"기간",menu:"대표 메뉴",checkin:"체크인 / 아웃",web:"홈페이지",title:"이용 안내"},
+ ja:{hours:"利用時間",closed:"休業日",fee:"料金",contact:"問い合わせ",parking:"駐車場",period:"期間",menu:"代表メニュー",checkin:"チェックイン / アウト",web:"ホームページ",title:"利用案内"},
+ zhs:{hours:"开放时间",closed:"休息日",fee:"费用",contact:"咨询",parking:"停车",period:"日期",menu:"招牌菜",checkin:"入住 / 退房",web:"网站",title:"游览信息"},
+ zht:{hours:"開放時間",closed:"休息日",fee:"費用",contact:"諮詢",parking:"停車",period:"日期",menu:"招牌菜",checkin:"入住 / 退房",web:"網站",title:"遊覽資訊"}};
+const INFO_FIELDS=[["hours",/^(usetime|opentime|playtime)/],["closed",/^restdate/],["fee",/^(usefee|usetimefestival)/],["period",/^eventstartdate$/],
+  ["menu",/^firstmenu$/],["checkin",/^checkintime$/],["contact",/^infocenter/],["parking",/^parking(?!fee)/]];
+async function placeInfo(it,common){
+  let d={};
+  try{const r=await tour("detailIntro2",{contentId:String(it.contentid),contentTypeId:String(it.contenttypeid||"")});d=r[0]||{};}catch(e){}
+  const clean=v=>String(v||"").replace(/<br\s*\/?>/gi," · ").replace(/<[^>]+>/g,"").replace(/&nbsp;/g," ").replace(/&amp;/g,"&").replace(/\s+/g," ").trim();
+  const L=INFO_LABELS[lang]||INFO_LABELS.en,rows=[];
+  for(const [k,re] of INFO_FIELDS){
+    const key=Object.keys(d).find(x=>re.test(x)&&clean(d[x]));if(!key)continue;
+    let v=clean(d[key]);
+    if(k==="period"){const e=clean(d.eventenddate);const f=x=>x.length===8?x.slice(0,4)+"."+x.slice(4,6)+"."+x.slice(6):x;v=f(v)+(e?" – "+f(e):"");}
+    if(k==="checkin"&&clean(d.checkouttime))v+=" / "+clean(d.checkouttime);
+    rows.push([L[k],v]);
+  }
+  const web=common&&String(common.homepage||"").match(/https?:\/\/[^"'<>\s]+/);
+  if(!rows.length&&!web)return null;
+  const box=el("div","placeinfo");box.append(el("h4",null,L.title));
+  const dl=document.createElement("dl");
+  for(const [k,v] of rows){dl.append(el("dt",null,k),el("dd",null,v));}
+  if(web){const dd=el("dd");const a=el("a",null,web[0].replace(/^https?:\/\//,"").replace(/\/$/,""));a.href=web[0];a.target="_blank";a.rel="noopener";dd.append(a);dl.append(el("dt",null,L.web),dd);}
+  box.append(dl);return box;
 }
 
 async function tmap(path,body){
