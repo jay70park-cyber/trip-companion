@@ -655,7 +655,7 @@ async function search(){
   else if(cat)extra.contentTypeId=cat;
   try{
     const pickKind=!cat?"":String(cat)===String(t("food"))?"food":(cat==="12"||cat==="76")?"sight":null;
-    const [res,picks]=await Promise.all([tour("locationBasedList2",extra).then(v=>({v}),e=>({e})),pickKind!==null?loadPicks().then(ps=>ps.filter(p=>!pickKind||(p.kind||"food")===pickKind)):Promise.resolve([])]);
+    const [res,picks]=await Promise.all([tour("locationBasedList2",extra).then(v=>({v}),e=>({e})),pickKind!==null?loadPicks().then(ps=>ps.filter(p=>!pickKind||pickKinds(p).includes(pickKind))):Promise.resolve([])]);
     const near=pickItems(picks,pos,+$("radius").value);
     if(res.e&&!near.length)throw res.e;
     let items=res.v||[];
@@ -687,6 +687,8 @@ function pickItems(picks,pos,radius){
     mapy:p.lat,mapx:p.lng,dist:String(meters(pos.lat,pos.lng,p.lat,p.lng))})).filter(x=>+x.dist<=radius);
 }
 const normName=x=>String(x||"").replace(/\s|\(.*?\)/g,"").toLowerCase();
+/* a pick can be both, e.g. a café that is also a sight: kind "food" (default), "sight" or ["food","sight"] */
+const pickKinds=p=>[].concat(p.kind||"food");
 function mergePicks(near,items){
   if(!near.length)return items;
   const taken=new Set();for(const x of near)for(const k of Object.values(x.pick.name||{}))taken.add(normName(k));
@@ -767,7 +769,7 @@ function pickTxt(o){return o?(o[lang]||o.en||o.ko||""):"";}
 async function loadFood(it,box){
   const lat=+it.mapy,lng=+it.mapx;
   const [picks,tourRes]=await Promise.all([
-    loadPicks().then(ps=>ps.filter(p=>(p.kind||"food")==="food")),
+    loadPicks().then(ps=>ps.filter(p=>pickKinds(p).includes("food"))),
     tour("locationBasedList2",{numOfRows:"5",pageNo:"1",arrange:"E",mapX:String(it.mapx),mapY:String(it.mapy),radius:"1000",contentTypeId:String(t("food"))}).then(v=>({v}),e=>({e}))
   ]);
   const self=it.pick&&it.pick.id;
