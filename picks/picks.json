@@ -198,6 +198,42 @@
    "lng": 128.593951,
    "image": "https://raw.githubusercontent.com/jay70park-cyber/trip-companion/data/picks/img/sokcho-songrim-sundae.jpg?v=184723",
    "photo": "own"
+  },
+  {
+   "id": "sokcho-chilsung-boatyard",
+   "area": "속초 청초호",
+   "address": "강원 속초시 중앙로46번길 45",
+   "name": {
+    "ko": "칠성조선소",
+    "en": "Chilsung Boatyard",
+    "ja": "七星造船所（チルソン・ボートヤード）",
+    "zhs": "七星造船厂",
+    "zht": "七星造船廠"
+   },
+   "menu": {
+    "ko": "커피 · 소금빵 · 스콘",
+    "en": "Coffee · salt bread · scones",
+    "ja": "コーヒー・塩パン・スコーン",
+    "zhs": "咖啡 · 盐面包 · 司康",
+    "zht": "咖啡 · 鹽麵包 · 司康"
+   },
+   "text": {
+    "ko": "원산 피란민이 1952년 세워 2017년까지 목선을 만들던 청초호변 조선소를 고친 카페 겸 문화공간",
+    "en": "A café and culture space in a lakeside boatyard where wooden boats were built from 1952 to 2017, founded by a refugee from Wonsan",
+    "ja": "元山からの避難民が1952年に開き、2017年まで木造船を造った青草湖畔の造船所を改装したカフェ兼文化空間",
+    "zhs": "由元山难民于1952年创办、至2017年一直建造木船的青草湖畔造船厂改建而成的咖啡馆兼文化空间",
+    "zht": "由元山難民於1952年創辦、至2017年一直建造木船的青草湖畔造船廠改建而成的咖啡館兼文化空間"
+   },
+   "source": "https://naver.me/FPswgT3Y",
+   "lat": 38.198244,
+   "lng": 128.583368,
+   "image": "https://tong.visitkorea.or.kr/cms/resource/97/3545597_image2_1.jpg",
+   "photo": "kto",
+   "kto": {
+    "id": "2774493",
+    "lat": 38.198245,
+    "lng": 128.583368
+   }
   }
  ]
 }
