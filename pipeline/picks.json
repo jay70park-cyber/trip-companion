@@ -136,6 +136,33 @@
     "zht": "全谷港旁高廉山水邊公園的吊橋，可一覽遊艇與西海郎纜車"
    },
    "source": "https://naver.me/GT4Erchy"
+  },
+  {
+   "id": "sokcho-songrim-sundae",
+   "area": "속초 아바이마을",
+   "address": "강원 속초시 아바이마을길 12",
+   "name": {
+    "ko": "2대송림순대집 아바이마을본점",
+    "en": "Songrim Sundae House (Abai Village, 2nd generation)",
+    "ja": "2代目松林スンデの店 アバイ村本店",
+    "zhs": "二代松林血肠店 阿爸村总店",
+    "zht": "二代松林血腸店 阿爸村總店"
+   },
+   "menu": {
+    "ko": "아바이순대 · 오징어순대",
+    "en": "Abai sundae (North Korean–style sausage) · stuffed squid",
+    "ja": "アバイスンデ・イカスンデ",
+    "zhs": "阿爸血肠 · 鱿鱼血肠",
+    "zht": "阿爸血腸 · 魷魚血腸"
+   },
+   "text": {
+    "ko": "함경도 실향민들이 일군 아바이마을의 2대째 순대집",
+    "en": "A second-generation sundae house in Abai Village, the neighborhood built by refugees from Hamgyeong Province",
+    "ja": "咸鏡道出身の避難民が築いたアバイ村で2代続くスンデの店",
+    "zhs": "由咸镜道离乡者建起的阿爸村里传承两代的血肠店",
+    "zht": "由咸鏡道離鄉者建起的阿爸村裡傳承兩代的血腸店"
+   },
+   "source": "https://naver.me/x2Pu7eSa"
   }
  ]
 }
