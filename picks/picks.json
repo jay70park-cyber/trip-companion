@@ -195,7 +195,9 @@
    },
    "source": "https://naver.me/x2Pu7eSa",
    "lat": 38.202429,
-   "lng": 128.593951
+   "lng": 128.593951,
+   "image": "https://raw.githubusercontent.com/jay70park-cyber/trip-companion/data/picks/img/sokcho-songrim-sundae.jpg?v=184723",
+   "photo": "own"
   }
  ]
 }
